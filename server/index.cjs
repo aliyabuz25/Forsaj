@@ -209,23 +209,29 @@ app.post('/api/courses', async (req, res) => {
 
 // Logic from extractJsonMap.cjs
 const isTrueText = (str) => {
-    if (!/[a-zA-ZəƏüÜöÖğĞıIçÇşŞ]/.test(str)) return false;
-    if (/[{}<>;]/.test(str)) return false;
-    if (str.includes('=>')) return false;
-    if (str.includes('=')) return false;
-    if (str.includes('return ')) return false;
-    if (str.includes('import ')) return false;
-    if (str.includes('export ')) return false;
-    if (str.includes('function')) return false;
-    if (str.includes('const ')) return false;
-    if (str.includes('void')) return false;
-    if (str.includes('REZERV')) return false;
+    if (!str || typeof str !== 'string') return false;
+    const trimmed = str.trim();
+    if (trimmed.length < 2 || trimmed.length > 300) return false;
 
-    const reserved = ['true', 'false', 'null', 'undefined', 'NaN', 'string', 'number', 'any'];
-    if (reserved.includes(str.trim())) return false;
+    // Must contain at least one letter (including Azerbaijani specific)
+    if (!/[a-zA-ZəƏüÜöÖğĞıIçÇşŞ]/.test(trimmed)) return false;
 
-    if (str.length < 2) return false;
-    if (str.length > 300) return false;
+    // Filter out common code characters/patterns
+    if (/[{}<>;]/.test(trimmed)) return false;
+    if (trimmed.includes('=>')) return false;
+    if (trimmed.includes('=')) return false;
+    if (trimmed.includes('(') && trimmed.includes(')')) return false; // functions/methods
+    if (trimmed.startsWith('.') || trimmed.includes(' .')) return false; // method chaining
+    if (trimmed.includes('/') && trimmed.split('/').length > 2) return false; // likely regex or path
+
+    const codeKeywords = [
+        'return ', 'import ', 'export ', 'function', 'const ', 'let ', 'var ',
+        'void', 'REZERV', 'replace', 'map', 'filter', 'join', 'split',
+        'true', 'false', 'null', 'undefined', 'NaN', 'string', 'number', 'any',
+        'async', 'await', 'console.', 'process.'
+    ];
+
+    if (codeKeywords.some(kw => trimmed.toLowerCase().includes(kw.toLowerCase()))) return false;
 
     return true;
 };
