@@ -29,7 +29,6 @@ const DriversPage: React.FC<DriversPageProps> = ({ initialCategoryId }) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const { getText } = useSiteContent('driverspage');
-
   useEffect(() => {
     fetch('/api/drivers')
       .then(res => {
@@ -38,12 +37,15 @@ const DriversPage: React.FC<DriversPageProps> = ({ initialCategoryId }) => {
       })
       .then(data => {
         if (Array.isArray(data)) {
-          const mappedCats = data.map((c: any) => ({
-            id: c.id,
-            name: c.name,
-            leaders: c.drivers.slice(0, 3), // Top 3
-            fullStandings: c.drivers.sort((a: any, b: any) => a.rank - b.rank)
-          }));
+          const mappedCats = data.map((c: any) => {
+            const drivers = Array.isArray(c.drivers) ? c.drivers : [];
+            return {
+              id: c.id,
+              name: c.name,
+              leaders: drivers.slice(0, 3), // Top 3
+              fullStandings: [...drivers].sort((a: any, b: any) => a.rank - b.rank)
+            };
+          });
           setCategories(mappedCats);
 
           if (initialCategoryId) {

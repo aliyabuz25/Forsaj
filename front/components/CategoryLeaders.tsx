@@ -19,7 +19,8 @@ const CategoryLeaders: React.FC<CategoryLeadersProps> = ({ onViewChange }) => {
       .then(data => {
         if (Array.isArray(data)) {
           const topLeaders = data.map(cat => {
-            const topDriver = cat.drivers.sort((a: any, b: any) => a.rank - b.rank)[0];
+            const drivers = Array.isArray(cat.drivers) ? cat.drivers : [];
+            const topDriver = [...drivers].sort((a: any, b: any) => a.rank - b.rank)[0];
             return {
               id: cat.id,
               title: `${cat.name} LİDERİ`,

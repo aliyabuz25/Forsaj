@@ -26,8 +26,11 @@ export const useSiteContent = (scopePageId?: string) => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetch('/site-content.json')
-            .then(res => res.json())
+        fetch('/api/get-content')
+            .then(res => {
+                if (!res.ok) throw new Error('Content API unreachable');
+                return res.json();
+            })
             .then(data => {
                 if (Array.isArray(data)) {
                     setContent(data);
@@ -41,7 +44,8 @@ export const useSiteContent = (scopePageId?: string) => {
     }, []);
 
     const getPage = (id: string) => {
-        return content.find(p => p.id === id.toLowerCase());
+        // This function assumes 'content' is PageContent[], which might be incorrect after the change
+        return (content as PageContent[]).find(p => p.id === id.toLowerCase());
     };
 
     const getText = (arg1: string, arg2?: string | number, arg3: string = '') => {
