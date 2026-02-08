@@ -26,10 +26,11 @@ app.use((req, res, next) => {
     next();
 });
 
-// Path to the front project's public directory
-const FRONT_PUBLIC_DIR = process.env.PUBLIC_DIR || path.join(__dirname, '../front/public');
-const SITE_CONTENT_PATH = path.join(FRONT_PUBLIC_DIR, 'site-content.json');
-const ADMIN_PUBLIC_DIR = path.join(__dirname, '../public');
+// Path to the web data directory (JSON files, etc.)
+const WEB_DATA_DIR = process.env.WEB_DATA_DIR || path.join(__dirname, '../front/public');
+const FRONT_PUBLIC_DIR = WEB_DATA_DIR;
+const SITE_CONTENT_PATH = path.join(WEB_DATA_DIR, 'site-content.json');
+const ADMIN_PUBLIC_DIR = process.env.ADMIN_PUBLIC_DIR || path.join(__dirname, '../public');
 const ADMIN_SITEMAP_PATH = path.join(ADMIN_PUBLIC_DIR, 'sitemap.json');
 
 app.get('/', (req, res) => {
@@ -42,6 +43,10 @@ app.use('/uploads', express.static(UPLOAD_DIR_PATH));
 // Ensure public directory exists
 if (!fs.existsSync(FRONT_PUBLIC_DIR)) {
     fs.mkdirSync(FRONT_PUBLIC_DIR, { recursive: true });
+}
+
+if (!fs.existsSync(ADMIN_PUBLIC_DIR)) {
+    fs.mkdirSync(ADMIN_PUBLIC_DIR, { recursive: true });
 }
 
 // Ensure upload directory exists

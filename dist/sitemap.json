@@ -1,0 +1,12 @@
+[
+    {
+        "title": "Sayt Redaktoru",
+        "icon": "Globe",
+        "path": "/"
+    },
+    {
+        "title": "Frontend Ayarları",
+        "icon": "Settings",
+        "path": "/frontend-settings"
+    }
+]
