@@ -1,6 +1,9 @@
 services:
   forsaj-backend:
     image: forsaj-backend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
     restart: unless-stopped
     environment:
       PORT: "3001"
@@ -20,6 +23,9 @@ services:
 
   forsaj-frontend:
     image: forsaj-frontend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
     restart: unless-stopped
     networks:
       - edge
@@ -32,6 +38,9 @@ services:
 
   forsaj-admin:
     image: forsaj-admin:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.admin
     restart: unless-stopped
     networks:
       - edge
