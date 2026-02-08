@@ -12,7 +12,10 @@ const CategoryLeaders: React.FC<CategoryLeadersProps> = ({ onViewChange }) => {
 
   React.useEffect(() => {
     fetch('/api/drivers')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('API unavailable');
+        return res.json();
+      })
       .then(data => {
         if (Array.isArray(data)) {
           const topLeaders = data.map(cat => {
@@ -28,7 +31,8 @@ const CategoryLeaders: React.FC<CategoryLeadersProps> = ({ onViewChange }) => {
           });
           setLeaders(topLeaders);
         }
-      });
+      })
+      .catch(err => console.error('Leaders fetch failed:', err));
   }, []);
 
   return (

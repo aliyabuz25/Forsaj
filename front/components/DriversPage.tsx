@@ -32,7 +32,10 @@ const DriversPage: React.FC<DriversPageProps> = ({ initialCategoryId }) => {
 
   useEffect(() => {
     fetch('/api/drivers')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('API unavailable');
+        return res.json();
+      })
       .then(data => {
         if (Array.isArray(data)) {
           const mappedCats = data.map((c: any) => ({
@@ -48,7 +51,8 @@ const DriversPage: React.FC<DriversPageProps> = ({ initialCategoryId }) => {
             if (cat) setSelectedCategory(cat);
           }
         }
-      });
+      })
+      .catch(err => console.error('Drivers fetch failed:', err));
   }, [initialCategoryId]);
 
   if (!selectedCategory && categories.length > 0 && !initialCategoryId) {
