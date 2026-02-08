@@ -269,9 +269,8 @@ app.post('/api/extract-content', async (req, res) => {
                     .replace(/([A-Z])/g, ' $1') // Insert space before capital
                     .trim(); // Remove leading space if any
 
-                const sections = [];
-                const images = [];
-                const seenValues = new Set(); // Per page dedup
+                const items = []; // Combined list to maintain order
+                const seenValues = new Set();
 
                 // 1. Text
                 const jsxTextRegex = />([^<{}]+)</g;
@@ -283,11 +282,14 @@ app.post('/api/extract-content', async (req, res) => {
                     if (isTrueText(text) && !seenValues.has(text)) {
                         seenValues.add(text);
                         const slug = text.slice(0, 20).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-                        sections.push({
-                            id: `txt-${slug}-${Math.floor(Math.random() * 1000)}`,
-                            type: 'text',
-                            label: text.slice(0, 30).toUpperCase() + (text.length > 30 ? '...' : ''),
-                            value: text
+                        items.push({
+                            pos: match.index,
+                            item: {
+                                id: `txt-${slug}-${Math.floor(Math.random() * 1000)}`,
+                                type: 'text',
+                                label: text.slice(0, 30).toUpperCase() + (text.length > 30 ? '...' : ''),
+                                value: text
+                            }
                         });
                     }
                 }
@@ -300,11 +302,14 @@ app.post('/api/extract-content', async (req, res) => {
                     if (isTrueText(text) && !seenValues.has(text)) {
                         seenValues.add(text);
                         const slug = text.slice(0, 20).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-                        sections.push({
-                            id: `attr-${slug}-${Math.floor(Math.random() * 1000)}`,
-                            type: 'text',
-                            label: `${attr.toUpperCase()}: ${text.slice(0, 20)}...`,
-                            value: text
+                        items.push({
+                            pos: match.index,
+                            item: {
+                                id: `attr-${slug}-${Math.floor(Math.random() * 1000)}`,
+                                type: 'text',
+                                label: `${attr.toUpperCase()}: ${text.slice(0, 20)}...`,
+                                value: text
+                            }
                         });
                     }
                 }
@@ -315,15 +320,23 @@ app.post('/api/extract-content', async (req, res) => {
                     const src = match[2];
                     if (src.match(/\.(png|jpg|jpeg|svg|webp|gif)/i) || src.startsWith('http')) {
                         if (!src.includes('{') && !src.includes('}')) {
-                            images.push({
-                                id: `img-${Math.floor(Math.random() * 1000)}`,
-                                path: src,
-                                alt: 'Extracted Image',
-                                type: 'local'
+                            items.push({
+                                pos: match.index,
+                                item: {
+                                    id: `img-${Math.floor(Math.random() * 1000)}`,
+                                    path: src,
+                                    alt: 'Bölmədəki Şəkil',
+                                    type: 'local'
+                                }
                             });
                         }
                     }
                 }
+
+                // Sort by position to get "top to bottom" order
+                items.sort((a, b) => a.pos - b.pos);
+                const sections = items.filter(i => i.item.type === 'text').map(i => i.item);
+                const images = items.filter(i => i.item.path).map(i => i.item);
 
                 if (sections.length > 0 || images.length > 0) {
                     pagesMap.set(pageId, {
@@ -339,37 +352,29 @@ app.post('/api/extract-content', async (req, res) => {
         }
 
         const newContent = Array.from(pagesMap.values());
+
+        // Custom Sort order for popular pages
+        const orderWeight = {
+            'home': 1, 'about': 2, 'news': 3, 'newspage': 4,
+            'events': 5, 'eventspage': 6, 'drivers': 7,
+            'driverspage': 8, 'gallery': 9, 'gallerypage': 10,
+            'rules': 11, 'rulespage': 12, 'contact': 13, 'contactpage': 14
+        };
+
+        newContent.sort((a, b) => (orderWeight[a.id] || 100) - (orderWeight[b.id] || 100));
+
         await fsPromises.writeFile(SITE_CONTENT_PATH, JSON.stringify(newContent, null, 2));
 
-        // GENERATE SITEMAP
+        // GENERATE SITEMAP (Fixed order based on user request)
         const sitemap = [
+            { title: 'Dashboard', icon: 'Layout', path: '/' },
+            { title: 'Haqqımızda', icon: 'Info', path: '/?page=about' },
+            { title: 'Xəbərlər', icon: 'FileText', path: '/?mode=news' },
+            { title: 'Tədbir Təqvimi', icon: 'Calendar', path: '/?mode=events' },
+            { title: 'Sürücü Reytinqi', icon: 'Trophy', path: '/?mode=drivers' },
+            { title: 'Kurs İdarəetməsi', icon: 'BookOpen', path: '/courses' },
             {
-                title: 'Sayt Redaktoru',
-                icon: 'Globe',
-                path: '/'
-            },
-            {
-                title: 'Xəbər İdarəetmə',
-                icon: 'FileText',
-                path: '/?mode=news'
-            },
-            {
-                title: 'Tədbir Təqvimi',
-                icon: 'Calendar',
-                path: '/?mode=events'
-            },
-            {
-                title: 'Sürücü Reytinqi',
-                icon: 'Trophy',
-                path: '/?mode=drivers'
-            },
-            {
-                title: 'Kurs İdarəetməsi',
-                icon: 'BookOpen',
-                path: '/courses'
-            },
-            {
-                title: 'Komponentlər',
+                title: 'Bütün Səhifələr',
                 icon: 'Layers',
                 children: newContent.map(p => ({
                     title: p.title,
@@ -377,11 +382,7 @@ app.post('/api/extract-content', async (req, res) => {
                     icon: 'Layout'
                 }))
             },
-            {
-                title: 'Frontend Ayarları',
-                icon: 'Settings',
-                path: '/frontend-settings'
-            }
+            { title: 'Sistem Ayarları', icon: 'Settings', path: '/frontend-settings' }
         ];
 
         try {
