@@ -249,11 +249,19 @@ app.post('/api/extract-content', async (req, res) => {
 
         try {
             await fsPromises.access(COMPONENTS_DIR);
-            const files = await fsPromises.readdir(COMPONENTS_DIR);
-            const tsxFiles = files.filter(f => f.endsWith('.tsx'));
+            const compFiles = await fsPromises.readdir(COMPONENTS_DIR);
+
+            // Add App.tsx from root if exists
+            const FRONT_DIR = path.join(__dirname, '../front');
+            const allFiles = compFiles.map(f => path.join(COMPONENTS_DIR, f));
+            if (await fsPromises.access(path.join(FRONT_DIR, 'App.tsx')).then(() => true).catch(() => false)) {
+                allFiles.push(path.join(FRONT_DIR, 'App.tsx'));
+            }
+
+            const tsxFiles = allFiles.filter(f => f.endsWith('.tsx'));
 
             for (const file of tsxFiles) {
-                const content = await fsPromises.readFile(path.join(COMPONENTS_DIR, file), 'utf8');
+                const content = await fsPromises.readFile(file, 'utf8');
                 // Clean the content to remove imports and logic to avoid false positives
                 const clean = content
                     .replace(/import\s+.*?from\s+['"].*?['"];?/g, '') // remove imports
@@ -272,7 +280,7 @@ app.post('/api/extract-content', async (req, res) => {
                 const items = []; // Combined list to maintain order
                 const seenValues = new Set();
 
-                // 1. Text
+                // 1. Text (JSX)
                 const jsxTextRegex = />([^<{}]+)</g;
                 let match;
                 while ((match = jsxTextRegex.exec(clean)) !== null) {
@@ -308,6 +316,46 @@ app.post('/api/extract-content', async (req, res) => {
                                 id: `attr-${slug}-${Math.floor(Math.random() * 1000)}`,
                                 type: 'text',
                                 label: `${attr.toUpperCase()}: ${text.slice(0, 20)}...`,
+                                value: text
+                            }
+                        });
+                    }
+                }
+
+                // 4. getText calls (Crucial for Events/News/Drivers)
+                // matches: getText('KEY', 'Default Text')
+                const getTextRegex = /getText\s*\(\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]+)['"]\s*\)/g;
+                while ((match = getTextRegex.exec(clean)) !== null) {
+                    const key = match[1];
+                    const text = match[2];
+                    if (isTrueText(text) && !seenValues.has(text)) {
+                        seenValues.add(text);
+                        items.push({
+                            pos: match.index,
+                            item: {
+                                id: key,
+                                type: 'text',
+                                label: `KEY: ${key}`,
+                                value: text
+                            }
+                        });
+                    }
+                }
+
+                // 5. Array/Object labels
+                // matches basically any "Quoted String" that looks like natural language
+                const quotedRegex = /(['"])([A-ZƏÜÖĞIÇŞ\s]{4,}.*?)\1/g; // Start with uppercase, min 4 chars
+                while ((match = quotedRegex.exec(clean)) !== null) {
+                    const text = match[2];
+                    if (isTrueText(text) && !seenValues.has(text)) {
+                        seenValues.add(text);
+                        const slug = text.slice(0, 20).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                        items.push({
+                            pos: match.index,
+                            item: {
+                                id: `lbl-${slug}-${Math.floor(Math.random() * 1000)}`,
+                                type: 'text',
+                                label: text.slice(0, 30).toUpperCase() + (text.length > 30 ? '...' : ''),
                                 value: text
                             }
                         });
