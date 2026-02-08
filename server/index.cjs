@@ -421,6 +421,21 @@ app.get('/api/get-content', async (req, res) => {
     }
 });
 
+// API: Get Sitemap
+app.get('/api/sitemap', async (req, res) => {
+    try {
+        try {
+            await fsPromises.access(ADMIN_SITEMAP_PATH);
+        } catch {
+            return res.json([]);
+        }
+        const data = await fsPromises.readFile(ADMIN_SITEMAP_PATH, 'utf8');
+        res.json(JSON.parse(data));
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to read sitemap' });
+    }
+});
+
 // API: Get All Images
 app.get('/api/all-images', (req, res) => {
     try {

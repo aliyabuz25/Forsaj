@@ -17,7 +17,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const loadSitemap = async () => {
       try {
-        const response = await fetch(`/sitemap.json?v=${Date.now()}`);
+        const response = await fetch(`/api/sitemap?v=${Date.now()}`);
         if (!response.ok) {
           setSitemap([]);
           return;

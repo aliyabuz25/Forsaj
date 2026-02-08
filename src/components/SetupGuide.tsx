@@ -1,9 +1,26 @@
-import React from 'react';
-import { FileJson, FolderSync, BookOpen, Search, PlusCircle } from 'lucide-react';
+import { useState } from 'react';
+import { FileJson, FolderSync, BookOpen, Search, PlusCircle, Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import './SetupGuide.css';
 
 const SetupGuide: React.FC = () => {
-    console.log('SetupGuide component rendered');
+    const [isScanning, setIsScanning] = useState(false);
+
+    const startScan = async () => {
+        setIsScanning(true);
+        const tid = toast.loading('Front qovluğu skan edilir...');
+        try {
+            const res = await fetch('/api/extract-content', { method: 'POST' });
+            if (!res.ok) throw new Error('Skan xətası');
+            toast.success('Skan tamamlandı! Panel yenilənir...', { id: tid });
+            setTimeout(() => window.location.reload(), 1500);
+        } catch (err) {
+            toast.error('Skan uğursuz oldu!', { id: tid });
+        } finally {
+            setIsScanning(false);
+        }
+    };
+
     const steps = [
         {
             id: 1,
@@ -22,7 +39,7 @@ const SetupGuide: React.FC = () => {
         {
             id: 3,
             title: 'Kurs Panelini Tənzimləyin',
-            description: 'Tədris materialları, tələbə siyahısı və dərsləri idarəetmə panelinə əlavə edin.',
+            description: 'Tədris materialları, tələbə siyahısı ve dərsləri idarəetmə panelinə əlavə edin.',
             path: 'OctoPanel Courses',
             icon: BookOpen,
         }
@@ -65,7 +82,13 @@ const SetupGuide: React.FC = () => {
                         <Search size={32} />
                         <h4>Front Skaner</h4>
                         <p>/front qosulub. Skanlamağa hazırdır.</p>
-                        <button className="scan-btn">İndi Skan Et</button>
+                        <button
+                            className={`scan-btn ${isScanning ? 'loading' : ''}`}
+                            onClick={startScan}
+                            disabled={isScanning}
+                        >
+                            {isScanning ? <Loader2 className="animate-spin" /> : 'İndi Skan Et'}
+                        </button>
                     </div>
                 </div>
             </div>
