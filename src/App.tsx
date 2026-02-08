@@ -45,7 +45,7 @@ const App: React.FC = () => {
   const isSitemapEmpty = !sitemap || sitemap.length === 0;
 
   return (
-    <Router>
+    <Router basename={import.meta.env.PROD ? '/admin' : '/'}>
       <div className="app-container">
         <Toaster position="top-right" reverseOrder={false} />
         <Sidebar menuItems={sitemap} />
