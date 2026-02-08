@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import VisualEditor from './pages/VisualEditor';
 import FrontendSettings from './pages/FrontendSettings';
+import CoursesManager from './pages/CoursesManager';
 import SetupGuide from './components/SetupGuide';
 import { Toaster } from 'react-hot-toast';
 import type { SidebarItem } from './types/navigation';
@@ -58,6 +59,7 @@ const App: React.FC = () => {
                 <>
                   <Route path="/" element={<VisualEditor />} />
                   <Route path="/frontend-settings" element={<FrontendSettings />} />
+                  <Route path="/courses" element={<CoursesManager />} />
                   {/* Keep placeholder logic for any other path defined in future sitemaps */}
                   <Route path="*" element={<div className="fade-in"><h1>Səhifə tapılmadı</h1></div>} />
                 </>
