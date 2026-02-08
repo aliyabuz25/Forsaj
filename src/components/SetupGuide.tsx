@@ -1,0 +1,82 @@
+import React from 'react';
+import { FileJson, FolderSync, BookOpen, Search, PlusCircle } from 'lucide-react';
+import './SetupGuide.css';
+
+const SetupGuide: React.FC = () => {
+    console.log('SetupGuide component rendered');
+    const steps = [
+        {
+            id: 1,
+            title: 'Sitemap Faylını Yaradın',
+            description: 'public/sitemap.json faylına menyu strukturunuzu əlavə edin və ya front-dan gətirin.',
+            path: 'public/sitemap.json',
+            icon: FileJson,
+        },
+        {
+            id: 2,
+            title: 'Front Layihəsini Sinxronlaşdırın',
+            description: '/front qovluğundakı React layihəsini skan edərək bütün səhifələri menyuya çıxarın.',
+            path: '/front/src/pages',
+            icon: FolderSync,
+        },
+        {
+            id: 3,
+            title: 'Kurs Panelini Tənzimləyin',
+            description: 'Tədris materialları, tələbə siyahısı və dərsləri idarəetmə panelinə əlavə edin.',
+            path: 'OctoPanel Courses',
+            icon: BookOpen,
+        }
+    ];
+
+    return (
+        <div className="setup-guide">
+            <div className="setup-header">
+                <div className="setup-brand">
+                    <div className="octo-logo">🐙</div>
+                    <h2>OctoPanel Kurs İdarəetmə</h2>
+                </div>
+                <h1>Xoş Gəlmisiniz! Paneli Qurmağa Başlayaq</h1>
+                <p>Sizin kurs platformanız üçün premium admin paneli artıq hazırdır. Aşağıdakı addımları izləyərək front layihənizi adminlə birləşdirin.</p>
+            </div>
+
+            <div className="setup-grid">
+                <div className="steps-container">
+                    {steps.map((step) => (
+                        <div key={step.id} className="step-card">
+                            <div className="step-icon">
+                                <step.icon size={26} />
+                            </div>
+                            <div className="step-content">
+                                <h3>{step.title}</h3>
+                                <p>{step.description}</p>
+                                <span className="step-badge">{step.path}</span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="setup-sidebar-actions">
+                    <div className="action-card primary">
+                        <PlusCircle size={32} />
+                        <h4>Yeni Səhifə Əlavə Et</h4>
+                        <p>Dinamik olaraq yeni admin səhifəsi yaradın.</p>
+                    </div>
+                    <div className="action-card secondary">
+                        <Search size={32} />
+                        <h4>Front Skaner</h4>
+                        <p>/front qosulub. Skanlamağa hazırdır.</p>
+                        <button className="scan-btn">İndi Skan Et</button>
+                    </div>
+                </div>
+            </div>
+
+            <div className="setup-footer">
+                <div className="info-box">
+                    <strong>Məlumat:</strong> /front qovluğu aşkar edildi. Sitemap avtomatik generasiya olunduqda bu ekran Dashboard ilə əvəzlənəcək.
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default SetupGuide;

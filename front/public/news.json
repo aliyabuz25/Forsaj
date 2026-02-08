@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "title": "Yeni Offroad Mövsümü Başlayırm",
+    "date": "2024-03-20",
+    "img": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=2070&auto=format&fit=crop",
+    "description": "Yeni mövsümdə sizi daha maraqlı yarışlar və sınaqlar gözləyir. Bütün iştirakçıları hazır olmağa çağırırıq!",
+    "category": "XƏBƏRLƏR",
+    "status": "published"
+  },
+  {
+    "id": 2,
+    "title": "Forsaj Club Beynəlxalq Yarışdakk",
+    "date": "2024-04-15",
+    "img": "https://images.unsplash.com/photo-1547038577-da80abbc4f19?q=80&w=2055&auto=format&fit=crop",
+    "description": "Klubumuzun pilotları beynəlxalq dərəcəli offroad ralli yarışlarında iştirak etmək üçün dəvət alıblar.",
+    "category": "UĞURLARIMIZ",
+    "status": "draft"
+  }
+]

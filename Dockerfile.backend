@@ -1,0 +1,11 @@
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --production
+COPY server/ ./server/
+# We need front/public for the JSON files if they are not mounted
+COPY front/public/ ./front/public/
+EXPOSE 3001
+ENV PORT=3001
+ENV NODE_ENV=production
+CMD ["node", "server/index.cjs"]

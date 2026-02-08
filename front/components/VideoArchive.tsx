@@ -1,0 +1,100 @@
+import React, { useState } from 'react';
+import { PlayCircle, ArrowRight, X } from 'lucide-react';
+import { useSiteContent } from '../hooks/useSiteContent';
+
+interface VideoArchiveProps {
+  onViewChange: (view: any) => void;
+}
+
+const VideoArchive: React.FC<VideoArchiveProps> = ({ onViewChange }) => {
+  const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
+  const { getText } = useSiteContent('videoarchive');
+
+  const videos = [
+    { title: 'BAKU RALLY 2023', videoId: 'dQw4w9WgXcQ', img: 'https://images.unsplash.com/photo-1547038577-da80abbc4f19?grayscale' },
+    { title: 'QUSAR CHALLENGE', videoId: 'dQw4w9WgXcQ', img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?grayscale' },
+    { title: 'QOBUSTAN TROPHY', videoId: 'dQw4w9WgXcQ', img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?grayscale' },
+    { title: 'SHEKI TRAIL 2023', videoId: 'dQw4w9WgXcQ', img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?grayscale' },
+  ];
+
+  const VideoModal = () => {
+    if (!playingVideoId) return null;
+
+    return (
+      <div
+        className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-10 animate-in fade-in duration-300"
+        onClick={() => setPlayingVideoId(null)}
+      >
+        <div className="relative w-full max-w-5xl aspect-video bg-black border border-white/10 shadow-[0_0_100px_rgba(255,77,0,0.3)]">
+          <button
+            onClick={(e) => { e.stopPropagation(); setPlayingVideoId(null); }}
+            className="absolute -top-12 right-0 md:-right-12 text-white/50 hover:text-[#FF4D00] transition-colors"
+          >
+            <X size={40} strokeWidth={1.5} />
+          </button>
+
+          <iframe
+            className="w-full h-full"
+            src={`https://www.youtube.com/embed/${playingVideoId}?autoplay=1`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <section className="py-24 px-6 lg:px-20 bg-[#0A0A0A]">
+      <VideoModal />
+
+      <div className="flex justify-between items-end mb-12">
+        <div className="flex items-start gap-4">
+          <div className="w-2 h-16 bg-[#FF4D00] shadow-[0_0_15px_rgba(255,77,0,0.5)]"></div>
+          <div>
+            <h2 className="text-5xl md:text-7xl font-black italic tracking-tighter uppercase leading-none text-white">
+              {getText('SECTION_TITLE', 'VİDEO ARXİVİ')}
+            </h2>
+            <p className="text-[#FF4D00] font-black italic text-xs mt-2 uppercase tracking-[0.3em]">{getText('SECTION_SUBTITLE', 'Tarixi yarışların unudulmaz anları')}</p>
+          </div>
+        </div>
+        <button
+          onClick={() => onViewChange('gallery')}
+          className="bg-white/5 border border-white/10 text-white font-black italic text-xs px-10 py-4 rounded-sm transform -skew-x-12 flex items-center gap-2 hover:bg-[#FF4D00] hover:text-black transition-all shadow-md active:scale-95 group"
+        >
+          <span className="transform skew-x-12 flex items-center gap-2 uppercase tracking-widest">
+            {getText('VIEW_ALL_BTN', 'BÜTÜN QALEREYA')} <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </span>
+        </button>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {videos.map((video, idx) => (
+          <div
+            key={idx}
+            onClick={() => setPlayingVideoId(video.videoId)}
+            className="group relative aspect-[3/4] overflow-hidden bg-[#111] cursor-pointer shadow-2xl rounded-sm border border-white/5"
+          >
+            <img
+              src={video.img}
+              alt={video.title}
+              className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-40 group-hover:opacity-80 grayscale`}
+            />
+            <div className="absolute inset-0 bg-black/40 group-hover:bg-[#FF4D00]/10 transition-colors flex items-center justify-center">
+              <PlayCircle className="w-16 h-16 text-white opacity-40 group-hover:opacity-100 group-hover:text-[#FF4D00] transition-all transform group-hover:scale-110" strokeWidth={1} />
+            </div>
+            <div className="absolute bottom-8 left-6 right-6 text-center">
+              <h3 className="text-white font-black italic uppercase tracking-tighter text-lg md:text-2xl drop-shadow-2xl group-hover:text-[#FF4D00] transition-colors">
+                {video.title}
+              </h3>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+export default VideoArchive;
