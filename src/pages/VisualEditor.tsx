@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Type, Image as ImageIcon, Layout, Globe, Plus, Trash2, X, Search, Calendar, MapPin, FileText } from 'lucide-react';
+import { Save, Type, Image as ImageIcon, Layout, Globe, Plus, Trash2, X, Search, Calendar, MapPin, FileText, Trophy } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './VisualEditor.css';
 
@@ -45,6 +45,23 @@ interface NewsItem {
     description: string;
     category?: string;
     status: 'published' | 'draft';
+}
+
+interface DriverItem {
+    id: number;
+    rank: number;
+    name: string;
+    license: string;
+    team: string;
+    wins: number;
+    points: number;
+    img: string;
+}
+
+interface DriverCategory {
+    id: string;
+    name: string;
+    drivers: DriverItem[];
 }
 
 const BBCodeEditor: React.FC<{ value: string, onChange: (val: string) => void, id: string }> = ({ value, onChange, id }) => {
@@ -119,8 +136,6 @@ const VisualEditor: React.FC = () => {
     const [newSectionTitle, setNewSectionTitle] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Events Mode State
-    const [editorMode, setEditorMode] = useState<'pages' | 'events' | 'news'>('pages');
     const [events, setEvents] = useState<EventItem[]>([]);
     const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
     const [eventForm, setEventForm] = useState<Partial<EventItem>>({});
@@ -129,6 +144,13 @@ const VisualEditor: React.FC = () => {
     const [news, setNews] = useState<NewsItem[]>([]);
     const [selectedNewsId, setSelectedNewsId] = useState<number | null>(null);
     const [newsForm, setNewsForm] = useState<Partial<NewsItem>>({});
+
+    // Drivers Mode State
+    const [editorMode, setEditorMode] = useState<'pages' | 'events' | 'news' | 'drivers'>('pages');
+    const [driverCategories, setDriverCategories] = useState<DriverCategory[]>([]);
+    const [selectedCatId, setSelectedCatId] = useState<string | null>(null);
+    const [selectedDriverId, setSelectedDriverId] = useState<number | null>(null);
+    const [driverForm, setDriverForm] = useState<Partial<DriverItem>>({});
 
     const loadContent = () => {
         fetch(`/api/get-content?v=${Date.now()}`)
@@ -150,9 +172,9 @@ const VisualEditor: React.FC = () => {
             .then(data => {
                 if (Array.isArray(data)) {
                     setEvents(data);
-                    // Auto-select first event if nothing is selected
                     if (data.length > 0 && selectedEventId === null) {
-                        handleEventSelect(data[0].id);
+                        setSelectedEventId(data[0].id);
+                        setEventForm(data[0]);
                     }
                 }
             })
@@ -166,7 +188,6 @@ const VisualEditor: React.FC = () => {
             .then(data => {
                 if (Array.isArray(data)) {
                     setNews(data);
-                    // Auto-select first news item if nothing is selected
                     if (data.length > 0 && selectedNewsId === null) {
                         handleNewsSelect(data[0].id);
                     }
@@ -175,6 +196,18 @@ const VisualEditor: React.FC = () => {
             .catch((err) => {
                 console.error('news load fail:', err);
             });
+
+        fetch(`/api/drivers?v=${Date.now()}`)
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setDriverCategories(data);
+                    if (data.length > 0 && selectedCatId === null) {
+                        setSelectedCatId(data[0].id);
+                    }
+                }
+            })
+            .catch(() => { console.error('drivers load fail'); });
     };
 
     useEffect(() => {
@@ -394,7 +427,7 @@ const VisualEditor: React.FC = () => {
         const toastId = toast.loading('Yadda saxlanılır...');
         try {
             let endpoint = '/api/save-content';
-            let bodyData: PageContent[] | EventItem[] | NewsItem[] = pages;
+            let bodyData: PageContent[] | EventItem[] | NewsItem[] | DriverCategory[] = pages;
 
             if (editorMode === 'events') {
                 endpoint = '/api/events';
@@ -402,6 +435,9 @@ const VisualEditor: React.FC = () => {
             } else if (editorMode === 'news') {
                 endpoint = '/api/news';
                 bodyData = news;
+            } else if (editorMode === 'drivers') {
+                endpoint = '/api/drivers';
+                bodyData = driverCategories;
             }
 
             console.log(`Saving to ${endpoint}`, bodyData);
@@ -526,6 +562,152 @@ const VisualEditor: React.FC = () => {
         }
     };
 
+    // Drivers Handlers
+    const handleCatSelect = (id: string) => {
+        setSelectedCatId(id);
+        setSelectedDriverId(null);
+        setDriverForm({});
+    };
+
+    const handleDriverSelect = (id: number) => {
+        setSelectedDriverId(id);
+        const cat = driverCategories.find(c => c.id === selectedCatId);
+        const driver = cat?.drivers.find(d => d.id === id);
+        if (driver) {
+            setDriverForm({ ...driver });
+        }
+    };
+
+    const handleDriverChange = (field: keyof DriverItem, value: any) => {
+        if (!selectedCatId || !selectedDriverId) return;
+
+        // Update both form and master list
+        setDriverForm(prev => {
+            const updated = { ...prev, [field]: value } as DriverItem;
+
+            setDriverCategories(prevCats => prevCats.map(c => {
+                if (c.id === selectedCatId) {
+                    return {
+                        ...c,
+                        drivers: c.drivers.map(d => d.id === selectedDriverId ? updated : d)
+                    };
+                }
+                return c;
+            }));
+
+            return updated;
+        });
+    };
+
+    const addDriver = () => {
+        if (!selectedCatId) {
+            toast.error('Öncə kateqoriya seçin və ya yaradın');
+            return;
+        }
+        const newId = Date.now();
+        const newDriver: DriverItem = {
+            id: newId,
+            rank: 99,
+            name: 'Yeni Sürücü',
+            license: 'PILOT LICENSE',
+            team: 'TEAM NAME',
+            wins: 0,
+            points: 0,
+            img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&fit=crop'
+        };
+
+        setDriverCategories(prev => prev.map(c => {
+            if (c.id === selectedCatId) {
+                return { ...c, drivers: [...c.drivers, newDriver] };
+            }
+            return c;
+        }));
+
+        setSelectedDriverId(newId);
+        setDriverForm(newDriver);
+        toast.success('Yeni sürücü siyahıya əlavə edildi');
+    };
+
+    const deleteDriver = (id: number) => {
+        if (window.confirm('Bu sürücünü silmək istədiyinizə əminsiniz?')) {
+            setDriverCategories(prev => prev.map(c => {
+                if (c.id === selectedCatId) {
+                    return { ...c, drivers: c.drivers.filter(d => d.id !== id) };
+                }
+                return c;
+            }));
+            if (selectedDriverId === id) {
+                setSelectedDriverId(null);
+                setDriverForm({});
+            }
+            toast.success('Sürücü silindi');
+        }
+    };
+
+    const handleDriverSave = async () => {
+        // Ensure master list is up to date one last time just in case
+        const currentForm = driverForm as DriverItem;
+        const updatedCats = driverCategories.map(c => {
+            if (c.id === selectedCatId) {
+                return {
+                    ...c,
+                    drivers: c.drivers.map(d => d.id === selectedDriverId ? { ...d, ...currentForm } as DriverItem : d)
+                };
+            }
+            return c;
+        });
+
+        setIsSaving(true);
+        const tid = toast.loading('Yadda saxlanılır...');
+        try {
+            const res = await fetch('/api/drivers', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedCats)
+            });
+            if (!res.ok) throw new Error('Save failed');
+            setDriverCategories(updatedCats);
+            toast.success('Bütün sürücü məlumatları qeyd edildi', { id: tid });
+        } catch (err) {
+            toast.error('Xəta baş verdi', { id: tid });
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const addCategory = () => {
+        const name = window.prompt('Kateqoriya adı (Məs: UNLIMITED CLASS):');
+        if (!name) return;
+        const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        if (driverCategories.find(c => c.id === id)) {
+            toast.error('Bu adda kateqoriya artıq mövcuddur');
+            return;
+        }
+        const newCat: DriverCategory = { id, name, drivers: [] };
+        setDriverCategories([...driverCategories, newCat]);
+        setSelectedCatId(id);
+        toast.success('Kateqoriya əlavə edildi');
+    };
+
+    const deleteCategory = () => {
+        if (!selectedCatId) return;
+        const cat = driverCategories.find(c => c.id === selectedCatId);
+        if (!cat) return;
+
+        if (window.confirm(`"${cat.name}" kateqoriyasını və içindəki bütün sürücüləri silmək istədiyinizə əminsiniz?`)) {
+            const newCats = driverCategories.filter(c => c.id !== selectedCatId);
+            setDriverCategories(newCats);
+            if (newCats.length > 0) {
+                setSelectedCatId(newCats[0].id);
+            } else {
+                setSelectedCatId(null);
+            }
+            setSelectedDriverId(null);
+            setDriverForm({});
+            toast.success('Kateqoriya silindi');
+        }
+    };
+
     if (pages.length === 0 && !isExtracting && !localStorage.getItem('octo_extracted')) {
         return (
             <div className="extractor-overlay">
@@ -608,6 +790,13 @@ const VisualEditor: React.FC = () => {
                                 style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: editorMode === 'news' ? 'var(--primary)' : '#eee', color: editorMode === 'news' ? '#fff' : '#666', fontWeight: 'bold', cursor: 'pointer' }}
                             >
                                 Xəbərlər
+                            </button>
+                            <button
+                                className={`mode-btn ${editorMode === 'drivers' ? 'active' : ''}`}
+                                onClick={() => setEditorMode('drivers')}
+                                style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: editorMode === 'drivers' ? 'var(--primary)' : '#eee', color: editorMode === 'drivers' ? '#fff' : '#666', fontWeight: 'bold', cursor: 'pointer' }}
+                            >
+                                Sürücülər
                             </button>
                         </div>
                     </div>
@@ -1010,6 +1199,190 @@ const VisualEditor: React.FC = () => {
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#94a3b8', flexDirection: 'column', gap: '1rem' }}>
                                 <Calendar size={48} style={{ opacity: 0.2 }} />
                                 <p>Redaktə etmək üçün sol tərəfdən tədbir seçin və ya yeni yaradın.</p>
+                            </div>
+                        )}
+                    </main>
+                </div>
+            ) : editorMode === 'drivers' ? (
+                <div className="editor-layout">
+                    <aside className="page-list">
+                        <div className="list-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                            <h3>Kateqoriyalar</h3>
+                            <div style={{ display: 'flex', gap: '4px' }}>
+                                <button className="add-section-btn" onClick={addCategory} title="Kateqoriya əlavə et">
+                                    <Plus size={16} />
+                                </button>
+                                <button className="delete-section-btn" onClick={deleteCategory} title="Seçilmiş kateqoriyanı sil" style={{ background: 'none', border: 'none', color: '#ff4d4f', cursor: 'pointer', padding: '4px' }}>
+                                    <Trash2 size={16} />
+                                </button>
+                            </div>
+                        </div>
+                        <select
+                            value={selectedCatId || ''}
+                            onChange={(e) => handleCatSelect(e.target.value)}
+                            style={{ width: '100%', padding: '10px', marginBottom: '1.5rem', borderRadius: '8px', border: '1px solid #e2e8f0', background: 'white', fontWeight: 'bold' }}
+                        >
+                            {driverCategories.map(cat => (
+                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                            ))}
+                        </select>
+
+                        <div className="list-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                            <h3>Sürücülər</h3>
+                            <button className="add-section-btn" onClick={addDriver}>
+                                <Plus size={16} />
+                            </button>
+                        </div>
+                        <div style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 400px)' }}>
+                            {selectedCatId && driverCategories.find(c => c.id === selectedCatId)?.drivers.length === 0 ? (
+                                <div style={{ padding: '2rem 1rem', textAlign: 'center', color: '#94a3b8', fontSize: '0.875rem' }}>
+                                    Bu kateqoriyada sürücü yoxdur.
+                                </div>
+                            ) : (
+                                driverCategories.find(c => c.id === selectedCatId)?.drivers.map((d) => (
+                                    <div key={d.id} className="page-nav-wrapper" style={{ position: 'relative', marginBottom: '4px' }}>
+                                        <button
+                                            className={`page-nav-item ${selectedDriverId === d.id ? 'active' : ''}`}
+                                            onClick={() => handleDriverSelect(d.id)}
+                                            style={{ width: '100%', paddingRight: '40px', textAlign: 'left' }}
+                                        >
+                                            <span style={{ fontWeight: '900', color: 'var(--primary)', marginRight: '8px' }}>#{d.rank}</span> {d.name}
+                                        </button>
+                                        <button
+                                            className="delete-section-btn"
+                                            onClick={(e) => { e.stopPropagation(); deleteDriver(d.id); }}
+                                            style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#ff4d4f', opacity: 0.5, cursor: 'pointer' }}
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </aside>
+
+                    <main className="editor-canvas" style={{ padding: '0' }}>
+                        {selectedDriverId !== null && driverForm.id !== undefined ? (
+                            <div style={{ padding: '2rem', height: '100%', overflowY: 'auto' }}>
+                                <div className="canvas-header" style={{ marginBottom: '2rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
+                                    <h2 style={{ fontSize: '2rem' }}>{driverForm.name}</h2>
+                                    <p style={{ color: '#64748b' }}>{driverCategories.find(c => c.id === selectedCatId)?.name} // RANK #{driverForm.rank}</p>
+                                </div>
+
+                                <div className="edit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                                    <div className="form-group">
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>AD SOYAD</label>
+                                        <input
+                                            type="text"
+                                            value={driverForm.name}
+                                            onChange={(e) => handleDriverChange('name', e.target.value)}
+                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>SIRA (RANK)</label>
+                                        <input
+                                            type="number"
+                                            value={driverForm.rank}
+                                            onChange={(e) => handleDriverChange('rank', parseInt(e.target.value))}
+                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '16px' }}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>LİSENZİYA</label>
+                                        <input
+                                            type="text"
+                                            value={driverForm.license}
+                                            onChange={(e) => handleDriverChange('license', e.target.value)}
+                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px' }}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>KOMANDA (TEAM)</label>
+                                        <input
+                                            type="text"
+                                            value={driverForm.team}
+                                            onChange={(e) => handleDriverChange('team', e.target.value)}
+                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px' }}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>QALİBİYYƏT (WINS)</label>
+                                        <input
+                                            type="number"
+                                            value={driverForm.wins}
+                                            onChange={(e) => handleDriverChange('wins', parseInt(e.target.value))}
+                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px' }}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>XAL (POINTS)</label>
+                                        <input
+                                            type="number"
+                                            value={driverForm.points}
+                                            onChange={(e) => handleDriverChange('points', parseInt(e.target.value))}
+                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px' }}
+                                        />
+                                    </div>
+
+                                    <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>PİLOT ŞƏKLİ</label>
+                                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                            <div style={{ width: '80px', height: '80px', borderRadius: '50%', overflow: 'hidden', background: '#f1f5f9', border: '2px solid var(--primary)' }}>
+                                                {driverForm.img ? (
+                                                    <img src={driverForm.img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                ) : (
+                                                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                        <ImageIcon size={24} style={{ opacity: 0.2 }} />
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div style={{ flex: 1, display: 'flex', gap: '0.5rem' }}>
+                                                <input
+                                                    type="text"
+                                                    value={driverForm.img || ''}
+                                                    onChange={(e) => handleDriverChange('img', e.target.value)}
+                                                    placeholder="Şəkil URL və ya yol..."
+                                                    style={{ flex: 1, padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px' }}
+                                                />
+                                                <input
+                                                    type="file"
+                                                    id="driver-img-upload"
+                                                    style={{ display: 'none' }}
+                                                    accept="image/*"
+                                                    onChange={async (e) => {
+                                                        const file = e.target.files?.[0];
+                                                        if (file) {
+                                                            const url = await uploadImage(file);
+                                                            if (url) handleDriverChange('img', url);
+                                                        }
+                                                    }}
+                                                />
+                                                <button
+                                                    onClick={() => document.getElementById('driver-img-upload')?.click()}
+                                                    style={{ background: '#f1f5f9', border: '1px solid #e2e8f0', padding: '12px', borderRadius: '8px', cursor: 'pointer' }}
+                                                >
+                                                    Yüklə
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
+                                    <button className="btn-primary" onClick={handleDriverSave} disabled={isSaving}>
+                                        {isSaving ? 'Gözləyin...' : 'Sürücünü Yadda Saxla'}
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#94a3b8', flexDirection: 'column', gap: '1rem' }}>
+                                <Trophy size={48} style={{ opacity: 0.2 }} />
+                                <p>Redaktə etmək üçün sol tərəfdən sürücü seçin.</p>
                             </div>
                         )}
                     </main>

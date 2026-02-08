@@ -20,40 +20,40 @@ interface Category {
   fullStandings: Driver[];
 }
 
-const generateMockDrivers = (categoryName: string): Driver[] => [
-  { id: 1, rank: 1, name: 'RAMİL HÜSEYNOV', license: `PILOT LICENSE // ${categoryName}`, team: 'BAKU BULLS', wins: 12, points: 450, img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&fit=crop' },
-  { id: 2, rank: 2, name: 'SƏİD MƏMMƏDOV', license: `PILOT LICENSE // ${categoryName}`, team: 'GANJA GEARS', wins: 11, points: 420, img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&fit=crop' },
-  { id: 3, rank: 3, name: 'LEYLA QASIMOVA', license: `PILOT LICENSE // ${categoryName}`, team: 'SİLK ROAD', wins: 4, points: 380, img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=400&fit=crop' },
-  { id: 4, rank: 4, name: 'TURAL ƏLİYEV', license: 'LICENSE // ACTIVE', team: 'CASPIAN RAIDERS', wins: 2, points: 310, img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&fit=crop' },
-  { id: 5, rank: 5, name: 'AYXAN BABAYEV', license: 'LICENSE // ACTIVE', team: 'OFFROAD AZ', wins: 1, points: 290, img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&fit=crop' },
-  { id: 6, rank: 6, name: 'EMİL DADAŞOV', license: 'LICENSE // ACTIVE', team: 'DESERT FOXES', wins: 0, points: 250, img: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=400&fit=crop' },
-  { id: 7, rank: 7, name: 'ORXAN RƏSULOV', license: 'LICENSE // ACTIVE', team: 'MOUNTAIN KINGS', wins: 0, points: 210, img: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=400&fit=crop' },
-  { id: 8, rank: 8, name: 'VÜSAL HƏSƏNOV', license: 'LICENSE // ACTIVE', team: 'MUD HUNTERS', wins: 0, points: 180, img: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=400&fit=crop' },
-  { id: 9, rank: 9, name: 'KAMRAN ƏZİZOV', license: 'LICENSE // ACTIVE', team: 'BAKU BULLS', wins: 0, points: 150, img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&fit=crop' },
-  { id: 10, rank: 10, name: 'ZAMİR QULİYEV', license: 'LICENSE // ACTIVE', team: 'FIRE RIDERS', wins: 0, points: 120, img: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=400&fit=crop' },
-];
-
-const categories: Category[] = [
-  { id: 'unlimited', name: 'UNLIMITED CLASS', leaders: generateMockDrivers('UNLIMITED').slice(0, 3), fullStandings: generateMockDrivers('UNLIMITED') },
-  { id: 'legend', name: 'LEGEND CLASS', leaders: generateMockDrivers('LEGEND').slice(0, 3), fullStandings: generateMockDrivers('LEGEND') },
-  { id: 'semistock', name: 'SEMI STOCK CLASS', leaders: generateMockDrivers('SEMI STOCK').slice(0, 3), fullStandings: generateMockDrivers('SEMI STOCK') },
-  { id: 'utv', name: 'UTV CLASS', leaders: generateMockDrivers('UTV').slice(0, 3), fullStandings: generateMockDrivers('UTV') },
-];
 
 interface DriversPageProps {
   initialCategoryId?: string | null;
 }
 
 const DriversPage: React.FC<DriversPageProps> = ({ initialCategoryId }) => {
+  const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const { getText } = useSiteContent('driverspage');
 
   useEffect(() => {
-    if (initialCategoryId) {
-      const cat = categories.find(c => c.id === initialCategoryId);
-      if (cat) setSelectedCategory(cat);
-    }
+    fetch('/api/drivers')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const mappedCats = data.map((c: any) => ({
+            id: c.id,
+            name: c.name,
+            leaders: c.drivers.slice(0, 3), // Top 3
+            fullStandings: c.drivers.sort((a: any, b: any) => a.rank - b.rank)
+          }));
+          setCategories(mappedCats);
+
+          if (initialCategoryId) {
+            const cat = mappedCats.find(c => c.id === initialCategoryId);
+            if (cat) setSelectedCategory(cat);
+          }
+        }
+      });
   }, [initialCategoryId]);
+
+  if (!selectedCategory && categories.length > 0 && !initialCategoryId) {
+    // If we are at the categories view, but a category was provided via prop, handled in useEffect
+  }
 
   if (selectedCategory) {
     return (

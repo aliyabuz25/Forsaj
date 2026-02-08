@@ -10,11 +10,11 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0',
       proxy: {
         '/api': {
-          target: 'http://localhost:3001',
+          target: 'http://forsaj-backend:3001',
           changeOrigin: true,
         },
         '/uploads': {
-          target: 'http://localhost:3001',
+          target: 'http://forsaj-backend:3001',
           changeOrigin: true,
         }
       }

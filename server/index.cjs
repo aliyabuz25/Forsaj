@@ -129,7 +129,6 @@ app.get('/api/news', async (req, res) => {
         res.status(500).json({ error: 'Failed to read news' });
     }
 });
-
 // API: Save News
 app.post('/api/news', async (req, res) => {
     try {
@@ -139,6 +138,36 @@ app.post('/api/news', async (req, res) => {
     } catch (error) {
         console.error('Error saving news:', error);
         res.status(500).json({ error: 'Failed to save news' });
+    }
+});
+
+const DRIVERS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'drivers.json');
+
+// API: Get Drivers
+app.get('/api/drivers', async (req, res) => {
+    try {
+        try {
+            await fsPromises.access(DRIVERS_FILE_PATH);
+        } catch {
+            return res.json([]);
+        }
+        const data = await fsPromises.readFile(DRIVERS_FILE_PATH, 'utf8');
+        res.json(JSON.parse(data));
+    } catch (error) {
+        console.error('Error reading drivers:', error);
+        res.status(500).json({ error: 'Failed to read drivers' });
+    }
+});
+
+// API: Save Drivers
+app.post('/api/drivers', async (req, res) => {
+    try {
+        const drivers = req.body;
+        await fsPromises.writeFile(DRIVERS_FILE_PATH, JSON.stringify(drivers, null, 2));
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error saving drivers:', error);
+        res.status(500).json({ error: 'Failed to save drivers' });
     }
 });
 

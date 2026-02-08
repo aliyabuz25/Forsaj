@@ -8,13 +8,28 @@ interface CategoryLeadersProps {
 
 const CategoryLeaders: React.FC<CategoryLeadersProps> = ({ onViewChange }) => {
   const { getText } = useSiteContent('categoryleaders');
+  const [leaders, setLeaders] = React.useState<any[]>([]);
 
-  const leaders = [
-    { id: 'unlimited', title: 'UNLIMITED LİDER', name: 'RAMİL HÜSEYNOV', team: 'BAKU BULLS', score: 450, img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?grayscale' },
-    { id: 'legend', title: 'LEGEND LİDER', name: 'SƏİD MƏMMƏDOV', team: 'GANJA GEARS', score: 420, img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?grayscale' },
-    { id: 'semistock', title: 'SEMI STOCK LİDER', name: 'ELENA PETROVA', team: 'MUD WARRIORS', score: 380, img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?grayscale' },
-    { id: 'utv', title: 'UTV LİDER', name: 'TURAL ƏLİYEV', team: 'CASPIAN RAIDERS', score: 390, img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?grayscale' },
-  ];
+  React.useEffect(() => {
+    fetch('/api/drivers')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const topLeaders = data.map(cat => {
+            const topDriver = cat.drivers.sort((a: any, b: any) => a.rank - b.rank)[0];
+            return {
+              id: cat.id,
+              title: `${cat.name} LİDERİ`,
+              name: topDriver?.name || '---',
+              team: topDriver?.team || '---',
+              score: topDriver?.points || 0,
+              img: topDriver?.img || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?grayscale'
+            };
+          });
+          setLeaders(topLeaders);
+        }
+      });
+  }, []);
 
   return (
     <section className="py-24 px-6 lg:px-20 bg-[#0A0A0A]">

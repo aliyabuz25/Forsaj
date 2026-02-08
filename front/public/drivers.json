@@ -1,0 +1,28 @@
+[
+  {
+    "id": "test",
+    "name": "TEST",
+    "drivers": [
+      {
+        "id": 1770547917109,
+        "rank": 99,
+        "name": "Yeni Sürücü",
+        "license": "PILOT LICENSE",
+        "team": "TEAM NAME",
+        "wins": 0,
+        "points": 0,
+        "img": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&fit=crop"
+      },
+      {
+        "id": 1770547937505,
+        "rank": 23,
+        "name": "ALI DEV",
+        "license": "PILOT LICENSE",
+        "team": "AZ",
+        "wins": 3,
+        "points": 300,
+        "img": "/uploads/1770547955419-477388235.jpeg"
+      }
+    ]
+  }
+]
