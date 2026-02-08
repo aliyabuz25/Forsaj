@@ -1,6 +1,5 @@
 services:
   forsaj-backend:
-    image: forsaj-backend:latest
     build:
       context: .
       dockerfile: Dockerfile.backend
@@ -23,7 +22,6 @@ services:
       - 'traefik.http.services.forsaj-api.loadbalancer.server.port=3001'
 
   forsaj-frontend:
-    image: forsaj-frontend:latest
     build:
       context: .
       dockerfile: Dockerfile.frontend
@@ -38,7 +36,6 @@ services:
       - 'traefik.http.services.forsaj.loadbalancer.server.port=80'
 
   forsaj-admin:
-    image: forsaj-admin:latest
     build:
       context: .
       dockerfile: Dockerfile.admin
