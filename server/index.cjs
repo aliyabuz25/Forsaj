@@ -29,6 +29,8 @@ app.use((req, res, next) => {
 // Path to the front project's public directory
 const FRONT_PUBLIC_DIR = process.env.PUBLIC_DIR || path.join(__dirname, '../front/public');
 const SITE_CONTENT_PATH = path.join(FRONT_PUBLIC_DIR, 'site-content.json');
+const ADMIN_PUBLIC_DIR = path.join(__dirname, '../public');
+const ADMIN_SITEMAP_PATH = path.join(ADMIN_PUBLIC_DIR, 'sitemap.json');
 
 app.get('/', (req, res) => {
     res.send('Admin Backend is running!');
@@ -299,6 +301,51 @@ app.post('/api/extract-content', async (req, res) => {
         const newContent = Array.from(pagesMap.values());
         await fsPromises.writeFile(SITE_CONTENT_PATH, JSON.stringify(newContent, null, 2));
 
+        // GENERATE SITEMAP
+        const sitemap = [
+            {
+                title: 'Sayt Redaktoru',
+                icon: 'Globe',
+                path: '/'
+            },
+            {
+                title: 'Xəbər İdarəetmə',
+                icon: 'FileText',
+                path: '/?mode=news'
+            },
+            {
+                title: 'Tədbir Təqvimi',
+                icon: 'Calendar',
+                path: '/?mode=events'
+            },
+            {
+                title: 'Sürücü Reytinqi',
+                icon: 'Trophy',
+                path: '/?mode=drivers'
+            },
+            {
+                title: 'Komponentlər',
+                icon: 'Layers',
+                children: newContent.map(p => ({
+                    title: p.title,
+                    path: `/?page=${p.id}`,
+                    icon: 'Layout'
+                }))
+            },
+            {
+                title: 'Frontend Ayarları',
+                icon: 'Settings',
+                path: '/frontend-settings'
+            }
+        ];
+
+        try {
+            await fsPromises.writeFile(ADMIN_SITEMAP_PATH, JSON.stringify(sitemap, null, 2));
+            console.log('Sitemap generated successfully.');
+        } catch (err) {
+            console.error('Failed to write sitemap:', err);
+        }
+
         const stats = {
             total: newContent.length,
             sections: newContent.reduce((acc, p) => acc + p.sections.length, 0),
@@ -310,7 +357,8 @@ app.post('/api/extract-content', async (req, res) => {
         // Return structured data with stats
         res.json({
             pages: newContent,
-            stats: stats
+            stats: stats,
+            sitemap: sitemap
         });
 
     } catch (error) {

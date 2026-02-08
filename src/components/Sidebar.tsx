@@ -28,13 +28,23 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
     const renderMenuItem = (item: SidebarItem) => {
         const hasChildren = item.children && item.children.length > 0;
         const isExpanded = expandedItems[item.title];
-        const isActive = location.pathname === item.path || (hasChildren && item.children?.some(child => location.pathname === child.path));
+
+        // Better active check including query params
+        const isCurrentActive = (path?: string) => {
+            if (!path) return false;
+            if (path.includes('?')) {
+                return (location.pathname + location.search) === path;
+            }
+            return location.pathname === path;
+        };
+
+        const isActive = isCurrentActive(item.path) || (hasChildren && item.children?.some(child => isCurrentActive(child.path)));
 
         if (hasChildren) {
             return (
                 <li key={item.title} className={`sidebar-item ${isActive ? 'active' : ''}`}>
                     <div
-                        className={`sidebar-link has-children ${isExpanded ? 'expanded' : ''}`}
+                        className={`sidebar-link has-children ${isExpanded ? 'active expanded' : ''}`}
                         onClick={() => toggleExpand(item.title)}
                     >
                         {item.icon && <IconComponent name={item.icon} className="sidebar-icon" />}
@@ -46,7 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
                             <li key={child.title} className="sidebar-submenu-item">
                                 <NavLink
                                     to={child.path || '#'}
-                                    className={({ isActive }) => `sidebar-submenu-link ${isActive ? 'active' : ''}`}
+                                    className={() => `sidebar-submenu-link ${isCurrentActive(child.path) ? 'active' : ''}`}
                                 >
                                     <LucideIcons.Circle size={8} className="submenu-dot" />
                                     <span>{child.title}</span>
@@ -62,7 +72,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
             <li key={item.title} className="sidebar-item">
                 <NavLink
                     to={item.path || '#'}
-                    className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+                    className={() => `sidebar-link ${isCurrentActive(item.path) ? 'active' : ''}`}
                 >
                     {item.icon && <IconComponent name={item.icon} className="sidebar-icon" />}
                     <span className="sidebar-text">{item.title}</span>

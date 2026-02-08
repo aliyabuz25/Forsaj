@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Type, Image as ImageIcon, Layout, Globe, Plus, Trash2, X, Search, Calendar, MapPin, FileText, Trophy } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { Save, Type, Image as ImageIcon, Layout, Globe, Plus, Trash2, X, Search, Calendar, MapPin, FileText, Trophy, RotateCcw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './VisualEditor.css';
 
@@ -140,6 +141,8 @@ const VisualEditor: React.FC = () => {
     const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
     const [eventForm, setEventForm] = useState<Partial<EventItem>>({});
 
+    const location = useLocation();
+
     // News Mode State
     const [news, setNews] = useState<NewsItem[]>([]);
     const [selectedNewsId, setSelectedNewsId] = useState<number | null>(null);
@@ -221,7 +224,22 @@ const VisualEditor: React.FC = () => {
                 if (pages.length === 0) startExtraction();
             }, 1000);
         }
-    }, [pages.length, editorMode]);
+    }, [pages.length]); // Removed editorMode from deps to avoid loop if we sync params
+
+    // Sync URL params to state
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const modeParam = queryParams.get('mode');
+        const pageParam = queryParams.get('page');
+
+        if (modeParam && ['pages', 'events', 'news', 'drivers'].includes(modeParam)) {
+            setEditorMode(modeParam as any);
+        } else if (pageParam) {
+            setEditorMode('pages');
+            const idx = pages.findIndex(p => p.id === pageParam);
+            if (idx !== -1) setSelectedPageIndex(idx);
+        }
+    }, [location.search, pages]);
 
     const startExtraction = async () => {
         setIsExtracting(true);
@@ -258,9 +276,12 @@ const VisualEditor: React.FC = () => {
                 localStorage.setItem('octo_extracted', 'true');
 
                 const stats = data.stats || { total: Array.isArray(data) ? data.length : 0 };
-                const msg = `Sinxronizasiya tamamlandı! ${stats.total || 0} səhifə yeniləndi.`;
+                const msg = `Sinxronizasiya tamamlandı! ${stats.total || 0} səhifə yeniləndi. Səhifə yenilənir...`;
 
                 toast.success(msg, { id: toastId });
+
+                // Reload to refresh sitemap in Sidebar
+                setTimeout(() => window.location.reload(), 1500);
             }, 500);
 
         } catch (error) {
@@ -800,13 +821,32 @@ const VisualEditor: React.FC = () => {
                             </button>
                         </div>
                     </div>
-                    <button
-                        className={`save-btn ${isSaving ? 'saving' : ''}`}
-                        onClick={saveChanges}
-                        disabled={isSaving}
-                    >
-                        {isSaving ? 'Gözləyin...' : <><Save size={18} /> Yenilə</>}
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                        <button
+                            className="sync-btn"
+                            onClick={() => window.location.reload()}
+                            style={{ background: '#f8fafc', border: '1px solid #e2e8f0', color: '#64748b', padding: '10px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                            title="Səhifəni yenilə"
+                        >
+                            <RotateCcw size={18} />
+                        </button>
+                        <button
+                            className="sync-btn"
+                            onClick={startExtraction}
+                            disabled={isExtracting}
+                            style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '10px 16px', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', cursor: 'pointer' }}
+                        >
+                            <RotateCcw size={18} className={isExtracting ? 'spin' : ''} />
+                            {isExtracting ? 'Sinxronlaşdırılır...' : 'Sinxron Et'}
+                        </button>
+                        <button
+                            className={`save-btn ${isSaving ? 'saving' : ''}`}
+                            onClick={saveChanges}
+                            disabled={isSaving}
+                        >
+                            {isSaving ? 'Gözləyin...' : <><Save size={18} /> Yenilə</>}
+                        </button>
+                    </div>
                 </div>
 
                 <div style={{ position: 'relative' }}>

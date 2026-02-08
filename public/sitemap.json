@@ -1,12 +1,93 @@
 [
-    {
-        "title": "Sayt Redaktoru",
-        "icon": "Globe",
-        "path": "/"
-    },
-    {
-        "title": "Frontend Ayarları",
-        "icon": "Settings",
-        "path": "/frontend-settings"
-    }
+  {
+    "title": "Sayt Redaktoru",
+    "icon": "Globe",
+    "path": "/"
+  },
+  {
+    "title": "Xəbər İdarəetmə",
+    "icon": "FileText",
+    "path": "/?mode=news"
+  },
+  {
+    "title": "Tədbir Təqvimi",
+    "icon": "Calendar",
+    "path": "/?mode=events"
+  },
+  {
+    "title": "Sürücü Reytinqi",
+    "icon": "Trophy",
+    "path": "/?mode=drivers"
+  },
+  {
+    "title": "Komponentlər",
+    "icon": "Layers",
+    "children": [
+      {
+        "title": "About",
+        "path": "/?page=about",
+        "icon": "Layout"
+      },
+      {
+        "title": "Contact Page",
+        "path": "/?page=contactpage",
+        "icon": "Layout"
+      },
+      {
+        "title": "Events Page",
+        "path": "/?page=eventspage",
+        "icon": "Layout"
+      },
+      {
+        "title": "Footer",
+        "path": "/?page=footer",
+        "icon": "Layout"
+      },
+      {
+        "title": "Gallery Page",
+        "path": "/?page=gallerypage",
+        "icon": "Layout"
+      },
+      {
+        "title": "Navbar",
+        "path": "/?page=navbar",
+        "icon": "Layout"
+      },
+      {
+        "title": "News",
+        "path": "/?page=news",
+        "icon": "Layout"
+      },
+      {
+        "title": "News Page",
+        "path": "/?page=newspage",
+        "icon": "Layout"
+      },
+      {
+        "title": "Next Race",
+        "path": "/?page=nextrace",
+        "icon": "Layout"
+      },
+      {
+        "title": "Partners",
+        "path": "/?page=partners",
+        "icon": "Layout"
+      },
+      {
+        "title": "Video Archive",
+        "path": "/?page=videoarchive",
+        "icon": "Layout"
+      },
+      {
+        "title": "What Is Offroad",
+        "path": "/?page=whatisoffroad",
+        "icon": "Layout"
+      }
+    ]
+  },
+  {
+    "title": "Frontend Ayarları",
+    "icon": "Settings",
+    "path": "/frontend-settings"
+  }
 ]
