@@ -129,8 +129,8 @@ app.get('/api', async (req, res) => {
         port: PORT,
         userCount: users.length,
         database: fileInfo,
-        supabaseConnected: !!supabaseUrl,
-        adminEnabled: !!supabaseAdmin,
+        supabaseConnected: false,
+        adminEnabled: true,
         message: 'Forsaj API is fully operational'
     });
 });

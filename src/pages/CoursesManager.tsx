@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabaseClient';
 import { BookOpen, Plus, Trash2, Edit, Users, Video, FileText, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './CoursesManager.css';
@@ -38,14 +37,15 @@ const CoursesManager: React.FC = () => {
 
     const loadCourses = async () => {
         try {
-            const { data, error } = await supabase
-                .from('courses')
-                .select('*')
-                .order('created_at', { ascending: false });
+            const token = localStorage.getItem('forsaj_admin_token');
+            const response = await fetch('/api/courses', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
 
-            if (error) throw error;
-
-            if (data) {
+            if (Array.isArray(data)) {
                 // Map DB names to interface names if different
                 const mappedData = data.map(item => ({
                     ...item,
@@ -67,10 +67,11 @@ const CoursesManager: React.FC = () => {
     const saveCourses = async () => {
         try {
             const toastId = toast.loading('Yadda saxlanılır...');
+            const token = localStorage.getItem('forsaj_admin_token');
 
             // Format data for DB
             const dataToSave = courses.map(c => ({
-                id: typeof c.id === 'number' ? undefined : c.id, // Let DB generate UUID for new items
+                id: c.id,
                 title: c.title,
                 description: c.description,
                 instructor: c.instructor,
@@ -80,14 +81,19 @@ const CoursesManager: React.FC = () => {
                 lessons: c.lessons
             }));
 
-            const { error } = await supabase
-                .from('courses')
-                .upsert(dataToSave);
+            const response = await fetch('/api/courses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(dataToSave)
+            });
 
-            if (error) throw error;
+            if (!response.ok) throw new Error('Save failed');
 
             toast.success('Kurslar yadda saxlanıldı!', { id: toastId });
-            await loadCourses(); // Refresh to get proper UUIDs
+            await loadCourses();
         } catch (error: any) {
             toast.error(`Saxlama xətası: ${error.message}`);
         }
