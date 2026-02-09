@@ -8,7 +8,6 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
-    const [isSetupNeeded, setIsSetupNeeded] = useState(false);
     const [isLoginMode, setIsLoginMode] = useState(true);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -21,7 +20,6 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 const response = await fetch('/api/check-setup');
                 const data = await response.json();
                 if (data.needsSetup) {
-                    setIsSetupNeeded(true);
                     setIsLoginMode(false);
                 }
             } catch (err) {
