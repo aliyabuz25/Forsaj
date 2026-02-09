@@ -43,7 +43,7 @@ const DriversPage: React.FC<DriversPageProps> = ({ initialCategoryId }) => {
             const drivers = Array.isArray(c.drivers) ? c.drivers : [];
             return {
               id: c.id,
-              name: c.category_name,
+              name: c.name,
               leaders: drivers.slice(0, 3), // Top 3
               fullStandings: [...drivers].sort((a: any, b: any) => a.rank - b.rank)
             };

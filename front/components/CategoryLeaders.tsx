@@ -25,7 +25,7 @@ const CategoryLeaders: React.FC<CategoryLeadersProps> = ({ onViewChange }) => {
             const topDriver = [...drivers].sort((a: any, b: any) => a.rank - b.rank)[0];
             return {
               id: cat.id,
-              title: `${cat.category_name} LİDERİ`,
+              title: `${cat.name} LİDERİ`,
               name: topDriver?.name || '---',
               team: topDriver?.team || '---',
               score: topDriver?.points || 0,
