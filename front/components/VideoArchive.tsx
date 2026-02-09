@@ -8,14 +8,15 @@ interface VideoArchiveProps {
 
 const VideoArchive: React.FC<VideoArchiveProps> = ({ onViewChange }) => {
   const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
+  const [videos, setVideos] = React.useState<any[]>([]);
   const { getText } = useSiteContent('videoarchive');
 
-  const videos = [
-    { title: 'BAKU RALLY 2023', videoId: 'dQw4w9WgXcQ', img: 'https://images.unsplash.com/photo-1547038577-da80abbc4f19?grayscale' },
-    { title: 'QUSAR CHALLENGE', videoId: 'dQw4w9WgXcQ', img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?grayscale' },
-    { title: 'QOBUSTAN TROPHY', videoId: 'dQw4w9WgXcQ', img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?grayscale' },
-    { title: 'SHEKI TRAIL 2023', videoId: 'dQw4w9WgXcQ', img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?grayscale' },
-  ];
+  React.useEffect(() => {
+    fetch('/videos.json')
+      .then(res => res.json())
+      .then(data => setVideos(data))
+      .catch(err => console.error('Videos load fail:', err));
+  }, []);
 
   const VideoModal = () => {
     if (!playingVideoId) return null;
@@ -78,7 +79,7 @@ const VideoArchive: React.FC<VideoArchiveProps> = ({ onViewChange }) => {
             className="group relative aspect-[3/4] overflow-hidden bg-[#111] cursor-pointer shadow-2xl rounded-sm border border-white/5"
           >
             <img
-              src={video.img}
+              src={video.thumbnail || video.img}
               alt={video.title}
               className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-40 group-hover:opacity-80 grayscale`}
             />

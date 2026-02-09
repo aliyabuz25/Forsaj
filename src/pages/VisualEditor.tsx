@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Save, Type, Image as ImageIcon, Layout, Globe, Plus, Trash2, X, Search, Calendar, MapPin, FileText, Trophy, RotateCcw } from 'lucide-react';
+import { Save, Type, Image as ImageIcon, Layout, Globe, Plus, Trash2, X, Search, Calendar, MapPin, FileText, Trophy, RotateCcw, Video, Play } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './VisualEditor.css';
 
@@ -57,6 +57,15 @@ interface DriverItem {
     wins: number;
     points: number;
     img: string;
+}
+
+interface VideoItem {
+    id: number;
+    title: string;
+    youtubeUrl: string;
+    videoId: string;
+    duration: string;
+    thumbnail: string;
 }
 
 interface DriverCategory {
@@ -141,15 +150,32 @@ const VisualEditor: React.FC = () => {
     const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
     const [eventForm, setEventForm] = useState<Partial<EventItem>>({});
 
-    const location = useLocation();
-
     // News Mode State
     const [news, setNews] = useState<NewsItem[]>([]);
     const [selectedNewsId, setSelectedNewsId] = useState<number | null>(null);
     const [newsForm, setNewsForm] = useState<Partial<NewsItem>>({});
 
-    // Drivers Mode State
-    const [editorMode, setEditorMode] = useState<'pages' | 'events' | 'news' | 'drivers'>('pages');
+    // Video Mode State
+    const [videos, setVideos] = useState<VideoItem[]>([]);
+    const [selectedVideoId, setSelectedVideoId] = useState<number | null>(null);
+    const [videoForm, setVideoForm] = useState<Partial<VideoItem>>({});
+
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const mode = queryParams.get('mode'); // 'extract', 'events', 'news', 'drivers', 'videos'
+    const pageParam = queryParams.get('page');
+
+    const [editorMode, setEditorMode] = useState<'extract' | 'events' | 'news' | 'drivers' | 'videos'>('extract');
+
+    useEffect(() => {
+        if (mode) {
+            setEditorMode(mode as any);
+        } else if (pageParam) {
+            setEditorMode('extract');
+        } else {
+            setEditorMode('extract');
+        }
+    }, [mode, pageParam]);
     const [driverCategories, setDriverCategories] = useState<DriverCategory[]>([]);
     const [selectedCatId, setSelectedCatId] = useState<string | null>(null);
     const [selectedDriverId, setSelectedDriverId] = useState<number | null>(null);
@@ -211,6 +237,18 @@ const VisualEditor: React.FC = () => {
                 }
             })
             .catch(() => { console.error('drivers load fail'); });
+
+        fetch(`/api/videos?v=${Date.now()}`)
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setVideos(data);
+                    if (data.length > 0 && selectedVideoId === null) {
+                        handleVideoSelect(data[0].id);
+                    }
+                }
+            })
+            .catch(() => { console.error('videos load fail'); });
     };
 
     useEffect(() => {
@@ -232,10 +270,10 @@ const VisualEditor: React.FC = () => {
         const modeParam = queryParams.get('mode');
         const pageParam = queryParams.get('page');
 
-        if (modeParam && ['pages', 'events', 'news', 'drivers'].includes(modeParam)) {
+        if (modeParam && ['extract', 'events', 'news', 'drivers', 'videos'].includes(modeParam)) {
             setEditorMode(modeParam as any);
         } else if (pageParam) {
-            setEditorMode('pages');
+            setEditorMode('extract');
             const idx = pages.findIndex(p => p.id === pageParam);
             if (idx !== -1) setSelectedPageIndex(idx);
         }
@@ -448,7 +486,7 @@ const VisualEditor: React.FC = () => {
         const toastId = toast.loading('Yadda saxlanılır...');
         try {
             let endpoint = '/api/save-content';
-            let bodyData: PageContent[] | EventItem[] | NewsItem[] | DriverCategory[] = pages;
+            let bodyData: PageContent[] | EventItem[] | NewsItem[] | DriverCategory[] | VideoItem[] = pages;
 
             if (editorMode === 'events') {
                 endpoint = '/api/events';
@@ -459,6 +497,9 @@ const VisualEditor: React.FC = () => {
             } else if (editorMode === 'drivers') {
                 endpoint = '/api/drivers';
                 bodyData = driverCategories;
+            } else if (editorMode === 'videos') {
+                endpoint = '/api/videos';
+                bodyData = videos;
             }
 
             console.log(`Saving to ${endpoint}`, bodyData);
@@ -572,6 +613,84 @@ const VisualEditor: React.FC = () => {
         setSelectedNewsId(newId);
         setNewsForm(newItem);
         toast.success('Yeni xəbər yaradıldı');
+    };
+
+    // Video Handlers
+    const handleVideoSelect = (id: number) => {
+        setSelectedVideoId(id);
+        const item = videos.find(v => v.id === id);
+        if (item) setVideoForm({ ...item });
+    };
+
+    const handleVideoChange = (field: keyof VideoItem, value: string, targetId?: number) => {
+        const activeId = targetId || selectedVideoId;
+
+        setVideoForm(prev => {
+            const isSame = !targetId || targetId === selectedVideoId;
+            let updatedForm = isSame ? { ...prev, [field]: value } as VideoItem : prev;
+
+            // Extract YouTube info if URL changes
+            if (field === 'youtubeUrl' && isSame) {
+                const vId = extractYoutubeId(value);
+                if (vId) {
+                    updatedForm = {
+                        ...updatedForm,
+                        videoId: vId,
+                        thumbnail: `https://img.youtube.com/vi/${vId}/maxresdefault.jpg`
+                    };
+                }
+            }
+
+            if (activeId) {
+                setVideos(old => old.map(v => {
+                    if (v.id === activeId) {
+                        let updated = { ...v, [field]: value };
+                        if (field === 'youtubeUrl') {
+                            const vId = extractYoutubeId(value);
+                            if (vId) {
+                                updated.videoId = vId;
+                                updated.thumbnail = `https://img.youtube.com/vi/${vId}/maxresdefault.jpg`;
+                            }
+                        }
+                        return updated;
+                    }
+                    return v;
+                }));
+            }
+
+            return updatedForm;
+        });
+    };
+
+    const extractYoutubeId = (url: string) => {
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+    };
+
+    const addNewVideo = () => {
+        const newId = videos.length > 0 ? Math.max(...videos.map(v => v.id)) + 1 : 1;
+        const newItem: VideoItem = {
+            id: newId,
+            title: 'Yeni Video',
+            youtubeUrl: '',
+            videoId: '',
+            duration: '00:00',
+            thumbnail: ''
+        };
+        setVideos([...videos, newItem]);
+        setSelectedVideoId(newId);
+        setVideoForm(newItem);
+        toast.success('Yeni video əlavə edildi');
+    };
+
+    const deleteVideo = (id: number, e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (window.confirm('Bu videonu silmək istədiyinizə əminsiniz?')) {
+            setVideos(videos.filter(v => v.id !== id));
+            if (selectedVideoId === id) setSelectedVideoId(null);
+            toast.success('Video silindi');
+        }
     };
 
     const deleteNews = (id: number, e: React.MouseEvent) => {
@@ -792,9 +911,9 @@ const VisualEditor: React.FC = () => {
                         <h1><Globe size={24} /> Admin Panel</h1>
                         <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
                             <button
-                                className={`mode-btn ${editorMode === 'pages' ? 'active' : ''}`}
-                                onClick={() => setEditorMode('pages')}
-                                style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: editorMode === 'pages' ? 'var(--primary)' : '#eee', color: editorMode === 'pages' ? '#fff' : '#666', fontWeight: 'bold', cursor: 'pointer' }}
+                                className={`mode-btn ${editorMode === 'extract' ? 'active' : ''}`}
+                                onClick={() => setEditorMode('extract')}
+                                style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: editorMode === 'extract' ? 'var(--primary)' : '#eee', color: editorMode === 'extract' ? '#fff' : '#666', fontWeight: 'bold', cursor: 'pointer' }}
                             >
                                 Sayt Məzmunu
                             </button>
@@ -1424,6 +1543,131 @@ const VisualEditor: React.FC = () => {
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#94a3b8', flexDirection: 'column', gap: '1rem' }}>
                                 <Trophy size={48} style={{ opacity: 0.2 }} />
                                 <p>Redaktə etmək üçün sol tərəfdən sürücü seçin.</p>
+                            </div>
+                        )}
+                    </main>
+                </div>
+            ) : editorMode === 'videos' ? (
+                <div className="editor-layout">
+                    <aside className="page-list">
+                        <div className="list-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                            <h3>Videolar</h3>
+                            <button className="add-section-btn" onClick={addNewVideo}>
+                                <Plus size={16} />
+                            </button>
+                        </div>
+                        <div style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}>
+                            {videos.length === 0 ? (
+                                <div style={{ padding: '2rem 1rem', textAlign: 'center', color: '#94a3b8', fontSize: '0.875rem' }}>
+                                    Heç bir video əlavə edilməyib.
+                                </div>
+                            ) : (
+                                videos.map((v) => (
+                                    <div key={v.id} className="page-nav-wrapper" style={{ position: 'relative', marginBottom: '4px' }}>
+                                        <button
+                                            className={`page-nav-item ${selectedVideoId === v.id ? 'active' : ''}`}
+                                            onClick={() => handleVideoSelect(v.id)}
+                                            style={{ width: '100%', paddingRight: '40px', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '8px' }}
+                                        >
+                                            <div style={{ width: '24px', height: '16px', background: '#333', borderRadius: '2px', overflow: 'hidden' }}>
+                                                {v.thumbnail && <img src={v.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+                                            </div>
+                                            <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{v.title}</span>
+                                        </button>
+                                        <button
+                                            className="delete-section-btn"
+                                            onClick={(e) => { e.stopPropagation(); deleteVideo(v.id, e); }}
+                                            style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#ff4d4f', opacity: 0.5, cursor: 'pointer' }}
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </aside>
+
+                    <main className="editor-canvas" style={{ padding: '0' }}>
+                        {selectedVideoId !== null && videoForm.id !== undefined ? (
+                            <div style={{ padding: '2rem', height: '100%', overflowY: 'auto' }}>
+                                <div className="canvas-header" style={{ marginBottom: '2rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
+                                    <h2 style={{ fontSize: '2rem' }}>Video Redaktəsi</h2>
+                                    <p style={{ color: '#64748b' }}>{videoForm.title} // ID: {videoForm.id}</p>
+                                </div>
+
+                                <div className="edit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem', maxWidth: '800px' }}>
+                                    <div className="form-group">
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>VİDEO BAŞLIĞI</label>
+                                        <input
+                                            type="text"
+                                            value={videoForm.title}
+                                            onChange={(e) => handleVideoChange('title', e.target.value)}
+                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>YOUTUBE URL</label>
+                                        <div style={{ position: 'relative' }}>
+                                            <Globe size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                                            <input
+                                                type="text"
+                                                value={videoForm.youtubeUrl}
+                                                onChange={(e) => handleVideoChange('youtubeUrl', e.target.value)}
+                                                placeholder="https://www.youtube.com/watch?v=..."
+                                                style={{ width: '100%', padding: '12px 12px 12px 40px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px' }}
+                                            />
+                                        </div>
+                                        <p style={{ fontSize: '11px', color: '#64748b', marginTop: '6px' }}>YouTube linkini daxil etdikdə şəkil və ID avtomatik təyin olunacaq.</p>
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                                        <div className="form-group">
+                                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>MÜDDƏT (MƏS: 05:20)</label>
+                                            <input
+                                                type="text"
+                                                value={videoForm.duration}
+                                                onChange={(e) => handleVideoChange('duration', e.target.value)}
+                                                style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px' }}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>VİDEO ID (AVTOMATİK)</label>
+                                            <input
+                                                type="text"
+                                                value={videoForm.videoId}
+                                                readOnly
+                                                style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px', background: '#f8fafc', color: '#94a3b8' }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>ÖNİZLƏMƏ (THUMBNAIL)</label>
+                                        <div style={{ width: '100%', aspectRatio: '16/9', borderRadius: '12px', overflow: 'hidden', background: '#000', border: '1px solid #e2e8f0', position: 'relative' }}>
+                                            {videoForm.thumbnail ? (
+                                                <img src={videoForm.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            ) : (
+                                                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '1rem' }}>
+                                                    <Video size={48} style={{ opacity: 0.1, color: 'white' }} />
+                                                    <p style={{ color: '#64748b', fontSize: '12px' }}>YouTube linki daxil edin</p>
+                                                </div>
+                                            )}
+                                            {videoForm.videoId && (
+                                                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.3)', cursor: 'pointer' }} onClick={() => window.open(videoForm.youtubeUrl, '_blank')}>
+                                                    <div style={{ background: '#FF4D00', color: 'white', padding: '12px', borderRadius: '50%', boxShadow: '0 0 20px rgba(255,77,0,0.4)' }}>
+                                                        <Play size={24} fill="currentColor" />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#94a3b8', flexDirection: 'column', gap: '1rem' }}>
+                                <Video size={48} style={{ opacity: 0.2 }} />
+                                <p>Redaktə etmək üçün sol tərəfdən video seçin və ya yeni əlavə edin.</p>
                             </div>
                         )}
                     </main>

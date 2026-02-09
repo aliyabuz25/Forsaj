@@ -166,6 +166,36 @@ app.post('/api/news', async (req, res) => {
     }
 });
 
+const VIDEOS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'videos.json');
+
+// API: Get Videos
+app.get('/api/videos', async (req, res) => {
+    try {
+        try {
+            await fsPromises.access(VIDEOS_FILE_PATH);
+        } catch {
+            return res.json([]);
+        }
+        const data = await fsPromises.readFile(VIDEOS_FILE_PATH, 'utf8');
+        res.json(JSON.parse(data));
+    } catch (error) {
+        console.error('Error reading videos:', error);
+        res.status(500).json({ error: 'Failed to read videos' });
+    }
+});
+
+// API: Save Videos
+app.post('/api/videos', async (req, res) => {
+    try {
+        const videos = req.body;
+        await fsPromises.writeFile(VIDEOS_FILE_PATH, JSON.stringify(videos, null, 2));
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error saving videos:', error);
+        res.status(500).json({ error: 'Failed to save videos' });
+    }
+});
+
 const DRIVERS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'drivers.json');
 
 // API: Get Drivers
@@ -449,121 +479,122 @@ app.post('/api/extract-content', async (req, res) => {
             }
 
         } catch (err) {
-        console.error('Error reading components directory:', err);
+            console.error('Error reading components directory:', err);
+        }
+
+        const newContent = Array.from(pagesMap.values());
+
+        // Custom Sort order for popular pages
+        const orderWeight = {
+            'home': 1, 'about': 2, 'news': 3, 'newspage': 4,
+            'events': 5, 'eventspage': 6, 'drivers': 7,
+            'driverspage': 8, 'gallery': 9, 'gallerypage': 10,
+            'rules': 11, 'rulespage': 12, 'contact': 13, 'contactpage': 14
+        };
+
+        newContent.sort((a, b) => (orderWeight[a.id] || 100) - (orderWeight[b.id] || 100));
+
+        await fsPromises.writeFile(SITE_CONTENT_PATH, JSON.stringify(newContent, null, 2));
+
+        // GENERATE SITEMAP (Page-Based Grouping)
+        const sitemap = [
+            { title: 'DASHBOARD', icon: 'Layout', path: '/' },
+            {
+                title: 'ANA SƏHİFƏ',
+                icon: 'Home',
+                children: [
+                    { title: 'Ümumi Görünüş', path: '/?page=home', icon: 'Layout' },
+                    { title: 'Naviqasiya', path: '/?page=navbar', icon: 'Menu' },
+                    { title: 'Giriş Hissəsi', path: '/?page=hero', icon: 'Maximize' },
+                    { title: 'Sürüşən Yazı', path: '/?page=marquee', icon: 'Type' },
+                    { title: 'Kateqoriya Liderləri', path: '/?page=categoryleaders', icon: 'Star' },
+                    { title: 'Sayt Sonu', path: '/?page=footer', icon: 'Anchor' }
+                ]
+            },
+            {
+                title: 'HAQQIMIZDA',
+                icon: 'Info',
+                children: [
+                    { title: 'Ümumi Məlumat', path: '/?page=about', icon: 'FileText' }
+                ]
+            },
+            {
+                title: 'XƏBƏRLƏR',
+                icon: 'FileText',
+                children: [
+                    { title: 'Xəbər Siyahısı', path: '/?mode=news', icon: 'List' },
+                    { title: 'Xəbər Səhifəsi', path: '/?page=newspage', icon: 'Layout' }
+                ]
+            },
+            {
+                title: 'TƏDBİRLƏR',
+                icon: 'Calendar',
+                children: [
+                    { title: 'Tədbir Təqvimi', path: '/?mode=events', icon: 'Clock' },
+                    { title: 'Tədbir Səhifəsi', path: '/?page=eventspage', icon: 'Layout' }
+                ]
+            },
+            {
+                title: 'SÜRÜCÜLƏR',
+                icon: 'Trophy',
+                children: [
+                    { title: 'Sürücü Reytinqi', path: '/?mode=drivers', icon: 'Award' },
+                    { title: 'Sürücülər Səhifəsi', path: '/?page=driverspage', icon: 'Layout' }
+                ]
+            },
+            {
+                title: 'QALEREYA',
+                icon: 'Image',
+                children: [
+                    { title: 'Videolar', path: '/?mode=videos', icon: 'Video' },
+                    { title: 'Qalereya Səhifəsi', path: '/?page=gallerypage', icon: 'Layout' }
+                ]
+            },
+            {
+                title: 'QAYDALAR',
+                icon: 'Shield',
+                children: [
+                    { title: 'Qaydalar Səhifəsi', path: '/?page=rulespage', icon: 'Layout' }
+                ]
+            },
+            {
+                title: 'ƏLAQƏ',
+                icon: 'Phone',
+                children: [
+                    { title: 'Əlaqə Səhifəsi', path: '/?page=contactpage', icon: 'Layout' }
+                ]
+            },
+            { title: 'KURS İDARƏETMƏSİ', icon: 'BookOpen', path: '/courses' },
+            { title: 'ADMİN HESABLARI', icon: 'Users', path: '/users-management' },
+            { title: 'SİSTEM AYARLARI', icon: 'Settings', path: '/frontend-settings' }
+        ];
+
+        try {
+            await fsPromises.writeFile(ADMIN_SITEMAP_PATH, JSON.stringify(sitemap, null, 2));
+            console.log('Sitemap generated successfully.');
+        } catch (err) {
+            console.error('Failed to write sitemap:', err);
+        }
+
+        const stats = {
+            total: newContent.length,
+            sections: newContent.reduce((acc, p) => acc + p.sections.length, 0),
+            images: newContent.reduce((acc, p) => acc + p.images.length, 0)
+        };
+
+        console.log(`Extraction complete. Pages: ${stats.total}, Sections: ${stats.sections}, Images: ${stats.images}`);
+
+        // Return structured data with stats
+        res.json({
+            pages: newContent,
+            stats: stats,
+            sitemap: sitemap
+        });
+
+    } catch (error) {
+        console.error('Extraction error:', error);
+        res.status(500).json({ error: 'Internal Server Error during extraction' });
     }
-
-    const newContent = Array.from(pagesMap.values());
-
-    // Custom Sort order for popular pages
-    const orderWeight = {
-        'home': 1, 'about': 2, 'news': 3, 'newspage': 4,
-        'events': 5, 'eventspage': 6, 'drivers': 7,
-        'driverspage': 8, 'gallery': 9, 'gallerypage': 10,
-        'rules': 11, 'rulespage': 12, 'contact': 13, 'contactpage': 14
-    };
-
-    newContent.sort((a, b) => (orderWeight[a.id] || 100) - (orderWeight[b.id] || 100));
-
-    await fsPromises.writeFile(SITE_CONTENT_PATH, JSON.stringify(newContent, null, 2));
-
-    // GENERATE SITEMAP (Page-Based Grouping)
-    const sitemap = [
-        { title: 'DASHBOARD', icon: 'Layout', path: '/' },
-        {
-            title: 'ANA SƏHİFƏ',
-            icon: 'Home',
-            children: [
-                { title: 'Ümumi Görünüş', path: '/?page=home', icon: 'Layout' },
-                { title: 'Naviqasiya', path: '/?page=navbar', icon: 'Menu' },
-                { title: 'Giriş Hissəsi', path: '/?page=hero', icon: 'Maximize' },
-                { title: 'Sürüşən Yazı', path: '/?page=marquee', icon: 'Type' },
-                { title: 'Kateqoriya Liderləri', path: '/?page=categoryleaders', icon: 'Star' },
-                { title: 'Sayt Sonu', path: '/?page=footer', icon: 'Anchor' }
-            ]
-        },
-        {
-            title: 'HAQQIMIZDA',
-            icon: 'Info',
-            children: [
-                { title: 'Ümumi Məlumat', path: '/?page=about', icon: 'FileText' }
-            ]
-        },
-        {
-            title: 'XƏBƏRLƏR',
-            icon: 'FileText',
-            children: [
-                { title: 'Xəbər Siyahısı', path: '/?mode=news', icon: 'List' },
-                { title: 'Xəbər Səhifəsi', path: '/?page=newspage', icon: 'Layout' }
-            ]
-        },
-        {
-            title: 'TƏDBİRLƏR',
-            icon: 'Calendar',
-            children: [
-                { title: 'Tədbir Təqvimi', path: '/?mode=events', icon: 'Clock' },
-                { title: 'Tədbir Səhifəsi', path: '/?page=eventspage', icon: 'Layout' }
-            ]
-        },
-        {
-            title: 'SÜRÜCÜLƏR',
-            icon: 'Trophy',
-            children: [
-                { title: 'Sürücü Reytinqi', path: '/?mode=drivers', icon: 'Award' },
-                { title: 'Sürücülər Səhifəsi', path: '/?page=driverspage', icon: 'Layout' }
-            ]
-        },
-        {
-            title: 'QALEREYA',
-            icon: 'Image',
-            children: [
-                { title: 'Qalereya Səhifəsi', path: '/?page=gallerypage', icon: 'Layout' }
-            ]
-        },
-        {
-            title: 'QAYDALAR',
-            icon: 'Shield',
-            children: [
-                { title: 'Qaydalar Səhifəsi', path: '/?page=rulespage', icon: 'Layout' }
-            ]
-        },
-        {
-            title: 'ƏLAQƏ',
-            icon: 'Phone',
-            children: [
-                { title: 'Əlaqə Səhifəsi', path: '/?page=contactpage', icon: 'Layout' }
-            ]
-        },
-        { title: 'KURS İDARƏETMƏSİ', icon: 'BookOpen', path: '/courses' },
-        { title: 'ADMİN HESABLARI', icon: 'Users', path: '/users-management' },
-        { title: 'SİSTEM AYARLARI', icon: 'Settings', path: '/frontend-settings' }
-    ];
-
-    try {
-        await fsPromises.writeFile(ADMIN_SITEMAP_PATH, JSON.stringify(sitemap, null, 2));
-        console.log('Sitemap generated successfully.');
-    } catch (err) {
-        console.error('Failed to write sitemap:', err);
-    }
-
-    const stats = {
-        total: newContent.length,
-        sections: newContent.reduce((acc, p) => acc + p.sections.length, 0),
-        images: newContent.reduce((acc, p) => acc + p.images.length, 0)
-    };
-
-    console.log(`Extraction complete. Pages: ${stats.total}, Sections: ${stats.sections}, Images: ${stats.images}`);
-
-    // Return structured data with stats
-    res.json({
-        pages: newContent,
-        stats: stats,
-        sitemap: sitemap
-    });
-
-} catch (error) {
-    console.error('Extraction error:', error);
-    res.status(500).json({ error: 'Internal Server Error during extraction' });
-}
 });
 
 // API: Get Content

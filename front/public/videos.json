@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "title": "BAKU RALLY 2023",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "videoId": "dQw4w9WgXcQ",
+        "duration": "10:15",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg"
+    },
+    {
+        "id": 2,
+        "title": "QUSAR CHALLENGE",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "videoId": "dQw4w9WgXcQ",
+        "duration": "08:45",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg"
+    }
+]

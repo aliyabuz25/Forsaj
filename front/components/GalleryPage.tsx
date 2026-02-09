@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PlayCircle, Image as ImageIcon, Video, ArrowRight, Zap, Maximize2, Calendar, X } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
 
@@ -65,7 +65,15 @@ const galleryData: GalleryEvent[] = [
 const GalleryPage: React.FC = () => {
   const [activeType, setActiveType] = useState<'photos' | 'videos'>('photos');
   const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
+  const [dynamicVideos, setDynamicVideos] = useState<any[]>([]);
   const { getText } = useSiteContent('gallerypage');
+
+  useEffect(() => {
+    fetch('/videos.json')
+      .then(res => res.json())
+      .then(data => setDynamicVideos(data))
+      .catch(() => { });
+  }, []);
 
   const VideoModal = () => {
     if (!playingVideoId) return null;
@@ -179,7 +187,7 @@ const GalleryPage: React.FC = () => {
             ) : (
               /* Video Grid - High Density / 4-5 per row on desktop */
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                {event.videos.map((video) => (
+                {(dynamicVideos.length > 0 ? dynamicVideos : event.videos).map((video) => (
                   <div
                     key={video.id}
                     onClick={() => setPlayingVideoId(video.videoId || 'dQw4w9WgXcQ')}
@@ -187,7 +195,7 @@ const GalleryPage: React.FC = () => {
                   >
                     <div className="aspect-video relative overflow-hidden">
                       <img
-                        src={video.url}
+                        src={video.thumbnail || video.url}
                         className="w-full h-full object-cover grayscale opacity-30 transition-all duration-700 group-hover/video:scale-105 group-hover/video:grayscale-0 group-hover/video:opacity-100"
                         alt={video.title}
                       />
