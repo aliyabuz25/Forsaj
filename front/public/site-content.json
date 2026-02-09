@@ -123,38 +123,38 @@
       {
         "id": "txt-replace-i-711",
         "type": "text",
-        "label": "') .REPLACE(/\\[I\\](.*?)\\[\\/I\\]...",
-        "value": "') .replace(/\\[i\\](.*?)\\[\\/i\\]/gi, '"
+        "label": "') .REPLACE(/\\(\\.*?\\)\\/I/...",
+        "value": "') .replace(/\\(\\.*?\\)\\/i/gi, '"
       },
       {
         "id": "txt-replace-u-289",
         "type": "text",
-        "label": "') .REPLACE(/\\[U\\](.*?)\\[\\/U\\]...",
-        "value": "') .replace(/\\[u\\](.*?)\\[\\/u\\]/gi, '"
+        "label": "') .REPLACE(/\\(\\.*?\\)\\/U/...",
+        "value": "') .replace(/\\(\\.*?\\)\\/u/gi, '"
       },
       {
         "id": "txt-replace-s-202",
         "type": "text",
-        "label": "') .REPLACE(/\\[S\\](.*?)\\[\\/S\\]...",
-        "value": "') .replace(/\\[s\\](.*?)\\[\\/s\\]/gi, '"
+        "label": "') .REPLACE(/\\(\\.*?\\)\\/S/...",
+        "value": "') .replace(/\\(\\.*?\\)\\/s/gi, '"
       },
       {
         "id": "txt-replace-img-273",
         "type": "text",
-        "label": "') .REPLACE(/\\[IMG\\](.*?)\\[\\/I...",
-        "value": "') .replace(/\\[img\\](.*?)\\[\\/img\\]/gi, '"
+        "label": "') .REPLACE(/\\(\\.*?\\)\\/I...",
+        "value": "') .replace(/\\(\\.*?\\)\\/img/gi, '"
       },
       {
         "id": "txt-replace-quote-738",
         "type": "text",
-        "label": "') .REPLACE(/\\[QUOTE\\](.*?)\\[\\...",
-        "value": "') .replace(/\\[quote\\](.*?)\\[\\/quote\\]/gi, '"
+        "label": "') .REPLACE(/\\(\\.*?\\)\\/\\...",
+        "value": "') .replace(/\\(\\.*?\\)\\/quote/gi, '"
       },
       {
         "id": "txt-replace-code-371",
         "type": "text",
-        "label": "') .REPLACE(/\\[CODE\\](.*?)\\[\\/...",
-        "value": "') .replace(/\\[code\\](.*?)\\[\\/code\\]/gi, '"
+        "label": "') .REPLACE(/\\(\\.*?\\)\\/...",
+        "value": "') .replace(/\\(\\.*?\\)\\/code/gi, '"
       },
       {
         "id": "txt-replace-n-g-303",
@@ -209,7 +209,7 @@
         "id": "txt-yar-t-qvimi-v-x-b-920",
         "type": "text",
         "label": "YARIŞ TƏQVIMI VƏ XƏBƏRLƏRDƏN A...",
-        "value": "Yarış təqvimi və xəbərlərdən anında xəbərdar olmaq üçün abunə olun."
+        "value": "Yarış təqvimi ve xəbərlərdən anında xəbərdar olmaq üçün abunə olun."
       },
       {
         "id": "txt-2024-forsaj-club-811",
@@ -283,26 +283,26 @@
       {
         "id": "txt-replace-i-190",
         "type": "text",
-        "label": "') .REPLACE(/\\[I\\](.*?)\\[\\/I\\]...",
-        "value": "') .replace(/\\[i\\](.*?)\\[\\/i\\]/gi, '"
+        "label": "') .REPLACE(/\\(\\.*?\\)\\/I/...",
+        "value": "') .replace(/\\(\\.*?\\)\\/i/gi, '"
       },
       {
         "id": "txt-replace-u-692",
         "type": "text",
-        "label": "') .REPLACE(/\\[U\\](.*?)\\[\\/U\\]...",
-        "value": "') .replace(/\\[u\\](.*?)\\[\\/u\\]/gi, '"
+        "label": "') .REPLACE(/\\(\\.*?\\)\\/U/...",
+        "value": "') .replace(/\\(\\.*?\\)\\/u/gi, '"
       },
       {
         "id": "txt-replace-s-603",
         "type": "text",
-        "label": "') .REPLACE(/\\[S\\](.*?)\\[\\/S\\]...",
-        "value": "') .replace(/\\[s\\](.*?)\\[\\/s\\]/gi, '"
+        "label": "') .REPLACE(/\\(\\.*?\\)\\/S/...",
+        "value": "') .replace(/\\(\\.*?\\)\\/s/gi, '"
       },
       {
         "id": "txt-replace-img-578",
         "type": "text",
-        "label": "') .REPLACE(/\\[IMG\\](.*?)\\[\\/I...",
-        "value": "') .replace(/\\[img\\](.*?)\\[\\/img\\]/gi, '"
+        "label": "') .REPLACE(/\\(\\.*?\\)\\/I...",
+        "value": "') .replace(/\\(\\.*?\\)\\/img/gi, '"
       },
       {
         "id": "txt-replace-n-g-777",
@@ -320,26 +320,26 @@
       {
         "id": "txt-replace-i-696",
         "type": "text",
-        "label": "') .REPLACE(/\\[I\\](.*?)\\[\\/I\\]...",
-        "value": "') .replace(/\\[i\\](.*?)\\[\\/i\\]/gi, '"
+        "label": "') .REPLACE(/\\(\\.*?\\)\\/I/...",
+        "value": "') .replace(/\\(\\.*?\\)\\/i/gi, '"
       },
       {
         "id": "txt-replace-u-724",
         "type": "text",
-        "label": "') .REPLACE(/\\[U\\](.*?)\\[\\/U\\]...",
-        "value": "') .replace(/\\[u\\](.*?)\\[\\/u\\]/gi, '"
+        "label": "') .REPLACE(/\\(\\.*?\\)\\/U/...",
+        "value": "') .replace(/\\(\\.*?\\)\\/u/gi, '"
       },
       {
         "id": "txt-replace-s-918",
         "type": "text",
-        "label": "') .REPLACE(/\\[S\\](.*?)\\[\\/S\\]...",
-        "value": "') .replace(/\\[s\\](.*?)\\[\\/s\\]/gi, '"
+        "label": "') .REPLACE(/\\(\\.*?\\)\\/S/...",
+        "value": "') .replace(/\\(\\.*?\\)\\/s/gi, '"
       },
       {
         "id": "txt-replace-img-607",
         "type": "text",
-        "label": "') .REPLACE(/\\[IMG\\](.*?)\\[\\/I...",
-        "value": "') .replace(/\\[img\\](.*?)\\[\\/img\\]/gi, '"
+        "label": "') .REPLACE(/\\(\\.*?\\)\\/I...",
+        "value": "') .replace(/\\(\\.*?\\)\\/img/gi, '"
       },
       {
         "id": "txt-replace-n-g-517",
@@ -439,5 +439,19 @@
         "type": "local"
       }
     ]
+  },
+  {
+    "id": "marquee",
+    "title": "Sürüşən Yazı",
+    "active": true,
+    "sections": [
+      {
+        "id": "txt-marquee-1",
+        "type": "text",
+        "label": "MARQUEE TEXT",
+        "value": "SUMQAYIT CHALLENGE ÜÇÜN QEYDİYYAT DAVAM EDİR!"
+      }
+    ],
+    "images": []
   }
 ]
