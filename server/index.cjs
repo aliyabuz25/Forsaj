@@ -296,134 +296,129 @@ app.post('/api/extract-content', async (req, res) => {
             const tsxFiles = allFiles.filter(f => f.endsWith('.tsx'));
 
             for (const file of tsxFiles) {
-                const content = await fsPromises.readFile(file, 'utf8');
-                // Clean the content to remove imports and logic to avoid false positives
-                const clean = content
-                    .replace(/import\s+.*?from\s+['"].*?['"];?/g, '') // remove imports
-                    .replace(/const\s+\w+\s*=\s*\([^)]*\)\s*=>\s*{/g, '') // remove component definition start
-                    .replace(/export\s+default\s+\w+;/g, ''); // remove export
+                try {
+                    const filePath = file;
+                    const content = await fsPromises.readFile(filePath, 'utf8');
+                    const pageId = path.basename(file, '.tsx').toLowerCase();
+                    const filenameBase = path.basename(file, '.tsx');
 
-                const pageId = path.basename(file, '.tsx').toLowerCase();
-                const filenameBase = path.basename(file, '.tsx');
+                    const AZ_TITLES = {
+                        'about': 'HAQQIMIZDA',
+                        'news': 'XƏBƏRLƏR',
+                        'newspage': 'Xəbər Səhifəsi',
+                        'eventspage': 'Tədbirlər Səhifəsi',
+                        'driverspage': 'Sürücülər Səhifəsi',
+                        'gallerypage': 'Qalereya',
+                        'rulespage': 'Qaydalar',
+                        'contactpage': 'Əlaqə Səhifəsi',
+                        'categoryleaders': 'Kateqoriya Liderləri',
+                        'footer': 'Sayt Sonu',
+                        'hero': 'Giriş Hissəsi',
+                        'marquee': 'Sürüşən Yazı',
+                        'navbar': 'Naviqasiya',
+                        'nextrace': 'Növbəti Yarış',
+                        'partners': 'Tərəfdaşlar',
+                        'videoarchive': 'Video Arxiv',
+                        'whatisoffroad': 'Offroad Nədir?',
+                        'home': 'ANA SƏHİFƏ',
+                        'app': 'Ümumi Ayarlar'
+                    };
 
-                const AZ_TITLES = {
-                    'about': 'Haqqımızda',
-                    'news': 'Xəbərlər',
-                    'newspage': 'Xəbərlər Səhifəsi',
-                    'eventspage': 'Tədbirlər Səhifəsi',
-                    'driverspage': 'Sürücülər Səhifəsi',
-                    'gallerypage': 'Qalereya',
-                    'rulespage': 'Qaydalar',
-                    'contactpage': 'Əlaqə Səhifəsi',
-                    'categoryleaders': 'Kateqoriya Liderləri',
-                    'footer': 'Sayt Sonu',
-                    'hero': 'Giriş Hissəsi',
-                    'marquee': 'Sürüşən Yazı',
-                    'navbar': 'Naviqasiya',
-                    'nextrace': 'Növbəti Yarış',
-                    'partners': 'Tərəfdaşlar',
-                    'videoarchive': 'Video Arxiv',
-                    'whatisoffroad': 'Offroad Nədir?',
-                    'home': 'Ana Səhifə',
-                    'app': 'Ümumi Ayarlar'
-                };
+                    const title = AZ_TITLES[pageId] || filenameBase;
+                    const items = [];
+                    const seenValues = new Set();
 
-                // Format Title using map or fallback
-                const title = AZ_TITLES[pageId] || filenameBase
-                    .replace(/([A-Z])/g, ' $1') // Insert space before capital
-                    .trim(); // Remove leading space if any
+                    // Strip noise
+                    const clean = content
+                        .replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm, '$1')
+                        .replace(/import\s+.*?from\s+['"].*?['"];?/g, '')
+                        .replace(/style=\{\{[\s\S]*?\}\}/g, '');
 
-                const items = []; // Combined list to maintain order
-                const seenValues = new Set();
+                    let match;
 
-                // 1. Text (JSX)
-                const jsxTextRegex = />([^<{}]+)</g;
-                let match;
-                while ((match = jsxTextRegex.exec(clean)) !== null) {
-                    let text = match[1].trim();
-                    text = text.replace(/\s+/g, ' ');
-
-                    if (isTrueText(text) && !seenValues.has(text)) {
-                        seenValues.add(text);
-                        const slug = text.slice(0, 20).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-                        items.push({
-                            pos: match.index,
-                            item: {
-                                id: `txt-${slug}-${Math.floor(Math.random() * 1000)}`,
-                                type: 'text',
-                                label: text.slice(0, 30).toUpperCase() + (text.length > 30 ? '...' : ''),
-                                value: text
-                            }
-                        });
+                    // 1. JSX Text
+                    const jsxRegex = />([^<{}]+)</g;
+                    while ((match = jsxRegex.exec(clean)) !== null) {
+                        let text = match[1].trim().replace(/\s+/g, ' ');
+                        if (isTrueText(text) && !seenValues.has(text)) {
+                            seenValues.add(text);
+                            const slug = text.slice(0, 15).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+                            items.push({
+                                pos: match.index,
+                                item: {
+                                    id: `txt-${slug}-${Math.floor(Math.random() * 1000)}`,
+                                    type: 'text',
+                                    label: text.length > 20 ? text.slice(0, 20) + '...' : text.toUpperCase(),
+                                    value: text
+                                }
+                            });
+                        }
                     }
-                }
 
-                // 2. Attributes
-                const attrRegex = /\s(placeholder|title|alt|label)=(['"])(.*?)\2/g;
-                while ((match = attrRegex.exec(clean)) !== null) {
-                    const attr = match[1];
-                    const text = match[3];
-                    if (isTrueText(text) && !seenValues.has(text)) {
-                        seenValues.add(text);
-                        const slug = text.slice(0, 20).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-                        items.push({
-                            pos: match.index,
-                            item: {
-                                id: `attr-${slug}-${Math.floor(Math.random() * 1000)}`,
-                                type: 'text',
-                                label: `${attr.toUpperCase()}: ${text.slice(0, 20)}...`,
-                                value: text
-                            }
-                        });
+                    // 2. Attributes
+                    const attrRegex = /\s(placeholder|title|alt|label)=(['"])(.*?)\2/g;
+                    while ((match = attrRegex.exec(clean)) !== null) {
+                        const attr = match[1];
+                        const text = match[3];
+                        if (isTrueText(text) && !seenValues.has(text)) {
+                            seenValues.add(text);
+                            const slug = text.slice(0, 15).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+                            items.push({
+                                pos: match.index,
+                                item: {
+                                    id: `attr-${slug}-${Math.floor(Math.random() * 1000)}`,
+                                    type: 'text',
+                                    label: `${attr.toUpperCase()}: ${text.slice(0, 15)}...`,
+                                    value: text
+                                }
+                            });
+                        }
                     }
-                }
 
-                // 4. getText calls (Crucial for Events/News/Drivers)
-                // matches: getText('KEY', 'Default Text')
-                const getTextRegex = /getText\s*\(\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]+)['"]\s*\)/g;
-                while ((match = getTextRegex.exec(clean)) !== null) {
-                    const key = match[1];
-                    const text = match[2];
-                    if (isTrueText(text) && !seenValues.has(text)) {
-                        seenValues.add(text);
-                        items.push({
-                            pos: match.index,
-                            item: {
-                                id: key,
-                                type: 'text',
-                                label: `KEY: ${key}`,
-                                value: text
-                            }
-                        });
+                    // 3. getText calls
+                    const getTextRegex = /getText\s*\(\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]+)['"]\s*\)/g;
+                    while ((match = getTextRegex.exec(clean)) !== null) {
+                        const key = match[1];
+                        const text = match[2];
+                        if (isTrueText(text) && !seenValues.has(text)) {
+                            seenValues.add(text);
+                            items.push({
+                                pos: match.index,
+                                item: {
+                                    id: key,
+                                    type: 'text',
+                                    label: `KEY: ${key}`,
+                                    value: text
+                                }
+                            });
+                        }
                     }
-                }
 
-                // 5. Array/Object labels
-                // matches basically any "Quoted String" that looks like natural language
-                const quotedRegex = /(['"])([A-ZƏÜÖĞIÇŞ\s]{4,}.*?)\1/g; // Start with uppercase, min 4 chars
-                while ((match = quotedRegex.exec(clean)) !== null) {
-                    const text = match[2];
-                    if (isTrueText(text) && !seenValues.has(text)) {
-                        seenValues.add(text);
-                        const slug = text.slice(0, 20).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-                        items.push({
-                            pos: match.index,
-                            item: {
-                                id: `lbl-${slug}-${Math.floor(Math.random() * 1000)}`,
-                                type: 'text',
-                                label: text.slice(0, 30).toUpperCase() + (text.length > 30 ? '...' : ''),
-                                value: text
-                            }
-                        });
+                    // 4. Quoted strings (Natural Language)
+                    const quotedRegex = /(['"])([A-ZƏÜÖĞIÇŞ][^'"]{3,})\1/g;
+                    while ((match = quotedRegex.exec(clean)) !== null) {
+                        const text = match[2];
+                        const isTechnical = /^[a-z]+[A-Z]/.test(text) || text.includes('/') || text.includes('{');
+                        if (isTrueText(text) && !seenValues.has(text) && !isTechnical) {
+                            seenValues.add(text);
+                            const slug = text.slice(0, 15).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+                            items.push({
+                                pos: match.index,
+                                item: {
+                                    id: `lbl-${slug}-${Math.floor(Math.random() * 1000)}`,
+                                    type: 'text',
+                                    label: text.length > 20 ? text.slice(0, 20) + '...' : text,
+                                    value: text
+                                }
+                            });
+                        }
                     }
-                }
 
-                // 3. Images
-                const imgRegex = /\ssrc=(['"])(.*?)\1/g;
-                while ((match = imgRegex.exec(clean)) !== null) {
-                    const src = match[2];
-                    if (src.match(/\.(png|jpg|jpeg|svg|webp|gif)/i) || src.startsWith('http')) {
-                        if (!src.includes('{') && !src.includes('}')) {
+                    // 5. Images
+                    const imgRegex = /src\s*=\s*(['"])(.*?)\1/g;
+                    while ((match = imgRegex.exec(clean)) !== null) {
+                        const src = match[2];
+                        if (src.match(/\.(png|jpg|jpeg|svg|webp|gif)/i) || src.startsWith('http')) {
                             items.push({
                                 pos: match.index,
                                 item: {
@@ -435,138 +430,140 @@ app.post('/api/extract-content', async (req, res) => {
                             });
                         }
                     }
-                }
 
-                // Sort by position to get "top to bottom" order
-                items.sort((a, b) => a.pos - b.pos);
-                const sections = items.filter(i => i.item.type === 'text').map(i => i.item);
-                const images = items.filter(i => i.item.path).map(i => i.item);
+                    items.sort((a, b) => a.pos - b.pos);
+                    const sections = items.filter(i => i.item.type === 'text').map(i => i.item);
+                    const images = items.filter(i => i.item.path).map(i => i.item);
 
-                if (sections.length > 0 || images.length > 0) {
-                    pagesMap.set(pageId, {
-                        id: pageId,
-                        title: title,
-                        sections: sections,
-                        images: images
-                    });
+                    if (sections.length > 0 || images.length > 0) {
+                        pagesMap.set(pageId, {
+                            id: pageId,
+                            title: title,
+                            sections: sections,
+                            images: images
+                        });
+                    }
+                } catch (fileErr) {
+                    console.error(`Failed to scan file ${file}:`, fileErr);
                 }
             }
+
         } catch (err) {
-            console.error('Error reading components directory:', err);
-        }
-
-        const newContent = Array.from(pagesMap.values());
-
-        // Custom Sort order for popular pages
-        const orderWeight = {
-            'home': 1, 'about': 2, 'news': 3, 'newspage': 4,
-            'events': 5, 'eventspage': 6, 'drivers': 7,
-            'driverspage': 8, 'gallery': 9, 'gallerypage': 10,
-            'rules': 11, 'rulespage': 12, 'contact': 13, 'contactpage': 14
-        };
-
-        newContent.sort((a, b) => (orderWeight[a.id] || 100) - (orderWeight[b.id] || 100));
-
-        await fsPromises.writeFile(SITE_CONTENT_PATH, JSON.stringify(newContent, null, 2));
-
-        // GENERATE SITEMAP (Page-Based Grouping)
-        const sitemap = [
-            { title: 'DASHBOARD', icon: 'Layout', path: '/' },
-            {
-                title: 'ANA SƏHİFƏ',
-                icon: 'Home',
-                children: [
-                    { title: 'Ümumi Görünüş', path: '/?page=home', icon: 'Layout' },
-                    { title: 'Naviqasiya', path: '/?page=navbar', icon: 'Menu' },
-                    { title: 'Giriş Hissəsi', path: '/?page=hero', icon: 'Maximize' },
-                    { title: 'Sürüşən Yazı', path: '/?page=marquee', icon: 'Type' },
-                    { title: 'Kateqoriya Liderləri', path: '/?page=categoryleaders', icon: 'Star' },
-                    { title: 'Sayt Sonu', path: '/?page=footer', icon: 'Anchor' }
-                ]
-            },
-            {
-                title: 'HAQQIMIZDA',
-                icon: 'Info',
-                children: [
-                    { title: 'Ümumi Məlumat', path: '/?page=about', icon: 'FileText' }
-                ]
-            },
-            {
-                title: 'XƏBƏRLƏR',
-                icon: 'FileText',
-                children: [
-                    { title: 'Xəbər Siyahısı', path: '/?mode=news', icon: 'List' },
-                    { title: 'Xəbər Səhifəsi', path: '/?page=newspage', icon: 'Layout' }
-                ]
-            },
-            {
-                title: 'TƏDBİRLƏR',
-                icon: 'Calendar',
-                children: [
-                    { title: 'Tədbir Təqvimi', path: '/?mode=events', icon: 'Clock' },
-                    { title: 'Tədbir Səhifəsi', path: '/?page=eventspage', icon: 'Layout' }
-                ]
-            },
-            {
-                title: 'SÜRÜCÜLƏR',
-                icon: 'Trophy',
-                children: [
-                    { title: 'Sürücü Reytinqi', path: '/?mode=drivers', icon: 'Award' },
-                    { title: 'Sürücülər Səhifəsi', path: '/?page=driverspage', icon: 'Layout' }
-                ]
-            },
-            {
-                title: 'QALEREYA',
-                icon: 'Image',
-                children: [
-                    { title: 'Qalereya Səhifəsi', path: '/?page=gallerypage', icon: 'Layout' }
-                ]
-            },
-            {
-                title: 'QAYDALAR',
-                icon: 'Shield',
-                children: [
-                    { title: 'Qaydalar Səhifəsi', path: '/?page=rulespage', icon: 'Layout' }
-                ]
-            },
-            {
-                title: 'ƏLAQƏ',
-                icon: 'Phone',
-                children: [
-                    { title: 'Əlaqə Səhifəsi', path: '/?page=contactpage', icon: 'Layout' }
-                ]
-            },
-            { title: 'KURS İDARƏETMƏSİ', icon: 'BookOpen', path: '/courses' },
-            { title: 'ADMİN HESABLARI', icon: 'Users', path: '/users-management' },
-            { title: 'SİSTEM AYARLARI', icon: 'Settings', path: '/frontend-settings' }
-        ];
-
-        try {
-            await fsPromises.writeFile(ADMIN_SITEMAP_PATH, JSON.stringify(sitemap, null, 2));
-            console.log('Sitemap generated successfully.');
-        } catch (err) {
-            console.error('Failed to write sitemap:', err);
-        }
-
-        const stats = {
-            total: newContent.length,
-            sections: newContent.reduce((acc, p) => acc + p.sections.length, 0),
-            images: newContent.reduce((acc, p) => acc + p.images.length, 0)
-        };
-
-        console.log(`Extraction complete. Pages: ${stats.total}, Sections: ${stats.sections}, Images: ${stats.images}`);
-
-        // Return structured data with stats
-        res.json({
-            pages: newContent,
-            stats: stats,
-            sitemap: sitemap
-        });
-
-    } catch (error) {
-        console.error('Extraction error:', error);
-        res.status(500).json({ error: 'Internal Server Error during extraction' });
+        console.error('Error reading components directory:', err);
     }
+
+    const newContent = Array.from(pagesMap.values());
+
+    // Custom Sort order for popular pages
+    const orderWeight = {
+        'home': 1, 'about': 2, 'news': 3, 'newspage': 4,
+        'events': 5, 'eventspage': 6, 'drivers': 7,
+        'driverspage': 8, 'gallery': 9, 'gallerypage': 10,
+        'rules': 11, 'rulespage': 12, 'contact': 13, 'contactpage': 14
+    };
+
+    newContent.sort((a, b) => (orderWeight[a.id] || 100) - (orderWeight[b.id] || 100));
+
+    await fsPromises.writeFile(SITE_CONTENT_PATH, JSON.stringify(newContent, null, 2));
+
+    // GENERATE SITEMAP (Page-Based Grouping)
+    const sitemap = [
+        { title: 'DASHBOARD', icon: 'Layout', path: '/' },
+        {
+            title: 'ANA SƏHİFƏ',
+            icon: 'Home',
+            children: [
+                { title: 'Ümumi Görünüş', path: '/?page=home', icon: 'Layout' },
+                { title: 'Naviqasiya', path: '/?page=navbar', icon: 'Menu' },
+                { title: 'Giriş Hissəsi', path: '/?page=hero', icon: 'Maximize' },
+                { title: 'Sürüşən Yazı', path: '/?page=marquee', icon: 'Type' },
+                { title: 'Kateqoriya Liderləri', path: '/?page=categoryleaders', icon: 'Star' },
+                { title: 'Sayt Sonu', path: '/?page=footer', icon: 'Anchor' }
+            ]
+        },
+        {
+            title: 'HAQQIMIZDA',
+            icon: 'Info',
+            children: [
+                { title: 'Ümumi Məlumat', path: '/?page=about', icon: 'FileText' }
+            ]
+        },
+        {
+            title: 'XƏBƏRLƏR',
+            icon: 'FileText',
+            children: [
+                { title: 'Xəbər Siyahısı', path: '/?mode=news', icon: 'List' },
+                { title: 'Xəbər Səhifəsi', path: '/?page=newspage', icon: 'Layout' }
+            ]
+        },
+        {
+            title: 'TƏDBİRLƏR',
+            icon: 'Calendar',
+            children: [
+                { title: 'Tədbir Təqvimi', path: '/?mode=events', icon: 'Clock' },
+                { title: 'Tədbir Səhifəsi', path: '/?page=eventspage', icon: 'Layout' }
+            ]
+        },
+        {
+            title: 'SÜRÜCÜLƏR',
+            icon: 'Trophy',
+            children: [
+                { title: 'Sürücü Reytinqi', path: '/?mode=drivers', icon: 'Award' },
+                { title: 'Sürücülər Səhifəsi', path: '/?page=driverspage', icon: 'Layout' }
+            ]
+        },
+        {
+            title: 'QALEREYA',
+            icon: 'Image',
+            children: [
+                { title: 'Qalereya Səhifəsi', path: '/?page=gallerypage', icon: 'Layout' }
+            ]
+        },
+        {
+            title: 'QAYDALAR',
+            icon: 'Shield',
+            children: [
+                { title: 'Qaydalar Səhifəsi', path: '/?page=rulespage', icon: 'Layout' }
+            ]
+        },
+        {
+            title: 'ƏLAQƏ',
+            icon: 'Phone',
+            children: [
+                { title: 'Əlaqə Səhifəsi', path: '/?page=contactpage', icon: 'Layout' }
+            ]
+        },
+        { title: 'KURS İDARƏETMƏSİ', icon: 'BookOpen', path: '/courses' },
+        { title: 'ADMİN HESABLARI', icon: 'Users', path: '/users-management' },
+        { title: 'SİSTEM AYARLARI', icon: 'Settings', path: '/frontend-settings' }
+    ];
+
+    try {
+        await fsPromises.writeFile(ADMIN_SITEMAP_PATH, JSON.stringify(sitemap, null, 2));
+        console.log('Sitemap generated successfully.');
+    } catch (err) {
+        console.error('Failed to write sitemap:', err);
+    }
+
+    const stats = {
+        total: newContent.length,
+        sections: newContent.reduce((acc, p) => acc + p.sections.length, 0),
+        images: newContent.reduce((acc, p) => acc + p.images.length, 0)
+    };
+
+    console.log(`Extraction complete. Pages: ${stats.total}, Sections: ${stats.sections}, Images: ${stats.images}`);
+
+    // Return structured data with stats
+    res.json({
+        pages: newContent,
+        stats: stats,
+        sitemap: sitemap
+    });
+
+} catch (error) {
+    console.error('Extraction error:', error);
+    res.status(500).json({ error: 'Internal Server Error during extraction' });
+}
 });
 
 // API: Get Content
