@@ -22,18 +22,22 @@ const pool = mysql.createPool({
     database: process.env.MYSQL_DATABASE || 'forsaj_admin',
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0
+    queueLimit: 0,
+    connectTimeout: 10000 // 10s timeout
 });
 
-console.log('Backend Configuration:');
-console.log('- PORT:', PORT);
-console.log('- Database Host: forsaj-db');
-console.log('- Database User:', process.env.MYSQL_USER || 'forsaj_user');
-console.log('- Database Name:', process.env.MYSQL_DATABASE || 'forsaj_admin');
-console.log('- Database Password Set:', process.env.MYSQL_PASSWORD ? 'Yes' : 'No');
+const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-change-this';
+
+console.log('--- SYSTEM CHECK ---');
+console.log('PORT:', PORT);
+console.log('DB_HOST: forsaj-db');
+console.log('DB_USER:', process.env.MYSQL_USER || 'forsaj_user');
+console.log('DB_NAME:', process.env.MYSQL_DATABASE || 'forsaj_admin');
+console.log('DB_PASS_LEN:', (process.env.MYSQL_PASSWORD || '').length);
+console.log('-------------------');
 
 // Database Initialization with Retry logic
-const initDB = async (retries = 5) => {
+const initDB = async (retries = 10) => {
     while (retries > 0) {
         try {
             const connection = await pool.getConnection();
