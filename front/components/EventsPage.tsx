@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, Calendar, MapPin, X, Car, Users as UsersIcon, Download, FileText, ChevronDown } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
-import { supabase } from '../lib/supabaseClient';
 
 interface EventItem {
   id: number;
@@ -45,15 +44,20 @@ const EventsPage: React.FC<EventsPageProps> = ({ onViewChange }) => {
   useEffect(() => {
     const loadEvents = async () => {
       try {
-        const { data, error } = await supabase
-          .from('events')
-          .select('*')
-          .order('date', { ascending: false });
+        const response = await fetch('/api/events');
+        if (!response.ok) throw new Error('Failed to fetch events');
 
-        if (error) throw error;
-        if (data) setEventsData(data as any);
+        const data = await response.json();
+
+        if (Array.isArray(data)) {
+          // Sort by date descending
+          const sortedEvents = data.sort((a: any, b: any) =>
+            new Date(b.date).getTime() - new Date(a.date).getTime()
+          );
+          setEventsData(sortedEvents as any);
+        }
       } catch (err) {
-        console.error('Failed to load events from Supabase', err);
+        console.error('Failed to load events from API', err);
       }
     };
     loadEvents();

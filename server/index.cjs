@@ -129,7 +129,6 @@ app.get('/api', async (req, res) => {
         port: PORT,
         userCount: users.length,
         database: fileInfo,
-        supabaseConnected: false,
         adminEnabled: true,
         message: 'Forsaj API is fully operational'
     });
@@ -245,7 +244,6 @@ app.post('/api/news', async (req, res) => {
 // CORE AUTH & SETUP ROUTES (Move to top)
 // ==========================================
 
-// API: Get Users (Supabase)
 // API: Get Users (MySQL)
 app.get('/api/users', authenticateToken, async (req, res) => {
     try {
@@ -257,7 +255,6 @@ app.get('/api/users', authenticateToken, async (req, res) => {
     }
 });
 
-// API: Save User (Supabase Create or Update)
 // API: Save User (MySQL Create or Update)
 app.post('/api/users', authenticateToken, async (req, res) => {
     const { id, username, name, role, password } = req.body;
@@ -295,7 +292,6 @@ app.post('/api/users', authenticateToken, async (req, res) => {
     }
 });
 
-// API: Delete User (Supabase)
 // API: Delete User (MySQL)
 app.delete('/api/users/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
@@ -1007,7 +1003,7 @@ app.get('/api/frontend/status', (req, res) => {
     });
 });
 
-// User management moved to Supabase section above
+// User management section above
 
 
 // Final Catch-all for diagnostics

@@ -6,7 +6,6 @@ interface VideoArchiveProps {
   onViewChange: (view: any) => void;
 }
 
-import { supabase } from '../lib/supabaseClient';
 
 const VideoArchive: React.FC<VideoArchiveProps> = ({ onViewChange }) => {
   const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
@@ -16,24 +15,25 @@ const VideoArchive: React.FC<VideoArchiveProps> = ({ onViewChange }) => {
   React.useEffect(() => {
     const loadVideos = async () => {
       try {
-        const { data, error } = await supabase
-          .from('videos')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(4);
+        const response = await fetch('/api/videos');
+        if (!response.ok) throw new Error('Failed to fetch videos');
 
-        if (error) throw error;
+        const data = await response.json();
+
         if (data) {
-          const mapped = data.map(v => ({
-            id: v.id,
-            title: v.title,
-            videoId: v.video_id,
-            thumbnail: v.thumbnail
-          }));
+          const mapped = data
+            .sort((a: any, b: any) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
+            .slice(0, 4)
+            .map((v: any) => ({
+              id: v.id,
+              title: v.title,
+              videoId: v.video_id,
+              thumbnail: v.thumbnail
+            }));
           setVideos(mapped);
         }
       } catch (err) {
-        console.error('Videos load fail from Supabase:', err);
+        console.error('Videos load fail from API:', err);
       }
     };
     loadVideos();

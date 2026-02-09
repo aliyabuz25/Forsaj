@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Calendar } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
-import { supabase } from '../lib/supabaseClient';
 
 interface NewsItem {
   id: number;
@@ -35,17 +34,22 @@ const News: React.FC<NewsProps> = ({ onViewChange }) => {
   useEffect(() => {
     const loadNews = async () => {
       try {
-        const { data, error } = await supabase
-          .from('news')
-          .select('*')
-          .eq('status', 'published')
-          .order('date', { ascending: false })
-          .limit(3);
+        const response = await fetch('/api/news');
+        if (!response.ok) throw new Error('Failed to fetch news');
 
-        if (error) throw error;
-        if (data) setNewsData(data as any);
+        const data = await response.json();
+
+        if (Array.isArray(data)) {
+          // Client-side filtering and sorting to match previous Supabase query
+          const publishedNews = data
+            .filter((item: any) => item.status === 'published')
+            .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
+            .slice(0, 3);
+
+          setNewsData(publishedNews);
+        }
       } catch (err) {
-        console.error('Failed to load news from Supabase', err);
+        console.error('Failed to load news from API', err);
       }
     };
     loadNews();

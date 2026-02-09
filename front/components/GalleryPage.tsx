@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PlayCircle, Image as ImageIcon, Video, ArrowRight, Zap, Maximize2, Calendar, X } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
-import { supabase } from '../lib/supabaseClient';
 
 const GalleryPage: React.FC = () => {
   const [activeType, setActiveType] = useState<'photos' | 'videos'>('photos');
@@ -13,22 +12,30 @@ const GalleryPage: React.FC = () => {
   useEffect(() => {
     const loadGallery = async () => {
       try {
-        const { data: photos } = await supabase.from('gallery_photos').select('*');
-        if (photos) setDynamicPhotos(photos);
+        const photosRes = await fetch('/api/gallery-photos');
+        if (photosRes.ok) {
+          const photos = await photosRes.json();
+          if (photos) setDynamicPhotos(photos);
+        }
 
-        const { data: videos } = await supabase.from('videos').select('*').order('created_at', { ascending: false });
-        if (videos) {
-          const mapped = videos.map(v => ({
-            id: v.id,
-            title: v.title,
-            videoId: v.video_id,
-            thumbnail: v.thumbnail,
-            duration: v.duration
-          }));
-          setDynamicVideos(mapped);
+        const videosRes = await fetch('/api/videos');
+        if (videosRes.ok) {
+          const videos = await videosRes.json();
+          if (videos) {
+            const mapped = videos
+              .sort((a: any, b: any) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
+              .map((v: any) => ({
+                id: v.id,
+                title: v.title,
+                videoId: v.video_id,
+                thumbnail: v.thumbnail,
+                duration: v.duration
+              }));
+            setDynamicVideos(mapped);
+          }
         }
       } catch (err) {
-        console.error('Gallery load failed from Supabase', err);
+        console.error('Gallery load failed from API', err);
       }
     };
     loadGallery();

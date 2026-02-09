@@ -33,92 +33,104 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         e.preventDefault();
         setIsLoading(true);
 
-        // Virtual email mapping for Supabase Auth
-        // const virtualEmail = `${username.trim().toLowerCase()}@forsaj.admin`;
-
         try {
+            const endpoint = isLoginMode ? '/api/login' : '/api/setup';
+            const body = isLoginMode
+                ? { username, password }
+                : { username, password, name };
 
-            const setupResult = await response.json();
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+
+            const result = await response.json();
 
             if (!response.ok) {
-                throw new Error(setupResult.error || 'Quraşdırma uğursuz oldu');
+                throw new Error(result.error || (isLoginMode ? 'Giriş uğursuz oldu' : 'Quraşdırma uğursuz oldu'));
             }
 
-            toast.success('Baza uğurla başladıldı! İndi daxil ola bilərsiniz.');
-            setIsLoginMode(true);
+            if (isLoginMode) {
+                localStorage.setItem('forsaj_admin_token', result.token);
+                onLogin(result.user);
+                toast.success('Xoş gəldiniz!');
+            } else {
+                toast.success('Baza uğurla başladıldı! İndi daxil ola bilərsiniz.');
+                setIsLoginMode(true);
+            }
+        } catch (err: any) {
+            toast.error(err.message || 'Əməliyyat uğursuz oldu');
+        } finally {
+            setIsLoading(false);
         }
-    } catch (err: any) {
-        toast.error(err.message || 'Əməliyyat uğursuz oldu');
-    } finally {
-        setIsLoading(false);
-    }
-};
+    };
 
-return (
-    <div className="login-page">
-        <div className="login-card fade-in">
-            <div className="login-header">
-                <div className="login-logo">
-                    {isLoginMode ? <ShieldAlert size={40} className="logo-icon" /> : <Lock size={40} className="logo-icon" />}
+    return (
+        <div className="login-page">
+            <div className="login-card fade-in">
+                <div className="login-header">
+                    <div className="login-logo">
+                        {isLoginMode ? <ShieldAlert size={40} className="logo-icon" /> : <Lock size={40} className="logo-icon" />}
+                    </div>
+                    <h1>{isLoginMode ? 'Forsaj Admin' : 'Sistem Quraşdırılması'}</h1>
+                    <p>{isLoginMode ? 'Sistemə daxil olmaq üçün məlumatlarınızı daxil edin' : 'İlkayan Master Admin hesabını yaradaraq bazanı başladın'}</p>
                 </div>
-                <h1>{isLoginMode ? 'Forsaj Admin' : 'Sistem Quraşdırılması'}</h1>
-                <p>{isLoginMode ? 'Sistemə daxil olmaq üçün məlumatlarınızı daxil edin' : 'İlkayan Master Admin hesabını yaradaraq bazanı başladın'}</p>
-            </div>
 
-            <form className="login-form" onSubmit={handleSubmit}>
-                {!isLoginMode && (
+                <form className="login-form" onSubmit={handleSubmit}>
+                    {!isLoginMode && (
+                        <div className="form-group">
+                            <label><User size={16} /> Tam Adınız</label>
+                            <input
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Məs: Əli Məmmədov"
+                                required
+                            />
+                        </div>
+                    )}
+
                     <div className="form-group">
-                        <label><User size={16} /> Tam Adınız</label>
+                        <label><User size={16} /> İstifadəçi Adı</label>
                         <input
                             type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="Məs: Əli Məmmədov"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Məs: admin"
                             required
                         />
                     </div>
-                )}
 
-                <div className="form-group">
-                    <label><User size={16} /> İstifadəçi Adı</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Məs: admin"
-                        required
-                    />
+                    <div className="form-group">
+                        <label><Lock size={16} /> Şifrə</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="••••••••"
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" className="login-btn" disabled={isLoading}>
+                        {isLoading ? (
+                            <div className="loader-container">
+                                <Loader2 className="animate-spin" size={20} />
+                                <span>Gözləyin...</span>
+                            </div>
+                        ) : (
+                            isLoginMode ? 'Daxil Ol' : 'Bazanı Başlat'
+                        )}
+                    </button>
+                </form>
+
+                <div className="login-footer">
+                    <p>© 2026 Forsaj Club. Platformanın təhlükəsizliyi üçün mütəmadi olaraq şifrənizi yeniləyin.</p>
                 </div>
-
-                <div className="form-group">
-                    <label><Lock size={16} /> Şifrə</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        required
-                    />
-                </div>
-
-                <button type="submit" className="login-btn" disabled={isLoading}>
-                    {isLoading ? (
-                        <div className="loader-container">
-                            <Loader2 className="animate-spin" size={20} />
-                            <span>Gözləyin...</span>
-                        </div>
-                    ) : (
-                        isLoginMode ? 'Daxil Ol' : 'Bazanı Başlat'
-                    )}
-                </button>
-            </form>
-
-            <div className="login-footer">
-                <p>© 2026 Forsaj Club. Platformanın təhlükəsizliyi üçün mütəmadi olaraq şifrənizi yeniləyin.</p>
             </div>
         </div>
-    </div>
-);
-    };
+    );
+};
 
 export default Login;

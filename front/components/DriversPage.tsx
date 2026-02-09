@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, Trophy, Zap } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
-import { supabase } from '../lib/supabaseClient';
 
 interface Driver {
   id: number;
@@ -34,12 +33,10 @@ const DriversPage: React.FC<DriversPageProps> = ({ initialCategoryId }) => {
   useEffect(() => {
     const loadDrivers = async () => {
       try {
-        const { data, error } = await supabase
-          .from('drivers')
-          .select('*')
-          .order('category_name');
+        const response = await fetch('/api/drivers');
+        if (!response.ok) throw new Error('Failed to fetch drivers');
 
-        if (error) throw error;
+        const data = await response.json();
 
         if (data) {
           const mappedCats = data.map((c: any) => {
@@ -54,12 +51,12 @@ const DriversPage: React.FC<DriversPageProps> = ({ initialCategoryId }) => {
           setCategories(mappedCats);
 
           if (initialCategoryId) {
-            const cat = mappedCats.find(c => c.id === initialCategoryId);
+            const cat = mappedCats.find((c: any) => c.id === initialCategoryId);
             if (cat) setSelectedCategory(cat);
           }
         }
       } catch (err) {
-        console.error('Drivers fetch failed from Supabase:', err);
+        console.error('Drivers fetch failed from API:', err);
       }
     };
     loadDrivers();

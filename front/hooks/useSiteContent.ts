@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabaseClient';
 
 interface ContentSection {
     id: string;
@@ -29,23 +28,24 @@ export const useSiteContent = (scopePageId?: string) => {
     useEffect(() => {
         const loadContent = async () => {
             try {
-                const { data, error } = await supabase
-                    .from('site_content')
-                    .select('*');
+                const response = await fetch('/api/site-content');
+                if (!response.ok) throw new Error('Failed to fetch site content');
 
-                if (error) throw error;
+                const data = await response.json();
 
                 if (data) {
-                    const mapped = data.map((p: any) => ({
-                        id: p.page_id,
+                    // Check if data is already in expected format or needs mapping
+                    // The API returns the format directly usually, but we keep mapping just in case
+                    const mapped = Array.isArray(data) ? data.map((p: any) => ({
+                        id: p.page_id || p.id,
                         title: p.title,
                         sections: p.sections,
                         images: p.images
-                    }));
+                    })) : [];
                     setContent(mapped as any);
                 }
             } catch (err) {
-                console.error('Failed to load site content from Supabase:', err);
+                console.error('Failed to load site content from API:', err);
             } finally {
                 setIsLoading(false);
             }

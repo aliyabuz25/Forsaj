@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, Calendar, Facebook, Send, Twitter, MessageCircle } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
-import { supabase } from '../lib/supabaseClient';
 
 interface NewsItem {
   id: number;
@@ -33,16 +32,18 @@ const NewsPage: React.FC = () => {
   useEffect(() => {
     const loadNews = async () => {
       try {
-        const { data, error } = await supabase
-          .from('news')
-          .select('*')
-          .eq('status', 'published') // Only show published news
-          .order('date', { ascending: false });
+        const response = await fetch('/api/news');
+        if (!response.ok) throw new Error('Failed to fetch news');
 
-        if (error) throw error;
+        const data = await response.json();
 
         if (data) {
-          const mapped = data.map((item: any) => ({
+          // Filter for published news and sort by date descending
+          const filtered = data
+            .filter((item: any) => item.status === 'published')
+            .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+          const mapped = filtered.map((item: any) => ({
             id: item.id,
             title: item.title,
             date: item.date,
@@ -53,7 +54,7 @@ const NewsPage: React.FC = () => {
           setNewsData(mapped);
         }
       } catch (err) {
-        console.error('Failed to load news from Supabase', err);
+        console.error('Failed to load news from API', err);
       }
     };
     loadNews();

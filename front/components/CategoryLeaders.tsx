@@ -6,7 +6,6 @@ interface CategoryLeadersProps {
   onViewChange: (view: 'home' | 'about' | 'news' | 'events' | 'drivers' | 'rules' | 'contact', category?: string) => void;
 }
 
-import { supabase } from '../lib/supabaseClient';
 
 const CategoryLeaders: React.FC<CategoryLeadersProps> = ({ onViewChange }) => {
   const { getText } = useSiteContent('categoryleaders');
@@ -15,15 +14,13 @@ const CategoryLeaders: React.FC<CategoryLeadersProps> = ({ onViewChange }) => {
   React.useEffect(() => {
     const loadLeaders = async () => {
       try {
-        const { data, error } = await supabase
-          .from('drivers')
-          .select('*')
-          .order('category_name');
+        const response = await fetch('/api/drivers');
+        if (!response.ok) throw new Error('Failed to fetch drivers');
 
-        if (error) throw error;
+        const data = await response.json();
 
         if (data) {
-          const topLeaders = data.map(cat => {
+          const topLeaders = data.map((cat: any) => {
             const drivers = Array.isArray(cat.drivers) ? cat.drivers : [];
             const topDriver = [...drivers].sort((a: any, b: any) => a.rank - b.rank)[0];
             return {
@@ -38,7 +35,7 @@ const CategoryLeaders: React.FC<CategoryLeadersProps> = ({ onViewChange }) => {
           setLeaders(topLeaders);
         }
       } catch (err) {
-        console.error('Leaders fetch failed from Supabase:', err);
+        console.error('Leaders fetch failed from API:', err);
       }
     };
     loadLeaders();

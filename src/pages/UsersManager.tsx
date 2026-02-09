@@ -83,137 +83,136 @@ const UsersManager: React.FC<UsersManagerProps> = ({ currentUser }) => {
         if (!window.confirm('Bu istifadəçini silmək istədiyinizə əminsiniz?')) return;
 
         try {
-            try {
-                const token = localStorage.getItem('forsaj_admin_token');
-                const response = await fetch(`/api/users/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (response.ok) {
-                    toast.success('İstifadəçi silindi');
-                    fetchUsers();
-                } else {
-                    const data = await response.json();
-                    toast.error(data.error || 'Silmək mümkün olmadı');
+            const token = localStorage.getItem('forsaj_admin_token');
+            const response = await fetch(`/api/users/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
                 }
-            } catch (err) {
-                toast.error('Serverlə bağlantı kəsildi');
+            });
+            if (response.ok) {
+                toast.success('İstifadəçi silindi');
+                fetchUsers();
+            } else {
+                const data = await response.json();
+                toast.error(data.error || 'Silmək mümkün olmadı');
             }
-        };
-
-        const openModal = (user: any | null = null) => {
-            setEditingUser(user ? { ...user } : { username: '', name: '', password: '', role: 'secondary' });
-            setIsModalOpen(true);
-        };
-
-        if (isLoading) return <div className="loading-state">Yüklənir...</div>;
-
-        return (
-            <div className="users-manager fade-in">
-                <div className="manager-header">
-                    <div>
-                        <h1>Admin Hesabları</h1>
-                        <p>Sistemi idarə edən bütün administratorların siyahısı və yetkiləri</p>
-                    </div>
-                    {currentUser.role === 'master' && (
-                        <button className="add-user-btn" onClick={() => openModal()}>
-                            <UserPlus size={18} /> Yeni Admin
-                        </button>
-                    )}
-                </div>
-
-                <div className="users-grid">
-                    {users.map(user => (
-                        <div key={user.id} className="user-card">
-                            <div className="user-avatar">
-                                <img src={`https://ui-avatars.com/api/?name=${user.name}&background=${user.role === 'master' ? '3b82f6' : 'f59e0b'}&color=fff`} alt={user.name} />
-                                <div className={`role-badge ${user.role || 'secondary'}`}>
-                                    <Shield size={10} /> {user.role === 'master' ? 'Master' : 'Secondary'}
-                                </div>
-                            </div>
-                            <div className="user-details">
-                                <h3>{user.name}</h3>
-                                <span>@{user.username || 'username'}</span>
-                            </div>
-                            {currentUser.role === 'master' && (
-                                <div className="user-actions">
-                                    <button className="edit-btn" onClick={() => openModal(user)} title="Düzəliş et">
-                                        <Edit size={16} />
-                                    </button>
-                                    <button className="delete-btn" onClick={() => handleDeleteUser(user.id)} title="Sil">
-                                        <Trash2 size={16} />
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </div>
-
-                {isModalOpen && (
-                    <div className="modal-overlay">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h2>{editingUser?.id ? 'İstifadəçini Redaktə Et' : 'Yeni Admin Hesabı'}</h2>
-                                <button onClick={() => setIsModalOpen(false)}><X size={20} /></button>
-                            </div>
-                            <form onSubmit={handleSaveUser}>
-                                <div className="form-group">
-                                    <label><User size={14} /> Tam Ad</label>
-                                    <input
-                                        type="text"
-                                        value={editingUser?.name || ''}
-                                        onChange={e => setEditingUser({ ...editingUser, name: e.target.value })}
-                                        placeholder="Məs: Əli Məmmədov"
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label><User size={14} /> İstifadəçi Adı</label>
-                                    <input
-                                        type="text"
-                                        value={editingUser?.username || ''}
-                                        onChange={e => setEditingUser({ ...editingUser, username: e.target.value })}
-                                        placeholder="Məs: alimm"
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label><Lock size={14} /> Şifrə {editingUser?.id && <span className="helper-text">(Dəyişmək istəmirsinizsə boş saxlayın)</span>}</label>
-                                    <input
-                                        type="password"
-                                        value={editingUser?.password || ''}
-                                        onChange={e => setEditingUser({ ...editingUser, password: e.target.value })}
-                                        placeholder="••••••••"
-                                        required={!editingUser?.id}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label><Shield size={14} /> Yetki (Rol)</label>
-                                    <select
-                                        value={editingUser?.role || 'secondary'}
-                                        onChange={e => setEditingUser({ ...editingUser, role: e.target.value as any })}
-                                    >
-                                        <option value="master">Master Admin (Tam Yetki)</option>
-                                        <option value="secondary">Redaktör (Məhdud Yetki)</option>
-                                    </select>
-                                </div>
-                                {editingUser?.role === 'master' && (
-                                    <div className="role-warning">
-                                        <AlertCircle size={14} /> Master Admin bütün sistem daxilində tam səlahiyyətə malikdir.
-                                    </div>
-                                )}
-                                <div className="modal-actions">
-                                    <button type="button" className="cancel-btn" onClick={() => setIsModalOpen(false)}>Ləğv Et</button>
-                                    <button type="submit" className="save-btn"><Save size={18} /> Yadda Saxla</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                )}
-            </div>
-        );
+        } catch (err) {
+            toast.error('Serverlə bağlantı kəsildi');
+        }
     };
 
-    export default UsersManager;
+    const openModal = (user: any | null = null) => {
+        setEditingUser(user ? { ...user } : { username: '', name: '', password: '', role: 'secondary' });
+        setIsModalOpen(true);
+    };
+
+    if (isLoading) return <div className="loading-state">Yüklənir...</div>;
+
+    return (
+        <div className="users-manager fade-in">
+            <div className="manager-header">
+                <div>
+                    <h1>Admin Hesabları</h1>
+                    <p>Sistemi idarə edən bütün administratorların siyahısı və yetkiləri</p>
+                </div>
+                {currentUser.role === 'master' && (
+                    <button className="add-user-btn" onClick={() => openModal()}>
+                        <UserPlus size={18} /> Yeni Admin
+                    </button>
+                )}
+            </div>
+
+            <div className="users-grid">
+                {users.map(user => (
+                    <div key={user.id} className="user-card">
+                        <div className="user-avatar">
+                            <img src={`https://ui-avatars.com/api/?name=${user.name}&background=${user.role === 'master' ? '3b82f6' : 'f59e0b'}&color=fff`} alt={user.name} />
+                            <div className={`role-badge ${user.role || 'secondary'}`}>
+                                <Shield size={10} /> {user.role === 'master' ? 'Master' : 'Secondary'}
+                            </div>
+                        </div>
+                        <div className="user-details">
+                            <h3>{user.name}</h3>
+                            <span>@{user.username || 'username'}</span>
+                        </div>
+                        {currentUser.role === 'master' && (
+                            <div className="user-actions">
+                                <button className="edit-btn" onClick={() => openModal(user)} title="Düzəliş et">
+                                    <Edit size={16} />
+                                </button>
+                                <button className="delete-btn" onClick={() => handleDeleteUser(user.id.toString())} title="Sil">
+                                    <Trash2 size={16} />
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </div>
+
+            {isModalOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h2>{editingUser?.id ? 'İstifadəçini Redaktə Et' : 'Yeni Admin Hesabı'}</h2>
+                            <button onClick={() => setIsModalOpen(false)}><X size={20} /></button>
+                        </div>
+                        <form onSubmit={handleSaveUser}>
+                            <div className="form-group">
+                                <label><User size={14} /> Tam Ad</label>
+                                <input
+                                    type="text"
+                                    value={editingUser?.name || ''}
+                                    onChange={e => setEditingUser({ ...editingUser, name: e.target.value })}
+                                    placeholder="Məs: Əli Məmmədov"
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label><User size={14} /> İstifadəçi Adı</label>
+                                <input
+                                    type="text"
+                                    value={editingUser?.username || ''}
+                                    onChange={e => setEditingUser({ ...editingUser, username: e.target.value })}
+                                    placeholder="Məs: alimm"
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label><Lock size={14} /> Şifrə {editingUser?.id && <span className="helper-text">(Dəyişmək istəmirsinizsə boş saxlayın)</span>}</label>
+                                <input
+                                    type="password"
+                                    value={editingUser?.password || ''}
+                                    onChange={e => setEditingUser({ ...editingUser, password: e.target.value })}
+                                    placeholder="••••••••"
+                                    required={!editingUser?.id}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label><Shield size={14} /> Yetki (Rol)</label>
+                                <select
+                                    value={editingUser?.role || 'secondary'}
+                                    onChange={e => setEditingUser({ ...editingUser, role: e.target.value as any })}
+                                >
+                                    <option value="master">Master Admin (Tam Yetki)</option>
+                                    <option value="secondary">Redaktör (Məhdud Yetki)</option>
+                                </select>
+                            </div>
+                            {editingUser?.role === 'master' && (
+                                <div className="role-warning">
+                                    <AlertCircle size={14} /> Master Admin bütün sistem daxilində tam səlahiyyətə malikdir.
+                                </div>
+                            )}
+                            <div className="modal-actions">
+                                <button type="button" className="cancel-btn" onClick={() => setIsModalOpen(false)}>Ləğv Et</button>
+                                <button type="submit" className="save-btn"><Save size={18} /> Yadda Saxla</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default UsersManager;
