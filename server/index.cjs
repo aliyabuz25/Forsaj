@@ -25,11 +25,12 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-change-this';
-
 console.log('Backend Configuration:');
 console.log('- PORT:', PORT);
 console.log('- Database Host: forsaj-db');
+console.log('- Database User:', process.env.MYSQL_USER || 'forsaj_user');
+console.log('- Database Name:', process.env.MYSQL_DATABASE || 'forsaj_admin');
+console.log('- Database Password Set:', process.env.MYSQL_PASSWORD ? 'Yes' : 'No');
 
 // Database Initialization with Retry logic
 const initDB = async (retries = 5) => {
@@ -168,7 +169,15 @@ app.get('/api/db-status', async (req, res) => {
 });
 
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+    res.json({
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        db_pool: !!pool
+    });
+});
+
+app.get('/', (req, res) => {
+    res.send('Forsaj Backend API is running. Use /api/health for details.');
 });
 
 app.use('/uploads', express.static(UPLOAD_DIR_PATH));
