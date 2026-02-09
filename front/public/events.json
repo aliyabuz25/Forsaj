@@ -83,14 +83,33 @@
     "status": "past"
   },
   {
-    "id": 10,
-    "title": "SET",
-    "date": "2026-02-08",
-    "location": "Bakı",
-    "category": "OFFROAD",
-    "img": "/uploads/1770545319199-891631459.avif",
-    "description": "[b]skdklasvlkdalkd[/b]\n[right]ksalkdksklaklps[/right]\n",
-    "rules": "kdfkldsklf",
+    "id": 11,
+    "title": "ABŞERON DUNES RAID",
+    "date": "2025-03-15",
+    "location": "ABŞERON",
+    "category": "DESERT RAID",
+    "img": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=2070&auto=format&fit=crop",
+    "description": "Abşeronun qum dyunlarında sürət və dözümlülük yarışı. Mart ayının sərinliyində qızmar yarış!",
+    "status": "planned"
+  },
+  {
+    "id": 12,
+    "title": "ŞƏKİ TARİXİ TUR",
+    "date": "2025-05-20",
+    "location": "ŞƏKİ",
+    "category": "EXPEDITION",
+    "img": "https://images.unsplash.com/photo-1547038577-da80abbc4f19?q=80&w=2055&auto=format&fit=crop",
+    "description": "Offroad texnikası ilə Şəkinin qədim kəndlərinə və tarixi abidələrinə səyahət.",
+    "status": "planned"
+  },
+  {
+    "id": 13,
+    "title": "MUD FESTIVAL 2025",
+    "date": "2025-06-10",
+    "location": "SUMQAYIT",
+    "category": "FESTIVAL",
+    "img": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=2070&auto=format&fit=crop",
+    "description": "Böyük Palçıq Festivalı. Həm yarış, həm əyləncə!",
     "status": "planned"
   }
 ]
