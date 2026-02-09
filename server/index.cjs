@@ -5,10 +5,28 @@ const path = require('path');
 const fs = require('fs');
 const fsPromises = require('fs/promises');
 
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// ------------------------------------------
+// MIDDLEWARE CONFIGURATION
+// ------------------------------------------
+app.use(cors());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// Request Logger & Trailing Slash Normalizer
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl || req.url}`);
+    if (req.url.startsWith('/api/') && req.url.length > 5 && req.url.endsWith('/')) {
+        req.url = req.url.slice(0, -1);
+    }
+    next();
+});
+
 // ------------------------------------------
 // ENVIRONMENT & PATH CONFIGURATION
 // ------------------------------------------
-const PORT = process.env.PORT || 5000;
 const WEB_DATA_DIR = process.env.WEB_DATA_DIR || path.join(__dirname, '../front/public');
 const FRONT_PUBLIC_DIR = WEB_DATA_DIR;
 const SITE_CONTENT_PATH = path.join(WEB_DATA_DIR, 'site-content.json');
@@ -26,6 +44,9 @@ const GALLERY_PHOTOS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'gallery-photos.jso
 const VIDEOS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'videos.json');
 const DRIVERS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'drivers.json');
 
+// ------------------------------------------
+// CORE ROUTES
+// ------------------------------------------
 app.get('/', (req, res) => {
     res.send('Admin Backend is running!');
 });
@@ -42,18 +63,13 @@ app.get('/api', async (req, res) => {
 
     res.json({
         status: 'ready',
-        version: '1.2.3',
+        version: '1.2.4',
         port: PORT,
         userCount: users.length,
         database: fileInfo,
         message: 'Forsaj API is fully operational'
     });
 });
-
-app.get('/', (req, res) => {
-    res.send('Admin Backend is running!');
-});
-
 
 app.use('/uploads', express.static(UPLOAD_DIR_PATH));
 
