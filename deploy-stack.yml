@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile.backend
     restart: unless-stopped
     environment:
-      PORT: "3001"
+      PORT: "5000"
       WEB_DATA_DIR: "/app/data/web-data"
       ADMIN_PUBLIC_DIR: "/app/data/web-data"
       UPLOAD_DIR: "/app/data/uploads"
@@ -19,7 +19,7 @@ services:
       - 'traefik.http.routers.forsaj-api.rule=((Host(`forsaj.octotech.az`) || Host(`forsaj.az`) || Host(`admin.forsaj.octotech.az`) || Host(`admin.forsaj.az`))) && ((PathPrefix(`/api`) || PathPrefix(`/uploads`)))'
       - 'traefik.http.routers.forsaj-api.entrypoints=web'
       - 'traefik.http.routers.forsaj-api.priority=1500'
-      - 'traefik.http.services.forsaj-api.loadbalancer.server.port=3001'
+      - 'traefik.http.services.forsaj-api.loadbalancer.server.port=5000'
 
   forsaj-frontend:
     build:
