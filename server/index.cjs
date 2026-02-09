@@ -5,31 +5,29 @@ const path = require('path');
 const fs = require('fs');
 const fsPromises = require('fs/promises');
 
-const app = express();
-const PORT = process.env.PORT || 3001;
+// ------------------------------------------
+// ENVIRONMENT & PATH CONFIGURATION
+// ------------------------------------------
+const PORT = process.env.PORT || 5000;
+const WEB_DATA_DIR = process.env.WEB_DATA_DIR || path.join(__dirname, '../front/public');
+const FRONT_PUBLIC_DIR = WEB_DATA_DIR;
+const SITE_CONTENT_PATH = path.join(WEB_DATA_DIR, 'site-content.json');
 
-app.use(cors());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+const ADMIN_PUBLIC_DIR = process.env.ADMIN_PUBLIC_DIR || path.join(__dirname, '../public');
+const ADMIN_SITEMAP_PATH = path.join(ADMIN_PUBLIC_DIR, 'sitemap.json');
 
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-});
+const UPLOAD_DIR_PATH = process.env.UPLOAD_DIR || path.join(FRONT_PUBLIC_DIR, 'uploads');
 
-process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception:', err);
-});
+const USERS_FILE_PATH = path.join(WEB_DATA_DIR, 'users.json');
+const EVENTS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'events.json');
+const NEWS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'news.json');
+const COURSES_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'courses.json');
+const GALLERY_PHOTOS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'gallery-photos.json');
+const VIDEOS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'videos.json');
+const DRIVERS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'drivers.json');
 
-// Request Logger & Trailing Slash Normalizer
-app.use((req, res, next) => {
-    // Log request
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl || req.url}`);
-
-    // Normalize trailing slashes for API routes
-    if (req.url.startsWith('/api/') && req.url.length > 5 && req.url.endsWith('/')) {
-        req.url = req.url.slice(0, -1);
-    }
-    next();
+app.get('/', (req, res) => {
+    res.send('Admin Backend is running!');
 });
 
 app.get('/api', async (req, res) => {
@@ -44,7 +42,7 @@ app.get('/api', async (req, res) => {
 
     res.json({
         status: 'ready',
-        version: '1.2.2',
+        version: '1.2.3',
         port: PORT,
         userCount: users.length,
         database: fileInfo,
@@ -52,79 +50,12 @@ app.get('/api', async (req, res) => {
     });
 });
 
-// Path to the web data directory (JSON files, etc.)
-const WEB_DATA_DIR = process.env.WEB_DATA_DIR || path.join(__dirname, '../front/public');
-const FRONT_PUBLIC_DIR = WEB_DATA_DIR;
-const SITE_CONTENT_PATH = path.join(WEB_DATA_DIR, 'site-content.json');
-const ADMIN_PUBLIC_DIR = process.env.ADMIN_PUBLIC_DIR || path.join(__dirname, '../public');
-const ADMIN_SITEMAP_PATH = path.join(ADMIN_PUBLIC_DIR, 'sitemap.json');
-
 app.get('/', (req, res) => {
     res.send('Admin Backend is running!');
 });
 
-const UPLOAD_DIR_PATH = process.env.UPLOAD_DIR || path.join(FRONT_PUBLIC_DIR, 'uploads');
+
 app.use('/uploads', express.static(UPLOAD_DIR_PATH));
-
-app.get('/api/ping', (req, res) => {
-    res.json({ success: true, message: 'API is working' });
-});
-
-// Ensure public directory exists
-if (!fs.existsSync(FRONT_PUBLIC_DIR)) {
-    fs.mkdirSync(FRONT_PUBLIC_DIR, { recursive: true });
-}
-
-if (!fs.existsSync(ADMIN_PUBLIC_DIR)) {
-    fs.mkdirSync(ADMIN_PUBLIC_DIR, { recursive: true });
-}
-
-// Ensure upload directory exists
-if (!fs.existsSync(UPLOAD_DIR_PATH)) {
-    fs.mkdirSync(UPLOAD_DIR_PATH, { recursive: true });
-}
-
-// Multer storage configuration
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, UPLOAD_DIR_PATH);
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({ storage: storage });
-
-// API: Upload Image
-app.post('/api/upload-image', upload.single('image'), (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({ error: 'No file uploaded' });
-    }
-    // Return the path relative to the public directory
-    const relativePath = `/uploads/${req.file.filename}`;
-    res.json({ url: relativePath });
-});
-
-// API: Save Content
-app.post('/api/save-content', async (req, res) => {
-    try {
-        const content = req.body;
-        await fsPromises.writeFile(SITE_CONTENT_PATH, JSON.stringify(content, null, 2));
-        res.json({ success: true });
-    } catch (error) {
-        console.error('Save error:', error);
-        res.status(500).json({ error: 'Failed to save content' });
-    }
-});
-
-const EVENTS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'events.json');
-const NEWS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'news.json');
-const COURSES_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'courses.json');
-const GALLERY_PHOTOS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'gallery-photos.json');
-const VIDEOS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'videos.json');
-const USERS_FILE_PATH = path.join(WEB_DATA_DIR, 'users.json');
 
 // API: Get Gallery Photos
 app.get('/api/gallery-photos', async (req, res) => {
@@ -271,7 +202,7 @@ app.all('/api/login', async (req, res) => {
     console.log(`Login attempt for username: ${username}`);
 
     const users = await getUsers();
-    const user = users.find(u => u.username === username);
+    const user = users.find(u => u.username.toLowerCase() === username.toLowerCase());
 
     if (!user) {
         console.warn(`Login failed: User '${username}' not found`);
@@ -344,7 +275,46 @@ app.post('/api/videos', async (req, res) => {
     }
 });
 
-const DRIVERS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'drivers.json');
+
+// ------------------------------------------
+// API ENDPOINTS
+// ------------------------------------------
+
+app.get('/api/ping', (req, res) => {
+    res.json({ success: true, message: 'API is working' });
+});
+
+// API: Upload Image
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, UPLOAD_DIR_PATH);
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage: storage });
+
+app.post('/api/upload-image', upload.single('image'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+    }
+    const relativePath = `/uploads/${req.file.filename}`;
+    res.json({ url: relativePath });
+});
+
+// API: Save Content
+app.post('/api/save-content', async (req, res) => {
+    try {
+        const content = req.body;
+        await fsPromises.writeFile(SITE_CONTENT_PATH, JSON.stringify(content, null, 2));
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Save error:', error);
+        res.status(500).json({ error: 'Failed to save content' });
+    }
+});
 
 // API: Get Drivers
 app.get('/api/drivers', async (req, res) => {
