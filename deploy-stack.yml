@@ -79,12 +79,13 @@ services:
       - "traefik.tcp.services.forsaj-db-tcp.loadbalancer.server.port=3306"
 
   forsaj-db-admin:
-    image: adminer
+    image: phpmyadmin/phpmyadmin
     restart: unless-stopped
     networks:
       - edge
     environment:
-      ADMINER_DEFAULT_SERVER: "forsaj-db"
+      PMA_HOST: "forsaj-db"
+      PMA_ABSOLUTE_URI: "https://forsaj.octotech.az/dbadmin/"
     labels:
       - 'traefik.enable=true'
       - 'traefik.docker.network=edge'
@@ -95,7 +96,7 @@ services:
       - 'traefik.http.middlewares.forsaj-dbadmin-slash.redirectregex.regex=^https?://forsaj.octotech.az/dbadmin$$'
       - 'traefik.http.middlewares.forsaj-dbadmin-slash.redirectregex.replacement=https://forsaj.octotech.az/dbadmin/'
       - 'traefik.http.middlewares.forsaj-dbadmin-strip.stripprefix.prefixes=/dbadmin'
-      - 'traefik.http.services.forsaj-dbadmin.loadbalancer.server.port=8080'
+      - 'traefik.http.services.forsaj-dbadmin.loadbalancer.server.port=80'
 
 networks:
   edge:
