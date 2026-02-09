@@ -20,10 +20,24 @@ process.on('uncaughtException', (err) => {
     console.error('Uncaught Exception:', err);
 });
 
-// Request Logger
+// Request Logger & Trailing Slash Normalizer
 app.use((req, res, next) => {
+    // Log request
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl || req.url}`);
+
+    // Normalize trailing slashes for API routes
+    if (req.url.startsWith('/api/') && req.url.length > 5 && req.url.endsWith('/')) {
+        req.url = req.url.slice(0, -1);
+    }
     next();
+});
+
+app.get('/api', (req, res) => {
+    res.json({
+        status: 'ready',
+        version: '1.2.0',
+        message: 'Forsaj API is fully operational'
+    });
 });
 
 // Path to the web data directory (JSON files, etc.)
@@ -199,6 +213,64 @@ app.post('/api/news', async (req, res) => {
         res.status(500).json({ error: 'Failed to save news' });
     }
 });
+
+// ==========================================
+// CORE AUTH & SETUP ROUTES (Move to top)
+// ==========================================
+
+// API: Check if setup is needed
+app.get('/api/check-setup', async (req, res) => {
+    const users = await getUsers();
+    res.json({ needsSetup: users.length === 0 });
+});
+
+// API: Setup initial Master Admin
+app.post('/api/setup', async (req, res) => {
+    const { username, password, name } = req.body;
+    const users = await getUsers();
+
+    if (users.length > 0) {
+        return res.status(400).json({ success: false, error: 'Sistem artıq quraşdırılıb' });
+    }
+
+    const newUser = {
+        id: Date.now(),
+        username,
+        password, // In a production app, use hashing here
+        name,
+        role: 'master'
+    };
+
+    await saveUsers([newUser]);
+    res.json({ success: true, user: { id: newUser.id, username: newUser.username, name: newUser.name, role: newUser.role } });
+});
+
+// API: Authentication
+app.all('/api/login', async (req, res) => {
+    if (req.method !== 'POST') {
+        return res.status(405).json({
+            success: false,
+            error: `Method ${req.method} not allowed. Please use POST for login.`,
+            note: 'If you are testing in a browser, please use the login form instead.'
+        });
+    }
+
+    const { username, password } = req.body;
+    const users = await getUsers();
+
+    const user = users.find(u => u.username === username && u.password === password);
+
+    if (user) {
+        const { password, ...userWithoutPassword } = user;
+        res.json({ success: true, user: userWithoutPassword });
+    } else {
+        res.status(401).json({ success: false, error: 'İstifadəçi adı və ya şifrə yanlışdır' });
+    }
+});
+
+// ==========================================
+// CONTENT API ROUTES
+// ==========================================
 
 // API: Get Videos
 app.get('/api/videos', async (req, res) => {
@@ -806,52 +878,15 @@ app.delete('/api/users/:id', async (req, res) => {
     res.json({ success: true });
 });
 
-// API: Check if setup is needed
-app.get('/api/check-setup', async (req, res) => {
-    const users = await getUsers();
-    res.json({ needsSetup: users.length === 0 });
-});
 
-// API: Setup initial Master Admin
-app.post('/api/setup', async (req, res) => {
-    const { username, password, name } = req.body;
-    const users = await getUsers();
-
-    if (users.length > 0) {
-        return res.status(400).json({ success: false, error: 'Sistem artıq quraşdırılıb' });
-    }
-
-    const newUser = {
-        id: Date.now(),
-        username,
-        password, // In a production app, use hashing here
-        name,
-        role: 'master'
-    };
-
-    await saveUsers([newUser]);
-    res.json({ success: true, user: { id: newUser.id, username: newUser.username, name: newUser.name, role: newUser.role } });
-});
-
-// API: Authentication
-app.post('/api/login', async (req, res) => {
-    const { username, password } = req.body;
-    const users = await getUsers();
-
-    const user = users.find(u => u.username === username && u.password === password);
-
-    if (user) {
-        const { password, ...userWithoutPassword } = user;
-        res.json({ success: true, user: userWithoutPassword });
-    } else {
-        res.status(401).json({ success: false, error: 'İstifadəçi adı və ya şifrə yanlışdır' });
-    }
-});
-
-// Catch-all for unmatched routes
+// Final Catch-all for diagnostics
 app.use((req, res) => {
-    console.log(`404 - Unmatched Request: ${req.method} ${req.originalUrl}`);
-    res.status(404).json({ error: `Route not found: ${req.method} ${req.originalUrl}` });
+    console.warn(`404 - Unmatched Request: ${req.method} ${req.originalUrl || req.url}`);
+    res.status(404).json({
+        error: `Route not found: ${req.method} ${req.originalUrl || req.url}`,
+        suggestion: 'Check the URL or method. Available base: /api/check-setup, /api/login, /api/get-content',
+        timestamp: new Date().toISOString()
+    });
 });
 
 app.listen(PORT, () => {
