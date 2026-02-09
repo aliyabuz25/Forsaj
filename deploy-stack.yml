@@ -30,6 +30,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
+      args:
+        VITE_SUPABASE_URL: "https://mrgnxibkjqsyolidyelp.supabase.co"
+        VITE_SUPABASE_ANON_KEY: "sb_publishable_6WzNDxYgXsTlShf4W2Y97w_lJefRrz4"
     restart: unless-stopped
     networks:
       - edge
