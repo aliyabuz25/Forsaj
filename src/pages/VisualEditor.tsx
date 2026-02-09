@@ -21,6 +21,7 @@ interface PageImage {
 interface PageContent {
     id: string;
     title: string;
+    active?: boolean;
     sections: Section[];
     images: PageImage[];
 }
@@ -1892,8 +1893,44 @@ const VisualEditor: React.FC = () => {
                     </aside>
 
                     <main className="editor-canvas">
-                        <div className="canvas-header">
+                        <div className="canvas-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <h2>{currentPage?.title} Bölməsi</h2>
+                            {editorMode === 'extract' && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <span style={{ fontSize: '14px', fontWeight: 'bold', color: currentPage?.active !== false ? '#10b981' : '#ef4444' }}>
+                                        {currentPage?.active !== false ? 'AKTİV' : 'DEAKTİV'}
+                                    </span>
+                                    <button
+                                        onClick={() => {
+                                            const newPages = [...pages];
+                                            newPages[selectedPageIndex].active = currentPage?.active === false ? true : false;
+                                            setPages(newPages);
+                                            toast.success(newPages[selectedPageIndex].active ? 'Bölmə aktivləşdirildi' : 'Bölmə deaktiv edildi');
+                                        }}
+                                        style={{
+                                            width: '50px',
+                                            height: '24px',
+                                            borderRadius: '12px',
+                                            background: currentPage?.active !== false ? '#10b981' : '#cbd5e1',
+                                            position: 'relative',
+                                            cursor: 'pointer',
+                                            border: 'none',
+                                            transition: 'background 0.3s'
+                                        }}
+                                    >
+                                        <div style={{
+                                            width: '18px',
+                                            height: '18px',
+                                            borderRadius: '50%',
+                                            background: 'white',
+                                            position: 'absolute',
+                                            top: '3px',
+                                            left: currentPage?.active !== false ? '29px' : '3px',
+                                            transition: 'left 0.3s'
+                                        }} />
+                                    </button>
+                                </div>
+                            )}
                         </div>
 
                         <div className="edit-fields">

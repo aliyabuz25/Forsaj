@@ -17,6 +17,7 @@ interface ImageSection {
 interface PageContent {
     id: string;
     title: string;
+    active?: boolean;
     sections: ContentSection[];
     images: ImageSection[];
 }

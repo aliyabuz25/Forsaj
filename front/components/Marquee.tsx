@@ -1,10 +1,15 @@
-
 import React from 'react';
 import { Activity } from 'lucide-react';
+import { useSiteContent } from '../hooks/useSiteContent';
 
 const Marquee: React.FC = () => {
-  const text = "SUMQAYIT CHALLENGE ÜÇÜN QEYDİYYAT DAVAM EDİR!";
-  
+  const { getPage } = useSiteContent();
+  const marqueePage = getPage('marquee');
+
+  if (!marqueePage || marqueePage.active === false) return null;
+
+  const text = marqueePage.sections[0]?.value || "FORSAJ CLUB";
+
   const MarqueeItem = () => (
     <div className="inline-flex items-center gap-8 mx-8">
       <span className="w-1.5 h-1.5 bg-black/40 rounded-full"></span>
