@@ -83,10 +83,12 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.docker.network=edge'
-      - 'traefik.http.routers.forsaj-dbadmin.rule=Host(`forsaj.octotech.az`) && PathPrefix(`/dbadmin`)'
+      - 'traefik.http.routers.forsaj-dbadmin.rule=Host(`forsaj.octotech.az`) && (PathPrefix(`/dbadmin`) || PathPrefix(`/dbadmin/`))'
       - 'traefik.http.routers.forsaj-dbadmin.entrypoints=web'
       - 'traefik.http.routers.forsaj-dbadmin.priority=2000'
-      - 'traefik.http.routers.forsaj-dbadmin.middlewares=forsaj-dbadmin-strip'
+      - 'traefik.http.routers.forsaj-dbadmin.middlewares=forsaj-dbadmin-redirect,forsaj-dbadmin-strip'
+      - 'traefik.http.middlewares.forsaj-dbadmin-redirect.redirectregex.regex=^https?://forsaj.octotech.az/dbadmin$$'
+      - 'traefik.http.middlewares.forsaj-dbadmin-redirect.redirectregex.replacement=https://forsaj.octotech.az/dbadmin/'
       - 'traefik.http.middlewares.forsaj-dbadmin-strip.stripprefix.prefixes=/dbadmin'
       - 'traefik.http.services.forsaj-dbadmin.loadbalancer.server.port=8080'
 
