@@ -1,7 +1,11 @@
 import { Search, Menu, ExternalLink } from 'lucide-react';
 import './Header.css';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+    user: any;
+}
+
+const Header: React.FC<HeaderProps> = ({ user }) => {
     return (
         <header className="header">
             <div className="header-left">
@@ -20,10 +24,10 @@ const Header: React.FC = () => {
                 </a>
                 <div className="header-profile">
                     <div className="profile-info">
-                        <span className="profile-name">Octo Admin</span>
-                        <span className="profile-status">Forsaj Club</span>
+                        <span className="profile-name">{user?.name || 'Octo Admin'}</span>
+                        <span className="profile-status">{user?.role === 'master' ? 'Admin Master' : 'Sayt Redaktoru'}</span>
                     </div>
-                    <img src="https://ui-avatars.com/api/?name=Octo+Admin&background=random" alt="Profile" />
+                    <img src={`https://ui-avatars.com/api/?name=${user?.name || 'Admin'}&background=random`} alt="Profile" />
                 </div>
             </div>
         </header>

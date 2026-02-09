@@ -6,13 +6,23 @@ import VisualEditor from './pages/VisualEditor';
 import FrontendSettings from './pages/FrontendSettings';
 import CoursesManager from './pages/CoursesManager';
 import SetupGuide from './components/SetupGuide';
+import Login from './pages/Login';
 import { Toaster } from 'react-hot-toast';
 import type { SidebarItem } from './types/navigation';
 import './index.css';
 
 const App: React.FC = () => {
+  const [user, setUser] = useState<any>(null);
   const [sitemap, setSitemap] = useState<SidebarItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Check for existing session
+    const savedUser = localStorage.getItem('forsaj_admin_user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
 
   useEffect(() => {
     const loadSitemap = async () => {
@@ -48,25 +58,38 @@ const App: React.FC = () => {
     <Router basename={import.meta.env.PROD ? '/admin' : '/'}>
       <div className="app-container">
         <Toaster position="top-right" reverseOrder={false} />
-        <Sidebar menuItems={sitemap} />
-        <main className="main-content">
-          <Header />
-          <div className="content-body">
-            <Routes>
-              {isSitemapEmpty ? (
-                <Route path="*" element={<SetupGuide />} />
-              ) : (
-                <>
-                  <Route path="/" element={<VisualEditor />} />
-                  <Route path="/frontend-settings" element={<FrontendSettings />} />
-                  <Route path="/courses" element={<CoursesManager />} />
-                  {/* Keep placeholder logic for any other path defined in future sitemaps */}
-                  <Route path="*" element={<div className="fade-in"><h1>Səhifə tapılmadı</h1></div>} />
-                </>
-              )}
-            </Routes>
-          </div>
-        </main>
+        {!user ? (
+          <Login onLogin={setUser} />
+        ) : (
+          <>
+            <Sidebar menuItems={sitemap} userRole={user.role} onLogout={() => {
+              localStorage.removeItem('forsaj_admin_user');
+              setUser(null);
+            }} />
+            <main className="main-content">
+              <Header user={user} />
+              <div className="content-body">
+                <Routes>
+                  {isSitemapEmpty ? (
+                    <Route path="*" element={<SetupGuide />} />
+                  ) : (
+                    <>
+                      <Route path="/" element={<VisualEditor />} />
+                      <Route path="/courses" element={<CoursesManager />} />
+
+                      {/* Protect sensitive pages from Secondary Admins */}
+                      <Route path="/frontend-settings" element={
+                        user.role === 'master' ? <FrontendSettings /> : <div className="fade-in"><h1>İcazə yoxdur</h1><p>Bu səhifə yalnız Master Admin üçündür.</p></div>
+                      } />
+
+                      <Route path="*" element={<div className="fade-in"><h1>Səhifə tapılmadı</h1></div>} />
+                    </>
+                  )}
+                </Routes>
+              </div>
+            </main>
+          </>
+        )}
       </div>
     </Router>
   );

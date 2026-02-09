@@ -1,0 +1,89 @@
+import React, { useState } from 'react';
+import { Lock, User, ShieldAlert } from 'lucide-react';
+import toast from 'react-hot-toast';
+import './Login.css';
+
+interface LoginProps {
+    onLogin: (user: any) => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onLogin }) => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                localStorage.setItem('forsaj_admin_user', JSON.stringify(data.user));
+                onLogin(data.user);
+                toast.success(`Xoş gəldiniz, ${data.user.name}`);
+            } else {
+                toast.error(data.error || 'Giriş uğursuz oldu');
+            }
+        } catch (err) {
+            toast.error('Serverlə bağlantı kəsildi');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return (
+        <div className="login-page">
+            <div className="login-card fade-in">
+                <div className="login-header">
+                    <div className="login-logo">
+                        <ShieldAlert size={40} className="logo-icon" />
+                    </div>
+                    <h1>Forsaj Admin</h1>
+                    <p>Sistemə daxil olmaq üçün məlumatlarınızı daxil edin</p>
+                </div>
+
+                <form className="login-form" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label><User size={16} /> İstifadəçi Adı</label>
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="master / admin"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label><Lock size={16} /> Şifrə</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="••••••••"
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" className="login-btn" disabled={isLoading}>
+                        {isLoading ? 'Giriş edilir...' : 'Daxil Ol'}
+                    </button>
+                </form>
+
+                <div className="login-footer">
+                    <p>© 2026 Forsaj Club. Bütün hüquqlar qorunur.</p>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Login;

@@ -6,9 +6,11 @@ import './Sidebar.css';
 
 interface SidebarProps {
     menuItems: SidebarItem[];
+    userRole: 'master' | 'secondary';
+    onLogout: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
+const Sidebar: React.FC<SidebarProps> = ({ menuItems, userRole, onLogout }) => {
     const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
     const location = useLocation();
 
@@ -96,17 +98,22 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
             </div>
 
             <div className="sidebar-user">
-                <img src="https://ui-avatars.com/api/?name=Octo+Admin&background=3b82f6&color=fff" alt="User" />
+                <img src={`https://ui-avatars.com/api/?name=${userRole === 'master' ? 'Master' : 'Forsaj'}+Admin&background=${userRole === 'master' ? '3b82f6' : 'f59e0b'}&color=fff`} alt="User" />
                 <div className="user-info">
-                    <span className="user-name">Octo Admin</span>
-                    <span className="user-role">Administrator</span>
+                    <span className="user-name">{userRole === 'master' ? 'Master Admin' : 'Forsaj Admin'}</span>
+                    <span className="user-role">{userRole === 'master' ? 'Tam Səlahiyyətli' : 'Məhdud Giriş'}</span>
                 </div>
             </div>
 
             <div className="sidebar-content">
                 <div className="sidebar-section-label">ƏSAS NAVİQASİYA</div>
                 <ul className="sidebar-menu">
-                    {menuItems.map(item => renderMenuItem(item))}
+                    {menuItems
+                        .filter(item => {
+                            if (userRole === 'secondary' && item.path === '/frontend-settings') return false;
+                            return true;
+                        })
+                        .map(item => renderMenuItem(item))}
                     {menuItems.length === 0 && (
                         <div className="empty-sidebar-msg">
                             <p>Menyu boşdur</p>
@@ -116,7 +123,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
             </div>
 
             <div className="sidebar-footer">
-                <button className="logout-btn">
+                <button className="logout-btn" onClick={onLogout}>
                     <LucideIcons.LogOut size={18} />
                     <span>Çıxış</span>
                 </button>

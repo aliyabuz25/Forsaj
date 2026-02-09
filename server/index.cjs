@@ -167,12 +167,30 @@ app.get('/api/drivers', async (req, res) => {
     }
 });
 
-// API: Save Drivers
+// API: Save Drivers with Automatic Ranking
 app.post('/api/drivers', async (req, res) => {
     try {
-        const drivers = req.body;
-        await fsPromises.writeFile(DRIVERS_FILE_PATH, JSON.stringify(drivers, null, 2));
-        res.json({ success: true });
+        let categories = req.body;
+
+        // Automatic Ranking Logic
+        if (Array.isArray(categories)) {
+            categories = categories.map(cat => {
+                if (cat.drivers && Array.isArray(cat.drivers)) {
+                    // Sort drivers by points descending
+                    cat.drivers.sort((a, b) => (b.points || 0) - (a.points || 0));
+
+                    // Reassign ranks based on sorted order
+                    cat.drivers = cat.drivers.map((driver, index) => ({
+                        ...driver,
+                        rank: index + 1
+                    }));
+                }
+                return cat;
+            });
+        }
+
+        await fsPromises.writeFile(DRIVERS_FILE_PATH, JSON.stringify(categories, null, 2));
+        res.json({ success: true, data: categories });
     } catch (error) {
         console.error('Error saving drivers:', error);
         res.status(500).json({ error: 'Failed to save drivers' });
@@ -575,13 +593,33 @@ app.get('/api/frontend/status', (req, res) => {
                 percentage: ramPercentage
             },
             versions: {
-                project: 'v0.0.0', // from package.json usually
+                project: 'v1.1.0',
                 node: process.version,
-                vite: 'v5.1.4' // hardcoded or read from package-lock
+                vite: 'v5.1.4'
             },
             uptime: uptimeStr
         }
     });
+});
+
+// API: Authentication
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+
+    // Static dummy users for implementation
+    const users = [
+        { id: 1, username: 'master', password: '123', role: 'master', name: 'Master Admin' },
+        { id: 2, username: 'admin', password: '456', role: 'secondary', name: 'Forsaj Admin' }
+    ];
+
+    const user = users.find(u => u.username === username && u.password === password);
+
+    if (user) {
+        const { password, ...userWithoutPassword } = user;
+        res.json({ success: true, user: userWithoutPassword });
+    } else {
+        res.status(401).json({ success: false, error: 'İstifadəçi adı və ya şifrə yanlışdır' });
+    }
 });
 
 app.listen(PORT, () => {

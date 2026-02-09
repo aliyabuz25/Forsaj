@@ -1325,9 +1325,10 @@ const VisualEditor: React.FC = () => {
                                         <input
                                             type="number"
                                             value={driverForm.rank}
-                                            onChange={(e) => handleDriverChange('rank', parseInt(e.target.value))}
-                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '16px' }}
+                                            readOnly
+                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '16px', background: '#f8fafc', color: '#94a3b8', cursor: 'not-allowed' }}
                                         />
+                                        <p style={{ fontSize: '10px', color: '#3b82f6', marginTop: '4px', fontWeight: 'bold' }}>* Sira xallara əsasən sistem tərəfindən avtomatik təyin edilir</p>
                                     </div>
 
                                     <div className="form-group">
