@@ -92,7 +92,37 @@ app.post('/api/save-content', async (req, res) => {
 const EVENTS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'events.json');
 const NEWS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'news.json');
 const COURSES_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'courses.json');
+const GALLERY_PHOTOS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'gallery-photos.json');
+const VIDEOS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'videos.json');
 const USERS_FILE_PATH = path.join(WEB_DATA_DIR, 'users.json');
+
+// API: Get Gallery Photos
+app.get('/api/gallery-photos', async (req, res) => {
+    try {
+        try {
+            await fsPromises.access(GALLERY_PHOTOS_FILE_PATH);
+        } catch {
+            return res.json([]);
+        }
+        const data = await fsPromises.readFile(GALLERY_PHOTOS_FILE_PATH, 'utf8');
+        res.json(JSON.parse(data));
+    } catch (error) {
+        console.error('Error reading gallery photos:', error);
+        res.status(500).json({ error: 'Failed to read gallery photos' });
+    }
+});
+
+// API: Save Gallery Photos
+app.post('/api/gallery-photos', async (req, res) => {
+    try {
+        const photos = req.body;
+        await fsPromises.writeFile(GALLERY_PHOTOS_FILE_PATH, JSON.stringify(photos, null, 2));
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error saving gallery photos:', error);
+        res.status(500).json({ error: 'Failed to save gallery photos' });
+    }
+});
 
 // Helper: Get Users
 const getUsers = async () => {
@@ -546,7 +576,8 @@ app.post('/api/extract-content', async (req, res) => {
                 title: 'QALEREYA',
                 icon: 'Image',
                 children: [
-                    { title: 'Videolar', path: '/?mode=videos', icon: 'Video' },
+                    { title: 'Video Arxivi', path: '/?mode=videos', icon: 'Video' },
+                    { title: 'Foto Arxiv', path: '/?mode=photos', icon: 'Image' },
                     { title: 'Qalereya Səhifəsi', path: '/?page=gallerypage', icon: 'Layout' }
                 ]
             },

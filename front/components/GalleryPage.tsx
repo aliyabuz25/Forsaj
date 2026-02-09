@@ -6,14 +6,18 @@ const GalleryPage: React.FC = () => {
   const [activeType, setActiveType] = useState<'photos' | 'videos'>('photos');
   const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
   const [dynamicVideos, setDynamicVideos] = useState<any[]>([]);
-  const { getText, getPage } = useSiteContent('gallerypage');
-  const pageContent = getPage('gallerypage');
-  const dynamicPhotos = pageContent?.images || [];
+  const [dynamicPhotos, setDynamicPhotos] = useState<any[]>([]);
+  const { getText } = useSiteContent('gallerypage');
 
   useEffect(() => {
     fetch('/videos.json')
       .then(res => res.json())
       .then(data => setDynamicVideos(data))
+      .catch(() => { });
+
+    fetch('/gallery-photos.json')
+      .then(res => res.json())
+      .then(data => setDynamicPhotos(data))
       .catch(() => { });
   }, []);
 
@@ -122,12 +126,15 @@ const GalleryPage: React.FC = () => {
                     className="group/item relative aspect-square bg-[#111] overflow-hidden cursor-pointer shadow-lg hover:z-20 transition-all duration-300"
                   >
                     <img
-                      src={photo.path}
+                      src={photo.url || photo.path}
                       className="w-full h-full object-cover grayscale opacity-60 transition-all duration-500 group-hover/item:scale-110 group-hover/item:grayscale-0 group-hover/item:opacity-100"
-                      alt={photo.alt}
+                      alt={photo.title || photo.alt}
                     />
-                    <div className="absolute inset-0 bg-[#FF4D00]/20 opacity-0 group-hover/item:opacity-100 transition-opacity flex items-center justify-center">
-                      <Maximize2 size={24} className="text-white drop-shadow-lg" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover/item:opacity-100 transition-opacity flex flex-col justify-end p-3">
+                      <p className="text-[10px] font-black italic uppercase text-white truncate drop-shadow-md">{photo.title || photo.alt}</p>
+                      <div className="flex justify-between items-center mt-1">
+                        <Maximize2 size={12} className="text-[#FF4D00]" />
+                      </div>
                     </div>
                   </div>
                 ))

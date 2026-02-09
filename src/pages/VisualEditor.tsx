@@ -68,6 +68,12 @@ interface VideoItem {
     thumbnail: string;
 }
 
+interface GalleryPhotoItem {
+    id: number;
+    title: string;
+    url: string;
+}
+
 interface DriverCategory {
     id: string;
     name: string;
@@ -162,10 +168,14 @@ const VisualEditor: React.FC = () => {
 
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const mode = queryParams.get('mode'); // 'extract', 'events', 'news', 'drivers', 'videos'
+    const mode = queryParams.get('mode'); // 'extract', 'events', 'news', 'drivers', 'videos', 'photos'
     const pageParam = queryParams.get('page');
 
-    const [editorMode, setEditorMode] = useState<'extract' | 'events' | 'news' | 'drivers' | 'videos'>('extract');
+    const [editorMode, setEditorMode] = useState<'extract' | 'events' | 'news' | 'drivers' | 'videos' | 'photos'>('extract');
+
+    const [galleryPhotos, setGalleryPhotos] = useState<GalleryPhotoItem[]>([]);
+    const [selectedPhotoId, setSelectedPhotoId] = useState<number | null>(null);
+    const [photoForm, setPhotoForm] = useState<Partial<GalleryPhotoItem>>({});
 
     useEffect(() => {
         if (mode) {
@@ -237,6 +247,13 @@ const VisualEditor: React.FC = () => {
                 }
             })
             .catch(() => { console.error('drivers load fail'); });
+
+        fetch(`/api/gallery-photos?v=${Date.now()}`)
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) setGalleryPhotos(data);
+            })
+            .catch(() => { console.error('gallery photos load fail'); });
 
         fetch(`/api/videos?v=${Date.now()}`)
             .then(res => res.json())
@@ -486,7 +503,7 @@ const VisualEditor: React.FC = () => {
         const toastId = toast.loading('Yadda saxlanılır...');
         try {
             let endpoint = '/api/save-content';
-            let bodyData: PageContent[] | EventItem[] | NewsItem[] | DriverCategory[] | VideoItem[] = pages;
+            let bodyData: PageContent[] | EventItem[] | NewsItem[] | DriverCategory[] | VideoItem[] | GalleryPhotoItem[] = pages;
 
             if (editorMode === 'events') {
                 endpoint = '/api/events';
@@ -500,6 +517,9 @@ const VisualEditor: React.FC = () => {
             } else if (editorMode === 'videos') {
                 endpoint = '/api/videos';
                 bodyData = videos;
+            } else if (editorMode === 'photos') {
+                endpoint = '/api/gallery-photos';
+                bodyData = galleryPhotos;
             }
 
             console.log(`Saving to ${endpoint}`, bodyData);
@@ -666,6 +686,54 @@ const VisualEditor: React.FC = () => {
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
         const match = url.match(regExp);
         return (match && match[2].length === 11) ? match[2] : null;
+    };
+
+    const handlePhotoSelect = (id: number) => {
+        setSelectedPhotoId(id);
+        const item = galleryPhotos.find(p => p.id === id);
+        if (item) setPhotoForm({ ...item });
+    };
+
+    const addGalleryPhoto = () => {
+        const newId = Date.now();
+        const newItem: GalleryPhotoItem = {
+            id: newId,
+            title: 'Yeni Şəkil',
+            url: ''
+        };
+        setGalleryPhotos(prev => [...prev, newItem]);
+        handlePhotoSelect(newId);
+    };
+
+    const deleteGalleryPhoto = (id: number, e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (window.confirm('Bu şəkli silmək istədiyinizə əminsiniz?')) {
+            setGalleryPhotos(prev => prev.filter(p => p.id !== id));
+            if (selectedPhotoId === id) {
+                setSelectedPhotoId(null);
+                setPhotoForm({});
+            }
+        }
+    };
+
+    const handlePhotoChange = (field: keyof GalleryPhotoItem, value: string) => {
+        setPhotoForm(prev => {
+            const updatedForm = { ...prev, [field]: value } as GalleryPhotoItem;
+            if (selectedPhotoId) {
+                setGalleryPhotos(old => old.map(p => p.id === selectedPhotoId ? updatedForm : p));
+            }
+            return updatedForm;
+        });
+    };
+
+    const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const url = await uploadImage(file);
+        if (url) {
+            handlePhotoChange('url', url);
+        }
     };
 
     const addNewVideo = () => {
@@ -1668,6 +1736,109 @@ const VisualEditor: React.FC = () => {
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#94a3b8', flexDirection: 'column', gap: '1rem' }}>
                                 <Video size={48} style={{ opacity: 0.2 }} />
                                 <p>Redaktə etmək üçün sol tərəfdən video seçin və ya yeni əlavə edin.</p>
+                            </div>
+                        )}
+                    </main>
+                </div>
+            ) : editorMode === 'photos' ? (
+                <div className="editor-layout">
+                    <aside className="page-list">
+                        <div className="list-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                            <h3>Foto Arxiv</h3>
+                            <button className="add-section-btn" onClick={addGalleryPhoto} title="Yeni şəkil əlavə et">
+                                <Plus size={16} />
+                            </button>
+                        </div>
+                        <div style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 200px)' }}>
+                            {galleryPhotos.length === 0 ? (
+                                <p style={{ padding: '20px', color: '#94a3b8', textAlign: 'center', fontSize: '13px' }}>Şəkil yoxdur</p>
+                            ) : (
+                                galleryPhotos.map((photo) => (
+                                    <div key={photo.id} className="page-nav-wrapper" style={{ position: 'relative', marginBottom: '4px' }}>
+                                        <button
+                                            className={`page-nav-item ${selectedPhotoId === photo.id ? 'active' : ''}`}
+                                            onClick={() => handlePhotoSelect(photo.id)}
+                                            style={{ width: '100%', paddingRight: '40px', display: 'flex', alignItems: 'center', gap: '8px' }}
+                                        >
+                                            <div style={{ width: '24px', height: '24px', borderRadius: '4px', overflow: 'hidden', flexShrink: 0, background: '#eee' }}>
+                                                {photo.url ? <img src={photo.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <ImageIcon size={12} style={{ margin: '6px', opacity: 0.3 }} />}
+                                            </div>
+                                            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{photo.title}</span>
+                                        </button>
+                                        <button
+                                            className="delete-section-btn"
+                                            onClick={(e) => deleteGalleryPhoto(photo.id, e)}
+                                            style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#ff4d4f', opacity: 0.5, cursor: 'pointer' }}
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </aside>
+
+                    <main className="editor-canvas" style={{ padding: '0' }}>
+                        {selectedPhotoId !== null && photoForm.id !== undefined ? (
+                            <div style={{ padding: '2rem', height: '100%', overflowY: 'auto' }}>
+                                <div className="canvas-header" style={{ marginBottom: '2rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
+                                    <h2 style={{ fontSize: '2rem' }}>Şəkil Redaktəsi</h2>
+                                    <p style={{ color: '#64748b' }}>{photoForm.title} // ID: {photoForm.id}</p>
+                                </div>
+
+                                <div className="edit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem', maxWidth: '800px' }}>
+                                    <div className="form-group">
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>ŞƏKİL BAŞLIĞI</label>
+                                        <input
+                                            type="text"
+                                            value={photoForm.title}
+                                            onChange={(e) => handlePhotoChange('title', e.target.value)}
+                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>FOTO</label>
+                                        <div style={{ width: '100%', minHeight: '300px', borderRadius: '12px', overflow: 'hidden', background: '#f8fafc', border: '1px dashed #cbd5e1', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '1rem' }}>
+                                            {photoForm.url ? (
+                                                <img src={photoForm.url} alt="" style={{ maxWidth: '100%', maxHeight: '400px', objectFit: 'contain' }} />
+                                            ) : (
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '1rem' }}>
+                                                    <ImageIcon size={48} style={{ opacity: 0.1 }} />
+                                                    <p style={{ color: '#64748b', fontSize: '12px' }}>Şəkil seçilməyib</p>
+                                                </div>
+                                            )}
+                                            <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
+                                                <input
+                                                    type="file"
+                                                    id="gallery-photo-upload"
+                                                    style={{ display: 'none' }}
+                                                    accept="image/*"
+                                                    onChange={handlePhotoUpload}
+                                                />
+                                                <button
+                                                    onClick={() => document.getElementById('gallery-photo-upload')?.click()}
+                                                    className="btn-primary"
+                                                    style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                                                >
+                                                    <Plus size={18} /> Şəkil Yüklə
+                                                </button>
+                                                <input
+                                                    type="text"
+                                                    value={photoForm.url || ''}
+                                                    onChange={(e) => handlePhotoChange('url', e.target.value)}
+                                                    placeholder="URL və ya yol..."
+                                                    style={{ padding: '10px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '12px', width: '250px' }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#94a3b8', flexDirection: 'column', gap: '1rem' }}>
+                                <ImageIcon size={48} style={{ opacity: 0.2 }} />
+                                <p>Redaktə etmək üçün sol tərəfdən şəkil seçin və ya yeni əlavə edin.</p>
                             </div>
                         )}
                     </main>
