@@ -469,25 +469,76 @@ app.post('/api/extract-content', async (req, res) => {
 
         await fsPromises.writeFile(SITE_CONTENT_PATH, JSON.stringify(newContent, null, 2));
 
-        // GENERATE SITEMAP (Fixed order based on user request)
+        // GENERATE SITEMAP (Page-Based Grouping)
         const sitemap = [
-            { title: 'Dashboard', icon: 'Layout', path: '/' },
-            { title: 'Haqqımızda', icon: 'Info', path: '/?page=about' },
-            { title: 'Xəbərlər', icon: 'FileText', path: '/?mode=news' },
-            { title: 'Tədbir Təqvimi', icon: 'Calendar', path: '/?mode=events' },
-            { title: 'Sürücü Reytinqi', icon: 'Trophy', path: '/?mode=drivers' },
-            { title: 'Kurs İdarəetməsi', icon: 'BookOpen', path: '/courses' },
+            { title: 'DASHBOARD', icon: 'Layout', path: '/' },
             {
-                title: 'Bütün Səhifələr',
-                icon: 'Layers',
-                children: newContent.map(p => ({
-                    title: p.title,
-                    path: `/?page=${p.id}`,
-                    icon: 'Layout'
-                }))
+                title: 'ANA SƏHİFƏ',
+                icon: 'Home',
+                children: [
+                    { title: 'Ümumi Görünüş', path: '/?page=home', icon: 'Layout' },
+                    { title: 'Naviqasiya', path: '/?page=navbar', icon: 'Menu' },
+                    { title: 'Giriş Hissəsi', path: '/?page=hero', icon: 'Maximize' },
+                    { title: 'Sürüşən Yazı', path: '/?page=marquee', icon: 'Type' },
+                    { title: 'Kateqoriya Liderləri', path: '/?page=categoryleaders', icon: 'Star' },
+                    { title: 'Sayt Sonu', path: '/?page=footer', icon: 'Anchor' }
+                ]
             },
-            { title: 'Admin Hesabları', icon: 'Users', path: '/users-management' },
-            { title: 'Sistem Ayarları', icon: 'Settings', path: '/frontend-settings' }
+            {
+                title: 'HAQQIMIZDA',
+                icon: 'Info',
+                children: [
+                    { title: 'Ümumi Məlumat', path: '/?page=about', icon: 'FileText' }
+                ]
+            },
+            {
+                title: 'XƏBƏRLƏR',
+                icon: 'FileText',
+                children: [
+                    { title: 'Xəbər Siyahısı', path: '/?mode=news', icon: 'List' },
+                    { title: 'Xəbər Səhifəsi', path: '/?page=newspage', icon: 'Layout' }
+                ]
+            },
+            {
+                title: 'TƏDBİRLƏR',
+                icon: 'Calendar',
+                children: [
+                    { title: 'Tədbir Təqvimi', path: '/?mode=events', icon: 'Clock' },
+                    { title: 'Tədbir Səhifəsi', path: '/?page=eventspage', icon: 'Layout' }
+                ]
+            },
+            {
+                title: 'SÜRÜCÜLƏR',
+                icon: 'Trophy',
+                children: [
+                    { title: 'Sürücü Reytinqi', path: '/?mode=drivers', icon: 'Award' },
+                    { title: 'Sürücülər Səhifəsi', path: '/?page=driverspage', icon: 'Layout' }
+                ]
+            },
+            {
+                title: 'QALEREYA',
+                icon: 'Image',
+                children: [
+                    { title: 'Qalereya Səhifəsi', path: '/?page=gallerypage', icon: 'Layout' }
+                ]
+            },
+            {
+                title: 'QAYDALAR',
+                icon: 'Shield',
+                children: [
+                    { title: 'Qaydalar Səhifəsi', path: '/?page=rulespage', icon: 'Layout' }
+                ]
+            },
+            {
+                title: 'ƏLAQƏ',
+                icon: 'Phone',
+                children: [
+                    { title: 'Əlaqə Səhifəsi', path: '/?page=contactpage', icon: 'Layout' }
+                ]
+            },
+            { title: 'KURS İDARƏETMƏSİ', icon: 'BookOpen', path: '/courses' },
+            { title: 'ADMİN HESABLARI', icon: 'Users', path: '/users-management' },
+            { title: 'SİSTEM AYARLARI', icon: 'Settings', path: '/frontend-settings' }
         ];
 
         try {

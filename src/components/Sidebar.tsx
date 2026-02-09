@@ -110,7 +110,11 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems, userRole, onLogout }) => {
                 <ul className="sidebar-menu">
                     {menuItems
                         .filter(item => {
-                            if (userRole === 'secondary' && item.path === '/frontend-settings') return false;
+                            const restrictedPaths = ['/frontend-settings', '/users-management'];
+                            if (userRole === 'secondary') {
+                                if (restrictedPaths.some(p => item.path?.toLowerCase() === p)) return false;
+                                if (['SİSTEM AYARLARI', 'ADMİN HESABLARI'].includes(item.title.toUpperCase())) return false;
+                            }
                             return true;
                         })
                         .map(item => renderMenuItem(item))}
