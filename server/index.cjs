@@ -271,9 +271,30 @@ app.post('/api/extract-content', async (req, res) => {
                 const pageId = path.basename(file, '.tsx').toLowerCase();
                 const filenameBase = path.basename(file, '.tsx');
 
-                // Format Title: "CategoryLeaders" -> "Category Leaders"
-                // Split by capital letters, but keep consecutive capitals together if any
-                const title = filenameBase
+                const AZ_TITLES = {
+                    'about': 'Haqqımızda',
+                    'news': 'Xəbərlər',
+                    'newspage': 'Xəbərlər Səhifəsi',
+                    'eventspage': 'Tədbirlər Səhifəsi',
+                    'driverspage': 'Sürücülər Səhifəsi',
+                    'gallerypage': 'Qalereya',
+                    'rulespage': 'Qaydalar',
+                    'contactpage': 'Əlaqə Səhifəsi',
+                    'categoryleaders': 'Kateqoriya Liderləri',
+                    'footer': 'Sayt Sonu',
+                    'hero': 'Giriş Hissəsi',
+                    'marquee': 'Sürüşən Yazı',
+                    'navbar': 'Naviqasiya',
+                    'nextrace': 'Növbəti Yarış',
+                    'partners': 'Tərəfdaşlar',
+                    'videoarchive': 'Video Arxiv',
+                    'whatisoffroad': 'Offroad Nədir?',
+                    'home': 'Ana Səhifə',
+                    'app': 'Ümumi Ayarlar'
+                };
+
+                // Format Title using map or fallback
+                const title = AZ_TITLES[pageId] || filenameBase
                     .replace(/([A-Z])/g, ' $1') // Insert space before capital
                     .trim(); // Remove leading space if any
 
