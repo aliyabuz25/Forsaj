@@ -7,6 +7,9 @@ const fs = require('fs');
 const fsPromises = require('fs/promises');
 const { createClient } = require('@supabase/supabase-js');
 
+const PORT = process.env.PORT || 5000;
+const app = express();
+
 // ------------------------------------------
 // SUPABASE CONFIGURATION
 // ------------------------------------------
@@ -22,9 +25,6 @@ console.log('- Service Role Key:', supabaseServiceRoleKey ? 'Set' : 'Missing');
 // Use Service Role Key for administrative operations if available
 const supabase = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseServiceRoleKey || supabaseAnonKey || 'placeholder');
 const supabaseAdmin = (supabaseUrl && supabaseServiceRoleKey) ? createClient(supabaseUrl, supabaseServiceRoleKey) : null;
-
-const app = express();
-const PORT = process.env.PORT || 5000;
 
 // ------------------------------------------
 // MIDDLEWARE CONFIGURATION
