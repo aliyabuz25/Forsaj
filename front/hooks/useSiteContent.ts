@@ -36,7 +36,7 @@ export const useSiteContent = (scopePageId?: string) => {
                 if (error) throw error;
 
                 if (data) {
-                    const mapped = data.map(p => ({
+                    const mapped = data.map((p: any) => ({
                         id: p.page_id,
                         title: p.title,
                         sections: p.sections,
