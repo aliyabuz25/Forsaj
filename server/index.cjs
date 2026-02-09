@@ -40,6 +40,10 @@ app.get('/', (req, res) => {
 const UPLOAD_DIR_PATH = process.env.UPLOAD_DIR || path.join(FRONT_PUBLIC_DIR, 'uploads');
 app.use('/uploads', express.static(UPLOAD_DIR_PATH));
 
+app.get('/api/ping', (req, res) => {
+    res.json({ success: true, message: 'API is working' });
+});
+
 // Ensure public directory exists
 if (!fs.existsSync(FRONT_PUBLIC_DIR)) {
     fs.mkdirSync(FRONT_PUBLIC_DIR, { recursive: true });
@@ -844,6 +848,12 @@ app.post('/api/login', async (req, res) => {
     } else {
         res.status(401).json({ success: false, error: 'İstifadəçi adı və ya şifrə yanlışdır' });
     }
+});
+
+// Catch-all for unmatched routes
+app.use((req, res) => {
+    console.log(`404 - Unmatched Request: ${req.method} ${req.originalUrl}`);
+    res.status(404).json({ error: `Route not found: ${req.method} ${req.originalUrl}` });
 });
 
 app.listen(PORT, () => {
