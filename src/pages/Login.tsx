@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { Lock, User, ShieldAlert, UserPlus, Loader2 } from 'lucide-react';
+import { Lock, User, ShieldAlert, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './Login.css';
 
