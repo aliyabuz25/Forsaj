@@ -73,6 +73,22 @@ services:
       - "traefik.tcp.routers.forsaj-db-tcp.entrypoints=mysql"
       - "traefik.tcp.services.forsaj-db-tcp.loadbalancer.server.port=3306"
 
+  forsaj-db-admin:
+    image: adminer
+    restart: unless-stopped
+    networks:
+      - edge
+    environment:
+      ADMINER_DEFAULT_SERVER: "forsaj-db"
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=edge'
+      - 'traefik.http.routers.forsaj-dbadmin.rule=Host(`forsaj.octotech.az`) && PathPrefix(`/dbadmin`)'
+      - 'traefik.http.routers.forsaj-dbadmin.entrypoints=web'
+      - 'traefik.http.routers.forsaj-dbadmin.middlewares=forsaj-dbadmin-strip'
+      - 'traefik.http.middlewares.forsaj-dbadmin-strip.stripprefix.prefixes=/dbadmin'
+      - 'traefik.http.services.forsaj-dbadmin.loadbalancer.server.port=8080'
+
 networks:
   edge:
     external: true
