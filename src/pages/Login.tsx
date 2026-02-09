@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Lock, User, ShieldAlert } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Lock, User, ShieldAlert, UserPlus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './Login.css';
 
@@ -8,19 +8,41 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
+    const [isSetupNeeded, setIsSetupNeeded] = useState(false);
+    const [isLoginMode, setIsLoginMode] = useState(true);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        const checkSetup = async () => {
+            try {
+                const response = await fetch('/api/check-setup');
+                const data = await response.json();
+                if (data.needsSetup) {
+                    setIsSetupNeeded(true);
+                    setIsLoginMode(false);
+                }
+            } catch (err) {
+                console.error('Setup check failed', err);
+            }
+        };
+        checkSetup();
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
 
+        const endpoint = isLoginMode ? '/api/login' : '/api/setup';
+        const body = isLoginMode ? { username, password } : { username, password, name };
+
         try {
-            const response = await fetch('/api/login', {
+            const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify(body)
             });
 
             const data = await response.json();
@@ -28,9 +50,9 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             if (data.success) {
                 localStorage.setItem('forsaj_admin_user', JSON.stringify(data.user));
                 onLogin(data.user);
-                toast.success(`Xoş gəldiniz, ${data.user.name}`);
+                toast.success(isLoginMode ? `Xoş gəldiniz, ${data.user.name}` : 'Sistem uğurla quraşdırıldı!');
             } else {
-                toast.error(data.error || 'Giriş uğursuz oldu');
+                toast.error(data.error || 'Əməliyyat uğursuz oldu');
             }
         } catch (err) {
             toast.error('Serverlə bağlantı kəsildi');
@@ -44,20 +66,33 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             <div className="login-card fade-in">
                 <div className="login-header">
                     <div className="login-logo">
-                        <ShieldAlert size={40} className="logo-icon" />
+                        {isLoginMode ? <ShieldAlert size={40} className="logo-icon" /> : <UserPlus size={40} className="logo-icon" />}
                     </div>
-                    <h1>Forsaj Admin</h1>
-                    <p>Sistemə daxil olmaq üçün məlumatlarınızı daxil edin</p>
+                    <h1>{isLoginMode ? 'Forsaj Admin' : 'Sistemi Quraşdır'}</h1>
+                    <p>{isLoginMode ? 'Sistemə daxil olmaq üçün məlumatlarınızı daxil edin' : 'İlk Master Admin hesabını yaradın'}</p>
                 </div>
 
                 <form className="login-form" onSubmit={handleSubmit}>
+                    {!isLoginMode && (
+                        <div className="form-group">
+                            <label><User size={16} /> Tam Adınız</label>
+                            <input
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Məs: Əli Məmmədov"
+                                required
+                            />
+                        </div>
+                    )}
+
                     <div className="form-group">
                         <label><User size={16} /> İstifadəçi Adı</label>
                         <input
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            placeholder="master / admin"
+                            placeholder={isLoginMode ? "master / admin" : "Məs: admin"}
                             required
                         />
                     </div>
@@ -74,7 +109,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                     </div>
 
                     <button type="submit" className="login-btn" disabled={isLoading}>
-                        {isLoading ? 'Giriş edilir...' : 'Daxil Ol'}
+                        {isLoading ? 'Gözləyin...' : (isLoginMode ? 'Daxil Ol' : 'Hesabı Yarat')}
                     </button>
                 </form>
 

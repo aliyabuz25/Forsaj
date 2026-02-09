@@ -92,6 +92,23 @@ app.post('/api/save-content', async (req, res) => {
 const EVENTS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'events.json');
 const NEWS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'news.json');
 const COURSES_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'courses.json');
+const USERS_FILE_PATH = path.join(WEB_DATA_DIR, 'users.json');
+
+// Helper: Get Users
+const getUsers = async () => {
+    try {
+        await fsPromises.access(USERS_FILE_PATH);
+        const data = await fsPromises.readFile(USERS_FILE_PATH, 'utf8');
+        return JSON.parse(data);
+    } catch {
+        return [];
+    }
+};
+
+// Helper: Save Users
+const saveUsers = async (users) => {
+    await fsPromises.writeFile(USERS_FILE_PATH, JSON.stringify(users, null, 2));
+};
 
 // API: Get Events
 app.get('/api/events', async (req, res) => {
@@ -602,15 +619,37 @@ app.get('/api/frontend/status', (req, res) => {
     });
 });
 
-// API: Authentication
-app.post('/api/login', (req, res) => {
-    const { username, password } = req.body;
+// API: Check if setup is needed
+app.get('/api/check-setup', async (req, res) => {
+    const users = await getUsers();
+    res.json({ needsSetup: users.length === 0 });
+});
 
-    // Static dummy users for implementation
-    const users = [
-        { id: 1, username: 'master', password: '123', role: 'master', name: 'Master Admin' },
-        { id: 2, username: 'admin', password: '456', role: 'secondary', name: 'Forsaj Admin' }
-    ];
+// API: Setup initial Master Admin
+app.post('/api/setup', async (req, res) => {
+    const { username, password, name } = req.body;
+    const users = await getUsers();
+
+    if (users.length > 0) {
+        return res.status(400).json({ success: false, error: 'Sistem artıq quraşdırılıb' });
+    }
+
+    const newUser = {
+        id: Date.now(),
+        username,
+        password, // In a production app, use hashing here
+        name,
+        role: 'master'
+    };
+
+    await saveUsers([newUser]);
+    res.json({ success: true, user: { id: newUser.id, username: newUser.username, name: newUser.name, role: newUser.role } });
+});
+
+// API: Authentication
+app.post('/api/login', async (req, res) => {
+    const { username, password } = req.body;
+    const users = await getUsers();
 
     const user = users.find(u => u.username === username && u.password === password);
 
