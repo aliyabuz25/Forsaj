@@ -63,23 +63,21 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 }, 1000);
 
             } else {
-                const { data, error } = await supabase.auth.signUp({
-                    email: virtualEmail,
-                    password,
+                // Use backend setup for initial master admin
+                const response = await fetch('/api/setup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, name })
                 });
 
-                if (error) throw error;
+                const setupResult = await response.json();
 
-                if (data.user) {
-                    const { error: profileError } = await supabase
-                        .from('profiles')
-                        .insert([{ id: data.user.id, name, role: 'master' }]);
-
-                    if (profileError) throw profileError;
-
-                    toast.success('Sistem uğurla quraşdırıldı! İndi daxil ola bilərsiniz.');
-                    setIsLoginMode(true);
+                if (!response.ok) {
+                    throw new Error(setupResult.error || 'Quraşdırma uğursuz oldu');
                 }
+
+                toast.success('Baza uğurla başladıldı! İndi daxil ola bilərsiniz.');
+                setIsLoginMode(true);
             }
         } catch (err: any) {
             toast.error(err.message || 'Əməliyyat uğursuz oldu');
@@ -93,10 +91,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             <div className="login-card fade-in">
                 <div className="login-header">
                     <div className="login-logo">
-                        {isLoginMode ? <ShieldAlert size={40} className="logo-icon" /> : <UserPlus size={40} className="logo-icon" />}
+                        {isLoginMode ? <ShieldAlert size={40} className="logo-icon" /> : <Lock size={40} className="logo-icon" />}
                     </div>
-                    <h1>{isLoginMode ? 'Forsaj Admin' : 'Sistemi Quraşdır'}</h1>
-                    <p>{isLoginMode ? 'Sistemə daxil olmaq üçün məlumatlarınızı daxil edin' : 'İlk Master Admin hesabını yaradın'}</p>
+                    <h1>{isLoginMode ? 'Forsaj Admin' : 'Sistem Quraşdırılması'}</h1>
+                    <p>{isLoginMode ? 'Sistemə daxil olmaq üçün məlumatlarınızı daxil edin' : 'İlkayan Master Admin hesabını yaradaraq bazanı başladın'}</p>
                 </div>
 
                 <form className="login-form" onSubmit={handleSubmit}>
@@ -142,7 +140,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                                 <span>Gözləyin...</span>
                             </div>
                         ) : (
-                            isLoginMode ? 'Daxil Ol' : 'Sistemi Quraşdır'
+                            isLoginMode ? 'Daxil Ol' : 'Bazanı Başlat'
                         )}
                     </button>
                 </form>

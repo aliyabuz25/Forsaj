@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { UserPlus, Edit, Trash2, Shield, User, Lock, Save, X, AlertCircle } from 'lucide-react';
+import { supabase } from '../lib/supabaseClient';
 import toast from 'react-hot-toast';
 import './UsersManager.css';
 
 interface AdminUser {
-    id: number;
+    id: string;
     username: string;
     name: string;
     role: 'master' | 'secondary';
+    created_at?: string;
 }
 
 interface UsersManagerProps {
@@ -20,13 +22,17 @@ const UsersManager: React.FC<UsersManagerProps> = ({ currentUser }) => {
     const [users, setUsers] = useState<AdminUser[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingUser, setEditingUser] = useState<Partial<AdminUser & { password?: string }> | null>(null);
+    const [editingUser, setEditingUser] = useState<any | null>(null);
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch('/api/users');
-            const data = await response.json();
-            setUsers(data);
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .order('created_at', { ascending: true });
+
+            if (error) throw error;
+            setUsers(data || []);
         } catch (err) {
             toast.error('İstifadəçiləri yükləmək mümkün olmadı');
         } finally {
@@ -58,14 +64,15 @@ const UsersManager: React.FC<UsersManagerProps> = ({ currentUser }) => {
                 setEditingUser(null);
                 fetchUsers();
             } else {
-                toast.error('Xəta baş verdi');
+                const data = await response.json();
+                toast.error(data.error || 'Xəta baş verdi');
             }
         } catch (err) {
             toast.error('Serverlə bağlantı kəsildi');
         }
     };
 
-    const handleDeleteUser = async (id: number) => {
+    const handleDeleteUser = async (id: string) => {
         if (!window.confirm('Bu istifadəçini silmək istədiyinizə əminsiniz?')) return;
 
         try {
@@ -82,7 +89,7 @@ const UsersManager: React.FC<UsersManagerProps> = ({ currentUser }) => {
         }
     };
 
-    const openModal = (user: Partial<AdminUser> | null = null) => {
+    const openModal = (user: any | null = null) => {
         setEditingUser(user ? { ...user } : { username: '', name: '', password: '', role: 'secondary' });
         setIsModalOpen(true);
     };
@@ -108,13 +115,13 @@ const UsersManager: React.FC<UsersManagerProps> = ({ currentUser }) => {
                     <div key={user.id} className="user-card">
                         <div className="user-avatar">
                             <img src={`https://ui-avatars.com/api/?name=${user.name}&background=${user.role === 'master' ? '3b82f6' : 'f59e0b'}&color=fff`} alt={user.name} />
-                            <div className={`role-badge ${user.role}`}>
+                            <div className={`role-badge ${user.role || 'secondary'}`}>
                                 <Shield size={10} /> {user.role === 'master' ? 'Master' : 'Secondary'}
                             </div>
                         </div>
                         <div className="user-details">
                             <h3>{user.name}</h3>
-                            <span>@{user.username}</span>
+                            <span>@{user.username || 'username'}</span>
                         </div>
                         {currentUser.role === 'master' && (
                             <div className="user-actions">

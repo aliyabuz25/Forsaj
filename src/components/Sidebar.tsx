@@ -6,11 +6,12 @@ import './Sidebar.css';
 
 interface SidebarProps {
     menuItems: SidebarItem[];
-    userRole: 'master' | 'secondary';
+    user: any;
     onLogout: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ menuItems, userRole, onLogout }) => {
+const Sidebar: React.FC<SidebarProps> = ({ menuItems, user, onLogout }) => {
+    const userRole = user?.role || 'secondary';
     const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
     const location = useLocation();
 
@@ -98,10 +99,10 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems, userRole, onLogout }) => {
             </div>
 
             <div className="sidebar-user">
-                <img src={`https://ui-avatars.com/api/?name=${userRole === 'master' ? 'Master' : 'Forsaj'}+Admin&background=${userRole === 'master' ? '3b82f6' : 'f59e0b'}&color=fff`} alt="User" />
+                <img src={`https://ui-avatars.com/api/?name=${user?.name || 'Admin'}&background=${userRole === 'master' ? '3b82f6' : 'f59e0b'}&color=fff`} alt="User" />
                 <div className="user-info">
-                    <span className="user-name">{userRole === 'master' ? 'Master Admin' : 'Forsaj Admin'}</span>
-                    <span className="user-role">{userRole === 'master' ? 'Tam Səlahiyyətli' : 'Məhdud Giriş'}</span>
+                    <span className="user-name">{user?.name || 'Admin'}</span>
+                    <span className="user-role">{userRole === 'master' ? 'Master Admin' : 'Redaktor'}</span>
                 </div>
             </div>
 

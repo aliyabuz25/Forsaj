@@ -1,9 +1,22 @@
+require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 const fsPromises = require('fs/promises');
+const { createClient } = require('@supabase/supabase-js');
+
+// ------------------------------------------
+// SUPABASE CONFIGURATION
+// ------------------------------------------
+const supabaseUrl = process.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+// Use Service Role Key for administrative operations if available
+const supabase = createClient(supabaseUrl, supabaseServiceRoleKey || supabaseAnonKey);
+const supabaseAdmin = supabaseServiceRoleKey ? createClient(supabaseUrl, supabaseServiceRoleKey) : null;
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -177,86 +190,159 @@ app.post('/api/news', async (req, res) => {
 // CORE AUTH & SETUP ROUTES (Move to top)
 // ==========================================
 
-// API: Check if setup is needed
-app.get('/api/check-setup', async (req, res) => {
-    const users = await getUsers();
-    res.json({ needsSetup: users.length === 0 });
+// API: Get Users (Supabase)
+app.get('/api/users', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .order('created_at', { ascending: true });
+
+        if (error) throw error;
+        res.json(data);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ error: 'İstifadəçiləri yükləmək mümkün olmadı' });
+    }
+});
+
+// API: Save User (Supabase Create or Update)
+app.post('/api/users', async (req, res) => {
+    const { id, username, name, role, password } = req.body;
+    const virtualEmail = `${username.trim().toLowerCase()}@forsaj.admin`;
+
+    try {
+        if (id) {
+            // Update existing profile
+            const { error: profileError } = await supabase
+                .from('profiles')
+                .update({ username, name, role })
+                .eq('id', id);
+
+            if (profileError) throw profileError;
+
+            // Optional: Update password via Admin API if possible
+            if (password && supabaseAdmin) {
+                await supabaseAdmin.auth.admin.updateUserById(id, { password });
+            }
+        } else {
+            // Create new user
+            if (!supabaseAdmin) {
+                return res.status(403).json({ error: 'Service Role Key tələb olunur' });
+            }
+
+            const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
+                email: virtualEmail,
+                password,
+                email_confirm: true,
+                user_metadata: { name }
+            });
+
+            if (authError) throw authError;
+
+            // Profile table should be updated via trigger or manually if no trigger exists
+            const { error: profileError } = await supabase
+                .from('profiles')
+                .upsert({
+                    id: authData.user.id,
+                    username,
+                    name,
+                    role: role || 'secondary'
+                });
+
+            if (profileError) throw profileError;
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error saving user:', error);
+        res.status(500).json({ error: error.message || 'Xəta baş verdi' });
+    }
+});
+
+// API: Delete User (Supabase)
+app.delete('/api/users/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        if (!supabaseAdmin) {
+            return res.status(403).json({ error: 'Service Role Key tələb olunur' });
+        }
+
+        // Check if last master admin
+        const { data: profiles } = await supabase.from('profiles').select('*');
+        const userToDelete = profiles?.find(u => u.id === id);
+
+        if (userToDelete?.role === 'master') {
+            const otherMasters = profiles.filter(u => u.role === 'master' && u.id !== id);
+            if (otherMasters.length === 0) {
+                return res.status(400).json({ error: 'Sonuncu Master Admini silə bilməzsiniz' });
+            }
+        }
+
+        const { error } = await supabaseAdmin.auth.admin.deleteUser(id);
+        if (error) throw error;
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ error: error.message || 'Silmək mümkün olmadı' });
+    }
 });
 
 // API: Setup initial Master Admin
 app.post('/api/setup', async (req, res) => {
     const { username, password, name } = req.body;
-    const users = await getUsers();
-
-    if (users.length > 0) {
-        return res.status(400).json({ success: false, error: 'Sistem artıq quraşdırılıb' });
-    }
-
-    const newUser = {
-        id: Date.now(),
-        username,
-        password, // In a production app, use hashing here
-        name,
-        role: 'master'
-    };
-
-    await saveUsers([newUser]);
-    res.json({ success: true, user: { id: newUser.id, username: newUser.username, name: newUser.name, role: newUser.role } });
-});
-
-// API: Authentication
-app.all('/api/login', async (req, res) => {
-    if (req.method !== 'POST') {
-        return res.status(405).json({
-            success: false,
-            error: `Method ${req.method} not allowed. Please use POST for login.`,
-            note: 'If you are testing in a browser, please use the login form instead.'
-        });
-    }
-
-    const { username, password } = req.body;
-    console.log(`Login attempt for username: ${username}`);
-
-    const users = await getUsers();
-    const user = users.find(u => u.username.toLowerCase() === username.toLowerCase());
-
-    if (!user) {
-        console.warn(`Login failed: User '${username}' not found`);
-        return res.status(401).json({ success: false, error: 'İstifadəçi adı yanlışdır' });
-    }
-
-    if (user.password !== password) {
-        console.warn(`Login failed: Incorrect password for user '${username}'`);
-        return res.status(401).json({ success: false, error: 'Şifrə yanlışdır' });
-    }
-
-    console.log(`Login successful for user: ${username}`);
-    const { password: _, ...userWithoutPassword } = user;
-    res.json({ success: true, user: userWithoutPassword });
-});
-
-// API: Emergency Reset Admin (Guaranteed Recovery)
-app.post('/api/emergency-reset-admin', async (req, res) => {
-    const { confirm } = req.body;
-    if (confirm !== 'RESET_NOW') {
-        return res.status(400).json({ error: 'Sıfırlama üçün "RESET_NOW" yazın' });
-    }
+    const virtualEmail = `${username.trim().toLowerCase()}@forsaj.admin`;
 
     try {
-        if (fs.existsSync(USERS_FILE_PATH)) {
-            await fsPromises.unlink(USERS_FILE_PATH);
-            console.log('Emergency Reset: User database deleted.');
+        // Check if setup is already done
+        const { count, error: countError } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+        if (!countError && count > 0) {
+            return res.status(400).json({ error: 'Sistem artıq quraşdırılıb' });
         }
-        res.json({ success: true, message: 'Sistem sıfırlandı. İndi səhifəni yeniləyib yeni admin quraşdıra bilərsiniz.' });
+
+        if (!supabaseAdmin) {
+            return res.status(500).json({ error: 'Service Role Key tələb olunur (setup üçün)' });
+        }
+
+        // Create the master user
+        const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
+            email: virtualEmail,
+            password,
+            email_confirm: true,
+            user_metadata: { name }
+        });
+
+        if (authError) throw authError;
+
+        // Create the profile
+        const { error: profileError } = await supabase
+            .from('profiles')
+            .upsert({
+                id: authData.user.id,
+                username: username.trim().toLowerCase(),
+                name,
+                role: 'master'
+            });
+
+        if (profileError) throw profileError;
+
+        res.json({ success: true, message: 'Master Admin uğurla yaradıldı' });
     } catch (error) {
-        console.error('Reset error:', error);
-        res.status(500).json({ error: 'Sıfırlama baş tutmadı' });
+        console.error('Setup error:', error);
+        res.status(500).json({ error: error.message || 'Quraşdırma zamanı xəta baş verdi' });
     }
 });
 
-// API: Logout
-app.post('/api/logout', (req, res) => {
-    res.json({ success: true, message: 'Çıxış uğurla başa çatdı' });
+// LEGACY SUPPORT /api/check-setup
+app.get('/api/check-setup', async (req, res) => {
+    try {
+        const { count, error } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+        res.json({ needsSetup: !error && count === 0 });
+    } catch (e) {
+        res.json({ needsSetup: false });
+    }
 });
 
 // ==========================================
@@ -854,59 +940,7 @@ app.get('/api/frontend/status', (req, res) => {
     });
 });
 
-// API: Get Users
-app.get('/api/users', async (req, res) => {
-    const users = await getUsers();
-    const safeUsers = users.map(({ password, ...u }) => u);
-    res.json(safeUsers);
-});
-
-// API: Save User (Create or Update)
-app.post('/api/users', async (req, res) => {
-    const userData = req.body;
-    const users = await getUsers();
-
-    if (userData.id) {
-        // Update existing
-        const index = users.findIndex(u => u.id === userData.id);
-        if (index !== -1) {
-            // Keep old password if new one is empty
-            if (!userData.password) {
-                userData.password = users[index].password;
-            }
-            users[index] = { ...users[index], ...userData };
-        }
-    } else {
-        // Create new
-        const newUser = {
-            ...userData,
-            id: Date.now()
-        };
-        users.push(newUser);
-    }
-
-    await saveUsers(users);
-    res.json({ success: true });
-});
-
-// API: Delete User
-app.delete('/api/users/:id', async (req, res) => {
-    const { id } = req.params;
-    let users = await getUsers();
-
-    // Prevent deleting the last master admin
-    const userToDelete = users.find(u => u.id == id);
-    if (userToDelete?.role === 'master') {
-        const otherMasters = users.filter(u => u.role === 'master' && u.id != id);
-        if (otherMasters.length === 0) {
-            return res.status(400).json({ error: 'Sonuncu Master Admini silə bilməzsiniz' });
-        }
-    }
-
-    users = users.filter(u => u.id != id);
-    await saveUsers(users);
-    res.json({ success: true });
-});
+// User management moved to Supabase section above
 
 
 // Final Catch-all for diagnostics

@@ -84,7 +84,7 @@ const App: React.FC = () => {
           <Login onLogin={setUser} />
         ) : (
           <>
-            <Sidebar menuItems={sitemap} userRole={user.role} onLogout={() => {
+            <Sidebar menuItems={sitemap} user={user} onLogout={() => {
               localStorage.removeItem('forsaj_admin_user');
               setUser(null);
             }} />
