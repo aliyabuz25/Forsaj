@@ -15,11 +15,12 @@ const app = express();
 // ------------------------------------------
 const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 console.log('Backend Configuration:');
 console.log('- PORT:', PORT);
 console.log('- Supabase URL:', supabaseUrl ? 'Set' : 'Missing');
+console.log('- Supabase Key:', supabaseAnonKey ? 'Set' : 'Missing');
 console.log('- Service Role Key:', supabaseServiceRoleKey ? 'Set' : 'Missing');
 
 // Use Service Role Key for administrative operations if available
@@ -318,12 +319,34 @@ app.post('/api/setup', async (req, res) => {
         }
 
         // Create the master user
-        const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
-            email: virtualEmail,
-            password,
-            email_confirm: true,
-            user_metadata: { name }
-        });
+        let authData, authError;
+
+        if (supabaseAdmin) {
+            console.log('Creating master admin via Admin API...');
+            const result = await supabaseAdmin.auth.admin.createUser({
+                email: virtualEmail,
+                password,
+                email_confirm: true,
+                user_metadata: { name }
+            });
+            authData = result.data;
+            authError = result.error;
+        } else {
+            console.log('Creating master admin via standard signUp fallback (Service Role Key missing)...');
+            const result = await supabase.auth.signUp({
+                email: virtualEmail,
+                password,
+                options: {
+                    data: { name }
+                }
+            });
+            authData = result.data;
+            authError = result.error;
+
+            if (!authError && authData.user && (!authData.session && !authData.user.email_confirmed_at)) {
+                console.warn('User created but requires confirmation. Ensure "Confirm email" is DISABLED in Supabase settings for instant setup.');
+            }
+        }
 
         if (authError) throw authError;
 
@@ -339,10 +362,16 @@ app.post('/api/setup', async (req, res) => {
 
         if (profileError) throw profileError;
 
-        res.json({ success: true, message: 'Master Admin uğurla yaradıldı' });
+        res.json({
+            success: true,
+            message: supabaseAdmin ? 'Master Admin uğurla yaradıldı' : 'Master Admin yaradıldı (E-poçt təsdiqi tələb oluna bilər)'
+        });
     } catch (error) {
-        console.error('Setup error:', error);
-        res.status(500).json({ error: error.message || 'Quraşdırma zamanı xəta baş verdi' });
+        console.error('Setup error details:', error);
+        res.status(500).json({
+            error: error.message || 'Quraşdırma zamanı xəta baş verdi',
+            details: !supabaseAdmin ? 'Service Role Key çatışmır, standart qeydiyyat cəhd edildi.' : 'Admin API xətası.'
+        });
     }
 });
 
