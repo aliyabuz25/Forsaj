@@ -486,6 +486,7 @@ app.post('/api/extract-content', async (req, res) => {
                     icon: 'Layout'
                 }))
             },
+            { title: 'Admin Hesabları', icon: 'Users', path: '/users-management' },
             { title: 'Sistem Ayarları', icon: 'Settings', path: '/frontend-settings' }
         ];
 
@@ -617,6 +618,60 @@ app.get('/api/frontend/status', (req, res) => {
             uptime: uptimeStr
         }
     });
+});
+
+// API: Get Users
+app.get('/api/users', async (req, res) => {
+    const users = await getUsers();
+    const safeUsers = users.map(({ password, ...u }) => u);
+    res.json(safeUsers);
+});
+
+// API: Save User (Create or Update)
+app.post('/api/users', async (req, res) => {
+    const userData = req.body;
+    const users = await getUsers();
+
+    if (userData.id) {
+        // Update existing
+        const index = users.findIndex(u => u.id === userData.id);
+        if (index !== -1) {
+            // Keep old password if new one is empty
+            if (!userData.password) {
+                userData.password = users[index].password;
+            }
+            users[index] = { ...users[index], ...userData };
+        }
+    } else {
+        // Create new
+        const newUser = {
+            ...userData,
+            id: Date.now()
+        };
+        users.push(newUser);
+    }
+
+    await saveUsers(users);
+    res.json({ success: true });
+});
+
+// API: Delete User
+app.delete('/api/users/:id', async (req, res) => {
+    const { id } = req.params;
+    let users = await getUsers();
+
+    // Prevent deleting the last master admin
+    const userToDelete = users.find(u => u.id == id);
+    if (userToDelete?.role === 'master') {
+        const otherMasters = users.filter(u => u.role === 'master' && u.id != id);
+        if (otherMasters.length === 0) {
+            return res.status(400).json({ error: 'Sonuncu Master Admini silə bilməzsiniz' });
+        }
+    }
+
+    users = users.filter(u => u.id != id);
+    await saveUsers(users);
+    res.json({ success: true });
 });
 
 // API: Check if setup is needed

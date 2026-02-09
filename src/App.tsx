@@ -5,6 +5,7 @@ import Header from './components/Header';
 import VisualEditor from './pages/VisualEditor';
 import FrontendSettings from './pages/FrontendSettings';
 import CoursesManager from './pages/CoursesManager';
+import UsersManager from './pages/UsersManager';
 import SetupGuide from './components/SetupGuide';
 import Login from './pages/Login';
 import { Toaster } from 'react-hot-toast';
@@ -78,6 +79,10 @@ const App: React.FC = () => {
                       <Route path="/courses" element={<CoursesManager />} />
 
                       {/* Protect sensitive pages from Secondary Admins */}
+                      <Route path="/users-management" element={
+                        user.role === 'master' ? <UsersManager /> : <div className="fade-in"><h1>İcazə yoxdur</h1><p>Bu səhifə yalnız Master Admin üçündür.</p></div>
+                      } />
+
                       <Route path="/frontend-settings" element={
                         user.role === 'master' ? <FrontendSettings /> : <div className="fade-in"><h1>İcazə yoxdur</h1><p>Bu səhifə yalnız Master Admin üçündür.</p></div>
                       } />
