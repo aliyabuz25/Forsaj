@@ -134,13 +134,37 @@ app.get('/api', async (req, res) => {
 
     res.json({
         status: 'ready',
-        version: '1.2.5',
+        version: '1.2.6',
         port: PORT,
         userCount: users.length,
         database: fileInfo,
         adminEnabled: true,
         message: 'Forsaj API is fully operational'
     });
+});
+
+// API: Database Connectivity Check
+app.get('/api/db-status', async (req, res) => {
+    try {
+        const connection = await pool.getConnection();
+        const [rows] = await connection.query('SELECT 1 as connected');
+        connection.release();
+        res.json({
+            status: 'connected',
+            details: 'Database is reachable',
+            host: 'forsaj-db',
+            user: process.env.MYSQL_USER || 'forsaj_user'
+        });
+    } catch (e) {
+        console.error('Database Status Check Failed:', e);
+        res.status(500).json({
+            status: 'error',
+            message: 'Database connection failed',
+            details: e.message,
+            code: e.code,
+            host: 'forsaj-db'
+        });
+    }
 });
 
 app.get('/api/health', (req, res) => {
