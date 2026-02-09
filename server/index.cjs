@@ -5,27 +5,70 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 const fsPromises = require('fs/promises');
-const { createClient } = require('@supabase/supabase-js');
+const mysql = require('mysql2/promise');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const PORT = process.env.PORT || 5000;
 const app = express();
 
 // ------------------------------------------
-// SUPABASE CONFIGURATION
+// MYSQL CONFIGURATION
 // ------------------------------------------
-const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+const pool = mysql.createPool({
+    host: 'forsaj-db',
+    user: process.env.MYSQL_USER || 'forsaj_user',
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE || 'forsaj_admin',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+});
+
+const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-change-this';
 
 console.log('Backend Configuration:');
 console.log('- PORT:', PORT);
-console.log('- Supabase URL:', supabaseUrl ? 'Set' : 'Missing');
-console.log('- Supabase Key:', supabaseAnonKey ? 'Set' : 'Missing');
-console.log('- Service Role Key:', supabaseServiceRoleKey ? 'Set' : 'Missing');
+console.log('- Database Host: forsaj-db');
 
-// Use Service Role Key for administrative operations if available
-const supabase = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseServiceRoleKey || supabaseAnonKey || 'placeholder');
-const supabaseAdmin = (supabaseUrl && supabaseServiceRoleKey) ? createClient(supabaseUrl, supabaseServiceRoleKey) : null;
+// Database Initialization
+const initDB = async () => {
+    try {
+        const connection = await pool.getConnection();
+        console.log('Connected to MySQL Database');
+
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                username VARCHAR(255) UNIQUE NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                name VARCHAR(255),
+                role VARCHAR(50) DEFAULT 'secondary',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log('Database initialized: users table ready');
+        connection.release();
+    } catch (error) {
+        console.error('Database initialization failed:', error.message);
+    }
+};
+
+initDB();
+
+// Auth Middleware
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) return res.sendStatus(401);
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next();
+    });
+};
 
 // ------------------------------------------
 // MIDDLEWARE CONFIGURATION
@@ -203,15 +246,11 @@ app.post('/api/news', async (req, res) => {
 // ==========================================
 
 // API: Get Users (Supabase)
-app.get('/api/users', async (req, res) => {
+// API: Get Users (MySQL)
+app.get('/api/users', authenticateToken, async (req, res) => {
     try {
-        const { data, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .order('created_at', { ascending: true });
-
-        if (error) throw error;
-        res.json(data);
+        const [rows] = await pool.query('SELECT id, username, name, role, created_at FROM users ORDER BY created_at ASC');
+        res.json(rows);
     } catch (error) {
         console.error('Error fetching users:', error);
         res.status(500).json({ error: 'İstifadəçiləri yükləmək mümkün olmadı' });
@@ -219,50 +258,34 @@ app.get('/api/users', async (req, res) => {
 });
 
 // API: Save User (Supabase Create or Update)
-app.post('/api/users', async (req, res) => {
+// API: Save User (MySQL Create or Update)
+app.post('/api/users', authenticateToken, async (req, res) => {
     const { id, username, name, role, password } = req.body;
-    const virtualEmail = `${username.trim().toLowerCase()}@forsaj.admin`;
 
     try {
+        if (req.user.role !== 'master') {
+            return res.status(403).json({ error: 'Yalnız Master Admin istifadəçi əlavə edə bilər' });
+        }
+
         if (id) {
-            // Update existing profile
-            const { error: profileError } = await supabase
-                .from('profiles')
-                .update({ username, name, role })
-                .eq('id', id);
+            // Update existing user
+            let query = 'UPDATE users SET username = ?, name = ?, role = ? WHERE id = ?';
+            let params = [username, name, role, id];
 
-            if (profileError) throw profileError;
-
-            // Optional: Update password via Admin API if possible
-            if (password && supabaseAdmin) {
-                await supabaseAdmin.auth.admin.updateUserById(id, { password });
+            if (password) {
+                const hashedPassword = await bcrypt.hash(password, 10);
+                query = 'UPDATE users SET username = ?, name = ?, role = ?, password = ? WHERE id = ?';
+                params = [username, name, role, hashedPassword, id];
             }
+
+            await pool.query(query, params);
         } else {
             // Create new user
-            if (!supabaseAdmin) {
-                return res.status(403).json({ error: 'Service Role Key tələb olunur' });
-            }
-
-            const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
-                email: virtualEmail,
-                password,
-                email_confirm: true,
-                user_metadata: { name }
-            });
-
-            if (authError) throw authError;
-
-            // Profile table should be updated via trigger or manually if no trigger exists
-            const { error: profileError } = await supabase
-                .from('profiles')
-                .upsert({
-                    id: authData.user.id,
-                    username,
-                    name,
-                    role: role || 'secondary'
-                });
-
-            if (profileError) throw profileError;
+            const hashedPassword = await bcrypt.hash(password, 10);
+            await pool.query(
+                'INSERT INTO users (username, password, name, role) VALUES (?, ?, ?, ?)',
+                [username, hashedPassword, name, role || 'secondary']
+            );
         }
 
         res.json({ success: true });
@@ -273,28 +296,24 @@ app.post('/api/users', async (req, res) => {
 });
 
 // API: Delete User (Supabase)
-app.delete('/api/users/:id', async (req, res) => {
+// API: Delete User (MySQL)
+app.delete('/api/users/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
 
     try {
-        if (!supabaseAdmin) {
-            return res.status(403).json({ error: 'Service Role Key tələb olunur' });
+        if (req.user.role !== 'master') {
+            return res.status(403).json({ error: 'İcazə yoxdur' });
         }
 
         // Check if last master admin
-        const { data: profiles } = await supabase.from('profiles').select('*');
-        const userToDelete = profiles?.find(u => u.id === id);
+        const [users] = await pool.query('SELECT * FROM users WHERE role = ?', ['master']);
+        const userToDelete = await pool.query('SELECT role FROM users WHERE id = ?', [id]);
 
-        if (userToDelete?.role === 'master') {
-            const otherMasters = profiles.filter(u => u.role === 'master' && u.id !== id);
-            if (otherMasters.length === 0) {
-                return res.status(400).json({ error: 'Sonuncu Master Admini silə bilməzsiniz' });
-            }
+        if (userToDelete[0][0]?.role === 'master' && users.length <= 1) {
+            return res.status(400).json({ error: 'Sonuncu Master Admini silə bilməzsiniz' });
         }
 
-        const { error } = await supabaseAdmin.auth.admin.deleteUser(id);
-        if (error) throw error;
-
+        await pool.query('DELETE FROM users WHERE id = ?', [id]);
         res.json({ success: true });
     } catch (error) {
         console.error('Error deleting user:', error);
@@ -303,85 +322,77 @@ app.delete('/api/users/:id', async (req, res) => {
 });
 
 // API: Setup initial Master Admin
+// API: Setup initial Master Admin
 app.post('/api/setup', async (req, res) => {
     const { username, password, name } = req.body;
-    const virtualEmail = `${username.trim().toLowerCase()}@forsaj.admin`;
 
     try {
-        // Check if setup is already done
-        const { count, error: countError } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
-        if (!countError && count > 0) {
+        const [rows] = await pool.query('SELECT COUNT(*) as count FROM users');
+        if (rows[0].count > 0) {
             return res.status(400).json({ error: 'Sistem artıq quraşdırılıb' });
         }
 
-        if (!supabaseAdmin) {
-            return res.status(500).json({ error: 'Service Role Key tələb olunur (setup üçün)' });
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await pool.query(
+            'INSERT INTO users (username, password, name, role) VALUES (?, ?, ?, ?)',
+            [username, hashedPassword, name, 'master']
+        );
+
+        res.json({ success: true, message: 'Master Admin uğurla yaradıldı' });
+    } catch (error) {
+        console.error('Setup error:', error);
+        res.status(500).json({ error: 'Quraşdırma zamanı xəta baş verdi' });
+    }
+});
+
+// API: Login
+app.post('/api/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const [users] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+        if (users.length === 0) {
+            return res.status(401).json({ error: 'İstifadəçi tapılmadı' });
         }
 
-        // Create the master user
-        let authData, authError;
+        const user = users[0];
+        const validPassword = await bcrypt.compare(password, user.password);
 
-        if (supabaseAdmin) {
-            console.log('Creating master admin via Admin API...');
-            const result = await supabaseAdmin.auth.admin.createUser({
-                email: virtualEmail,
-                password,
-                email_confirm: true,
-                user_metadata: { name }
-            });
-            authData = result.data;
-            authError = result.error;
-        } else {
-            console.log('Creating master admin via standard signUp fallback (Service Role Key missing)...');
-            const result = await supabase.auth.signUp({
-                email: virtualEmail,
-                password,
-                options: {
-                    data: { name }
-                }
-            });
-            authData = result.data;
-            authError = result.error;
-
-            if (!authError && authData.user && (!authData.session && !authData.user.email_confirmed_at)) {
-                console.warn('User created but requires confirmation. Ensure "Confirm email" is DISABLED in Supabase settings for instant setup.');
-            }
+        if (!validPassword) {
+            return res.status(401).json({ error: 'Şifrə yanlışdır' });
         }
 
-        if (authError) throw authError;
-
-        // Create the profile
-        const { error: profileError } = await supabase
-            .from('profiles')
-            .upsert({
-                id: authData.user.id,
-                username: username.trim().toLowerCase(),
-                name,
-                role: 'master'
-            });
-
-        if (profileError) throw profileError;
+        const token = jwt.sign(
+            { id: user.id, username: user.username, role: user.role, name: user.name },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+        );
 
         res.json({
-            success: true,
-            message: supabaseAdmin ? 'Master Admin uğurla yaradıldı' : 'Master Admin yaradıldı (E-poçt təsdiqi tələb oluna bilər)'
+            token,
+            user: {
+                id: user.id,
+                username: user.username,
+                name: user.name,
+                role: user.role
+            }
         });
     } catch (error) {
-        console.error('Setup error details:', error);
-        res.status(500).json({
-            error: error.message || 'Quraşdırma zamanı xəta baş verdi',
-            details: !supabaseAdmin ? 'Service Role Key çatışmır, standart qeydiyyat cəhd edildi.' : 'Admin API xətası.'
-        });
+        console.error('Login error:', error);
+        res.status(500).json({ error: 'Daxil olarkən xəta baş verdi' });
     }
 });
 
 // LEGACY SUPPORT /api/check-setup
+// API: Check Setup
 app.get('/api/check-setup', async (req, res) => {
     try {
-        const { count, error } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
-        res.json({ needsSetup: !error && count === 0 });
+        // Using pool.query directly to get count
+        const [rows] = await pool.query('SELECT COUNT(*) as count FROM users');
+        res.json({ needsSetup: rows[0].count === 0 });
     } catch (e) {
-        res.json({ needsSetup: false });
+        // If table doesn't exist yet, it needs setup
+        res.json({ needsSetup: true });
     }
 });
 
