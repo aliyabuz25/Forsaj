@@ -7,11 +7,20 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ onViewChange }) => {
-  const { getText, getImage, isLoading } = useSiteContent('hero');
+  const { getText, getImage, getUrl, isLoading } = useSiteContent('hero');
 
   const heroImg = getImage('hero-bg', 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=2070&auto=format&fit=crop');
 
   if (isLoading) return <div className="h-[85vh] bg-black animate-pulse"></div>;
+
+  const handleAction = (key: string, defaultView: string) => {
+    const url = getUrl(key, defaultView);
+    if (url.startsWith('http')) {
+      window.open(url, '_blank');
+    } else {
+      onViewChange(url as any);
+    }
+  };
 
   return (
     <section className="relative h-[85vh] flex items-center justify-center overflow-hidden bg-black">
@@ -41,13 +50,13 @@ const Hero: React.FC<HeroProps> = ({ onViewChange }) => {
 
         <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
           <button
-            onClick={() => onViewChange('events')}
+            onClick={() => handleAction('text-3', 'events')}
             className="bg-[#FF4D00] hover:bg-white hover:text-black text-black font-black italic py-5 px-12 rounded-sm flex items-center gap-3 transition-all transform hover:scale-105 active:scale-95 shadow-[0_10px_40px_rgba(255,77,0,0.3)]"
           >
             {getText('text-3', 'YARIŞLARA BAX')} <ChevronRight className="w-6 h-6" />
           </button>
           <button
-            onClick={() => onViewChange('about')}
+            onClick={() => handleAction('text-4', 'about')}
             className="border-2 border-white/20 text-white hover:border-[#FF4D00] hover:text-[#FF4D00] font-black italic py-5 px-12 rounded-sm transition-all bg-white/5 backdrop-blur-sm"
           >
             {getText('text-4', 'HAQQIMIZDA')}

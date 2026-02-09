@@ -5,6 +5,7 @@ interface ContentSection {
     type: 'text' | 'image';
     label: string;
     value: string;
+    url?: string;
 }
 
 interface ImageSection {
@@ -116,5 +117,32 @@ export const useSiteContent = (scopePageId?: string) => {
         return image ? { path: image.path, alt: image.alt } : { path: defaultPath, alt: '' };
     };
 
-    return { content, isLoading, getPage, getText, getImage };
+    const getUrl = (arg1: string, arg2?: string | number, arg3: string = '') => {
+        let pageId: string | undefined;
+        let sectionIdOrIndex: string | number;
+        let defaultUrl: string;
+
+        if (scopePageId) {
+            pageId = scopePageId;
+            sectionIdOrIndex = arg1;
+            defaultUrl = (typeof arg2 === 'string' ? arg2 : '') || '';
+        } else {
+            pageId = arg1;
+            sectionIdOrIndex = arg2 as string | number;
+            defaultUrl = arg3;
+        }
+
+        if (!pageId) return defaultUrl;
+
+        const page = getPage(pageId);
+        if (!page) return defaultUrl;
+
+        const section = typeof sectionIdOrIndex === 'number'
+            ? page.sections[sectionIdOrIndex]
+            : page.sections.find(s => s.id === sectionIdOrIndex);
+
+        return section?.url || defaultUrl;
+    };
+
+    return { content, isLoading, getPage, getText, getImage, getUrl };
 };

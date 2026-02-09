@@ -441,6 +441,52 @@
     ]
   },
   {
+    "id": "hero",
+    "title": "Giriş Hissəsi",
+    "sections": [
+      {
+        "id": "text-0",
+        "type": "text",
+        "label": "SUBTITLE",
+        "value": "AZERBAIJAN OFFROAD MOTORSPORT HUB"
+      },
+      {
+        "id": "text-1",
+        "type": "text",
+        "label": "TITLE",
+        "value": "SƏRHƏDSİZ OFFROAD HƏYƏCANI"
+      },
+      {
+        "id": "text-2",
+        "type": "text",
+        "label": "DESCRIPTION",
+        "value": "Azərbaycanın ən çətin yollarında peşəkar yarışlar və adrenalin dolu anlar."
+      },
+      {
+        "id": "text-3",
+        "type": "text",
+        "label": "PRIMARY BUTTON",
+        "value": "YARIŞLARA BAX",
+        "url": "events"
+      },
+      {
+        "id": "text-4",
+        "type": "text",
+        "label": "SECONDARY BUTTON",
+        "value": "HAQQIMIZDA",
+        "url": "about"
+      }
+    ],
+    "images": [
+      {
+        "id": "hero-bg",
+        "path": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=2070&auto=format&fit=crop",
+        "alt": "Hero Background",
+        "type": "local"
+      }
+    ]
+  },
+  {
     "id": "marquee",
     "title": "Sürüşən Yazı",
     "active": true,

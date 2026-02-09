@@ -9,6 +9,7 @@ interface Section {
     type: 'text' | 'image';
     label: string;
     value: string;
+    url?: string;
 }
 
 interface PageImage {
@@ -337,7 +338,7 @@ const VisualEditor: React.FC = () => {
         }
     };
 
-    const handleSectionChange = (pageIdx: number, sectionId: string, field: 'value' | 'label', value: string) => {
+    const handleSectionChange = (pageIdx: number, sectionId: string, field: 'value' | 'label' | 'url', value: string) => {
         const newPages = [...pages];
         const sectionIdx = newPages[pageIdx].sections.findIndex(s => s.id === sectionId);
         if (sectionIdx !== -1) {
@@ -1963,8 +1964,18 @@ const VisualEditor: React.FC = () => {
                                                     value={section.value}
                                                     onChange={(e) => handleSectionChange(selectedPageIndex, section.id, 'value', e.target.value)}
                                                     placeholder="Mətn daxil edin..."
-                                                    style={{ background: '#fff' }}
+                                                    style={{ background: '#fff', marginBottom: '0.5rem' }}
                                                 />
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    <Globe size={14} style={{ color: '#94a3b8' }} />
+                                                    <input
+                                                        type="text"
+                                                        value={section.url || ''}
+                                                        onChange={(e) => handleSectionChange(selectedPageIndex, section.id, 'url', e.target.value)}
+                                                        placeholder="URL (Məs: /about veya https://...)"
+                                                        style={{ fontSize: '12px', padding: '6px 10px', border: '1px solid #e2e8f0', borderRadius: '6px', flex: 1 }}
+                                                    />
+                                                </div>
                                                 <button
                                                     className="field-delete-btn"
                                                     onClick={() => removeField('text', section.id)}

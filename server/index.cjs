@@ -714,20 +714,27 @@ app.all('/api/extract-content', async (req, res) => {
                         }
                     }
 
-                    // 3. getText calls
+                    // 3. getText and getUrl calls
                     const getTextRegex = /getText\s*\(\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]+)['"]\s*\)/g;
                     while ((match = getTextRegex.exec(clean)) !== null) {
                         const key = match[1];
                         const text = match[2];
                         if (isTrueText(text) && !seenValues.has(text)) {
                             seenValues.add(text);
+
+                            // Try to find a corresponding getUrl call for the same key
+                            const getUrlRegex = new RegExp(`getUrl\\s*\\(\\s*['"]${key}['"]\\s*,\\s*['"]([^'"]+)['"]\\s*\\)`, 'g');
+                            const urlMatch = getUrlRegex.exec(clean);
+                            const url = urlMatch ? urlMatch[1] : undefined;
+
                             items.push({
                                 pos: match.index,
                                 item: {
                                     id: key,
                                     type: 'text',
                                     label: `KEY: ${key}`,
-                                    value: text
+                                    value: text,
+                                    url: url
                                 }
                             });
                         }
