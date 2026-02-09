@@ -536,14 +536,34 @@ app.get('/api/get-content', async (req, res) => {
 // API: Get Sitemap
 app.get('/api/sitemap', async (req, res) => {
     try {
+        let sitemap = [];
         try {
             await fsPromises.access(ADMIN_SITEMAP_PATH);
+            const data = await fsPromises.readFile(ADMIN_SITEMAP_PATH, 'utf8');
+            sitemap = JSON.parse(data);
         } catch {
-            return res.json([]);
+            // Default sitemap if file doesn't exist
+            sitemap = [
+                { title: 'Dashboard', icon: 'Layout', path: '/' },
+                { title: 'Kurs İdarəetməsi', icon: 'BookOpen', path: '/courses' }
+            ];
         }
-        const data = await fsPromises.readFile(ADMIN_SITEMAP_PATH, 'utf8');
-        res.json(JSON.parse(data));
+
+        // Ensure Admin Management and Settings are always present for the frontend to filter
+        const coreLinks = [
+            { title: 'Admin Hesabları', icon: 'Users', path: '/users-management' },
+            { title: 'Sistem Ayarları', icon: 'Settings', path: '/frontend-settings' }
+        ];
+
+        coreLinks.forEach(link => {
+            if (!sitemap.find(item => item.path === link.path)) {
+                sitemap.push(link);
+            }
+        });
+
+        res.json(sitemap);
     } catch (error) {
+        console.error('Sitemap read error:', error);
         res.status(500).json({ error: 'Failed to read sitemap' });
     }
 });
