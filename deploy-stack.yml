@@ -67,6 +67,10 @@ services:
       - /datastore/forsaj/mysql:/var/lib/mysql
     networks:
       - edge
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 5
     labels:
       - "traefik.enable=true"
       - "traefik.tcp.routers.forsaj-db-tcp.rule=HostSNI(`*`)"
