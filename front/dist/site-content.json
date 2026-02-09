@@ -1,0 +1,443 @@
+[
+  {
+    "id": "about",
+    "title": "About",
+    "sections": [
+      {
+        "id": "txt-haqqimizda-904",
+        "type": "text",
+        "label": "HAQQIMIZDA",
+        "value": "HAQQIMIZDA"
+      },
+      {
+        "id": "txt-bi-zi-m-hekay-mi-z-m-888",
+        "type": "text",
+        "label": "BİZİM HEKAYƏMİZ // MİSSİYAMIZ ...",
+        "value": "BİZİM HEKAYƏMİZ // MİSSİYAMIZ VƏ GƏLƏCƏYİMİZ"
+      },
+      {
+        "id": "txt-est-2018-motorsp-949",
+        "type": "text",
+        "label": "EST. 2018 // MOTORSPORT MƏRKƏZ...",
+        "value": "EST. 2018 // MOTORSPORT MƏRKƏZİ"
+      },
+      {
+        "id": "txt-forsaj-club-az-rba-66",
+        "type": "text",
+        "label": "\"FORSAJ CLUB\" AZƏRBAYCANIN OFF...",
+        "value": "\"FORSAJ CLUB\" AZƏRBAYCANIN OFFROAD MƏDƏNİYYƏTİNİ PEŞƏKAR SƏVİYYƏYƏ ÇATDIRMAQ ÜÇÜN YARADILMIŞDIR."
+      },
+      {
+        "id": "txt-klubumuz-sad-c-bir-552",
+        "type": "text",
+        "label": "KLUBUMUZ SADƏCƏ BIR HƏVƏSKAR Q...",
+        "value": "Klubumuz sadəcə bir həvəskar qrupu deyil, ölkəmizi beynəlxalq ralli xəritəsinə daxil etməyi hədəfləyən rəsmi və peşəkar bir platformadır. 2018-ci ildən bəri biz 50-dən çox rəsmi yarış, 100-dən çox ekspedisiya və saysız-hesabsız adrenalin dolu anlar yaşamışıq."
+      },
+      {
+        "id": "txt-bi-zi-m-mi-ssi-yamiz-424",
+        "type": "text",
+        "label": "BİZİM MİSSİYAMIZ",
+        "value": "BİZİM MİSSİYAMIZ"
+      },
+      {
+        "id": "txt-az-rbaycan-n-h-r-bir-45",
+        "type": "text",
+        "label": "AZƏRBAYCANIN HƏR BIR GUŞƏSINDƏ...",
+        "value": "Azərbaycanın hər bir guşəsində offroad idmanını təbliğ etmək, yerli pilotları beynəlxalq standartlara uyğun yetişdirmək və təbiəti qoruyaraq ekstremal adrenalin təcrübəsi bəxş etmək."
+      },
+      {
+        "id": "txt-h-d-fi-mi-z-dakar-ral-50",
+        "type": "text",
+        "label": "HƏDƏFİMİZ: DAKAR RALLİ 2026",
+        "value": "HƏDƏFİMİZ: DAKAR RALLİ 2026"
+      },
+      {
+        "id": "txt-bi-zi-m-baxi-imiz-944",
+        "type": "text",
+        "label": "BİZİM BAXIŞIMIZ",
+        "value": "BİZİM BAXIŞIMIZ"
+      },
+      {
+        "id": "txt-regionun-n-b-y-k-mo-901",
+        "type": "text",
+        "label": "REGIONUN ƏN BÖYÜK MOTORSPORT H...",
+        "value": "Regionun ən böyük motorsport hubuna çevrilmək, rəqəmsal və fiziki infrastrukturlarla pilotlarımızı dəstəkləmək və motorsportu hər kəs üçün əlçatan bir ehtirasa çevirmək."
+      },
+      {
+        "id": "txt-qafqazin-li-der-klubu-758",
+        "type": "text",
+        "label": "QAFQAZIN LİDER KLUBUNA ÇEVRİLM...",
+        "value": "QAFQAZIN LİDER KLUBUNA ÇEVRİLMƏK"
+      },
+      {
+        "id": "txt-fundamental-pri-nsi-pl-219",
+        "type": "text",
+        "label": "FUNDAMENTAL PRİNSİPLƏR",
+        "value": "FUNDAMENTAL PRİNSİPLƏR"
+      },
+      {
+        "id": "txt-sas-d-y-rl-ri-mi-z-482",
+        "type": "text",
+        "label": "ƏSAS DƏYƏRLƏRİMİZ",
+        "value": "ƏSAS DƏYƏRLƏRİMİZ"
+      },
+      {
+        "id": "attr-forsaj-club-detail-405",
+        "type": "text",
+        "label": "ALT: Forsaj Club Detail...",
+        "value": "Forsaj Club Detail"
+      }
+    ],
+    "images": [
+      {
+        "id": "img-992",
+        "path": "https://images.unsplash.com/photo-1541447271487-09612b3f49f7?q=80&w=1974&auto=format&fit=crop",
+        "alt": "Extracted Image",
+        "type": "local"
+      }
+    ]
+  },
+  {
+    "id": "contactpage",
+    "title": "Contact Page",
+    "sections": [
+      {
+        "id": "txt-online-276",
+        "type": "text",
+        "label": "ONLINE",
+        "value": "ONLINE"
+      },
+      {
+        "id": "txt-status-online-382",
+        "type": "text",
+        "label": "STATUS: ONLINE",
+        "value": "STATUS: ONLINE"
+      }
+    ],
+    "images": []
+  },
+  {
+    "id": "eventspage",
+    "title": "Events Page",
+    "sections": [
+      {
+        "id": "txt-replace-i-711",
+        "type": "text",
+        "label": "') .REPLACE(/\\[I\\](.*?)\\[\\/I\\]...",
+        "value": "') .replace(/\\[i\\](.*?)\\[\\/i\\]/gi, '"
+      },
+      {
+        "id": "txt-replace-u-289",
+        "type": "text",
+        "label": "') .REPLACE(/\\[U\\](.*?)\\[\\/U\\]...",
+        "value": "') .replace(/\\[u\\](.*?)\\[\\/u\\]/gi, '"
+      },
+      {
+        "id": "txt-replace-s-202",
+        "type": "text",
+        "label": "') .REPLACE(/\\[S\\](.*?)\\[\\/S\\]...",
+        "value": "') .replace(/\\[s\\](.*?)\\[\\/s\\]/gi, '"
+      },
+      {
+        "id": "txt-replace-img-273",
+        "type": "text",
+        "label": "') .REPLACE(/\\[IMG\\](.*?)\\[\\/I...",
+        "value": "') .replace(/\\[img\\](.*?)\\[\\/img\\]/gi, '"
+      },
+      {
+        "id": "txt-replace-quote-738",
+        "type": "text",
+        "label": "') .REPLACE(/\\[QUOTE\\](.*?)\\[\\...",
+        "value": "') .replace(/\\[quote\\](.*?)\\[\\/quote\\]/gi, '"
+      },
+      {
+        "id": "txt-replace-code-371",
+        "type": "text",
+        "label": "') .REPLACE(/\\[CODE\\](.*?)\\[\\/...",
+        "value": "') .replace(/\\[code\\](.*?)\\[\\/code\\]/gi, '"
+      },
+      {
+        "id": "txt-replace-n-g-303",
+        "type": "text",
+        "label": "') .REPLACE(/\\N/G, '",
+        "value": "') .replace(/\\n/g, '"
+      }
+    ],
+    "images": []
+  },
+  {
+    "id": "footer",
+    "title": "Footer",
+    "sections": [
+      {
+        "id": "txt-forsaj-822",
+        "type": "text",
+        "label": "FORSAJ",
+        "value": "FORSAJ"
+      },
+      {
+        "id": "txt-club-660",
+        "type": "text",
+        "label": "CLUB",
+        "value": "CLUB"
+      },
+      {
+        "id": "txt-az-rbaycan-n-n-pres-931",
+        "type": "text",
+        "label": "AZƏRBAYCANIN ƏN PRESTIJLI MOTO...",
+        "value": "Azərbaycanın ən prestijli motorsport mərkəzi. Sərhədsiz offroad həyəcanını bizimlə yaşayın."
+      },
+      {
+        "id": "txt-navi-qasi-ya-808",
+        "type": "text",
+        "label": "NAVİQASİYA",
+        "value": "NAVİQASİYA"
+      },
+      {
+        "id": "txt-motorsport-309",
+        "type": "text",
+        "label": "MOTORSPORT",
+        "value": "MOTORSPORT"
+      },
+      {
+        "id": "txt-x-b-rdar-ol-2",
+        "type": "text",
+        "label": "XƏBƏRDAR OL",
+        "value": "XƏBƏRDAR OL"
+      },
+      {
+        "id": "txt-yar-t-qvimi-v-x-b-920",
+        "type": "text",
+        "label": "YARIŞ TƏQVIMI VƏ XƏBƏRLƏRDƏN A...",
+        "value": "Yarış təqvimi və xəbərlərdən anında xəbərdar olmaq üçün abunə olun."
+      },
+      {
+        "id": "txt-2024-forsaj-club-811",
+        "type": "text",
+        "label": "© 2024 FORSAJ CLUB. ALL RIGHTS...",
+        "value": "© 2024 FORSAJ CLUB. ALL RIGHTS RESERVED."
+      },
+      {
+        "id": "txt-privacy-policy-882",
+        "type": "text",
+        "label": "PRIVACY POLICY",
+        "value": "Privacy Policy"
+      },
+      {
+        "id": "txt-terms-of-service-101",
+        "type": "text",
+        "label": "TERMS OF SERVICE",
+        "value": "Terms of Service"
+      },
+      {
+        "id": "attr-email-daxi-l-edi-n-383",
+        "type": "text",
+        "label": "PLACEHOLDER: EMAIL DAXİL EDİN...",
+        "value": "EMAIL DAXİL EDİN"
+      }
+    ],
+    "images": []
+  },
+  {
+    "id": "gallerypage",
+    "title": "Gallery Page",
+    "sections": [
+      {
+        "id": "txt-video-grid-779",
+        "type": "text",
+        "label": ") : ( /* VIDEO GRID - HIGH DEN...",
+        "value": ") : ( /* Video Grid - High Density / 4-5 per row on desktop */"
+      },
+      {
+        "id": "attr-youtube-video-player-393",
+        "type": "text",
+        "label": "TITLE: YouTube video player...",
+        "value": "YouTube video player"
+      }
+    ],
+    "images": []
+  },
+  {
+    "id": "navbar",
+    "title": "Navbar",
+    "sections": [
+      {
+        "id": "txt-forsaj-467",
+        "type": "text",
+        "label": "FORSAJ",
+        "value": "FORSAJ"
+      },
+      {
+        "id": "txt-club-703",
+        "type": "text",
+        "label": "CLUB",
+        "value": "CLUB"
+      }
+    ],
+    "images": []
+  },
+  {
+    "id": "news",
+    "title": "News",
+    "sections": [
+      {
+        "id": "txt-replace-i-190",
+        "type": "text",
+        "label": "') .REPLACE(/\\[I\\](.*?)\\[\\/I\\]...",
+        "value": "') .replace(/\\[i\\](.*?)\\[\\/i\\]/gi, '"
+      },
+      {
+        "id": "txt-replace-u-692",
+        "type": "text",
+        "label": "') .REPLACE(/\\[U\\](.*?)\\[\\/U\\]...",
+        "value": "') .replace(/\\[u\\](.*?)\\[\\/u\\]/gi, '"
+      },
+      {
+        "id": "txt-replace-s-603",
+        "type": "text",
+        "label": "') .REPLACE(/\\[S\\](.*?)\\[\\/S\\]...",
+        "value": "') .replace(/\\[s\\](.*?)\\[\\/s\\]/gi, '"
+      },
+      {
+        "id": "txt-replace-img-578",
+        "type": "text",
+        "label": "') .REPLACE(/\\[IMG\\](.*?)\\[\\/I...",
+        "value": "') .replace(/\\[img\\](.*?)\\[\\/img\\]/gi, '"
+      },
+      {
+        "id": "txt-replace-n-g-777",
+        "type": "text",
+        "label": "') .REPLACE(/\\N/G, '",
+        "value": "') .replace(/\\n/g, '"
+      }
+    ],
+    "images": []
+  },
+  {
+    "id": "newspage",
+    "title": "News Page",
+    "sections": [
+      {
+        "id": "txt-replace-i-696",
+        "type": "text",
+        "label": "') .REPLACE(/\\[I\\](.*?)\\[\\/I\\]...",
+        "value": "') .replace(/\\[i\\](.*?)\\[\\/i\\]/gi, '"
+      },
+      {
+        "id": "txt-replace-u-724",
+        "type": "text",
+        "label": "') .REPLACE(/\\[U\\](.*?)\\[\\/U\\]...",
+        "value": "') .replace(/\\[u\\](.*?)\\[\\/u\\]/gi, '"
+      },
+      {
+        "id": "txt-replace-s-918",
+        "type": "text",
+        "label": "') .REPLACE(/\\[S\\](.*?)\\[\\/S\\]...",
+        "value": "') .replace(/\\[s\\](.*?)\\[\\/s\\]/gi, '"
+      },
+      {
+        "id": "txt-replace-img-607",
+        "type": "text",
+        "label": "') .REPLACE(/\\[IMG\\](.*?)\\[\\/I...",
+        "value": "') .replace(/\\[img\\](.*?)\\[\\/img\\]/gi, '"
+      },
+      {
+        "id": "txt-replace-n-g-517",
+        "type": "text",
+        "label": "') .REPLACE(/\\N/G, '",
+        "value": "') .replace(/\\n/g, '"
+      }
+    ],
+    "images": []
+  },
+  {
+    "id": "nextrace",
+    "title": "Next Race",
+    "sections": [
+      {
+        "id": "attr-next-race-523",
+        "type": "text",
+        "label": "ALT: Next Race...",
+        "value": "Next Race"
+      }
+    ],
+    "images": [
+      {
+        "id": "img-708",
+        "path": "https://images.unsplash.com/photo-1541447271487-09612b3f49f7?q=80&w=1974&auto=format&fit=crop",
+        "alt": "Extracted Image",
+        "type": "local"
+      }
+    ]
+  },
+  {
+    "id": "partners",
+    "title": "Partners",
+    "sections": [
+      {
+        "id": "txt-official-partner-42",
+        "type": "text",
+        "label": "OFFICIAL PARTNER",
+        "value": "OFFICIAL PARTNER"
+      }
+    ],
+    "images": []
+  },
+  {
+    "id": "videoarchive",
+    "title": "Video Archive",
+    "sections": [
+      {
+        "id": "attr-youtube-video-player-677",
+        "type": "text",
+        "label": "TITLE: YouTube video player...",
+        "value": "YouTube video player"
+      }
+    ],
+    "images": []
+  },
+  {
+    "id": "whatisoffroad",
+    "title": "What Is Offroad",
+    "sections": [
+      {
+        "id": "txt-offroad-n-dir-134",
+        "type": "text",
+        "label": "OFFROAD NƏDIR?",
+        "value": "Offroad nədir?"
+      },
+      {
+        "id": "txt-adrenali-n-v-texni-ka-364",
+        "type": "text",
+        "label": "ADRENALİN VƏ TEXNİKANIN SİMBİO...",
+        "value": "ADRENALİN VƏ TEXNİKANIN SİMBİOZU"
+      },
+      {
+        "id": "txt-offroad-yaln-z-yol-339",
+        "type": "text",
+        "label": "OFFROAD – YALNIZ YOLSUZLUQ ŞƏR...",
+        "value": "Offroad – yalnız yolsuzluq şəraitində hərəkət etmək deyil, həm də dözümlülük, strateji düşüncə və mühəndislik bacarığının sınağıdır. Azərbaycanın çətin dağlıq relyefi bu idman növü üçün dünyada ən maraqlı məkanlardan biri hesab olunur."
+      },
+      {
+        "id": "txt-yar-i-llik-96",
+        "type": "text",
+        "label": "YARIŞ İLLIK",
+        "value": "Yarış İllik"
+      },
+      {
+        "id": "attr-offroad-culture-27",
+        "type": "text",
+        "label": "ALT: Offroad Culture...",
+        "value": "Offroad Culture"
+      }
+    ],
+    "images": [
+      {
+        "id": "img-679",
+        "path": "https://picsum.photos/id/107/800/600",
+        "alt": "Extracted Image",
+        "type": "local"
+      }
+    ]
+  }
+]

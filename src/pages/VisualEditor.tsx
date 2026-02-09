@@ -197,7 +197,7 @@ const VisualEditor: React.FC = () => {
             // 1. Load Site Content
             const { data: contentData } = await supabase.from('site_content').select('*');
             if (contentData) {
-                const mappedPages = contentData.map(p => ({
+                const mappedPages = contentData.map((p: any) => ({
                     id: p.page_id,
                     title: p.title,
                     sections: p.sections,

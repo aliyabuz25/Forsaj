@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { BookOpen, Plus, Trash2, Edit, Users, Video, FileText, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -55,7 +56,7 @@ const CoursesManager: React.FC = () => {
                 }));
                 setCourses(mappedData);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Failed to load courses:', error);
             toast.error('Kurslar yüklənərkən xəta baş verdi');
         } finally {
@@ -111,7 +112,7 @@ const CoursesManager: React.FC = () => {
         toast.success('Yeni kurs yaradıldı');
     };
 
-    const deleteCourse = (id: number) => {
+    const deleteCourse = (id: string | number) => {
         if (window.confirm('Bu kursu silmək istədiyinizə əminsiniz?')) {
             setCourses(courses.filter(c => c.id !== id));
             if (selectedCourse?.id === id) {
@@ -139,7 +140,7 @@ const CoursesManager: React.FC = () => {
         };
 
         setSelectedCourse(updatedCourse);
-        setCourses(courses.map(c => c.id === updatedCourse.id ? updatedCourse : c));
+        setCourses(courses.map((c: Course) => c.id === updatedCourse.id ? updatedCourse : c));
         toast.success('Yeni dərs əlavə edildi');
     };
 
@@ -148,7 +149,7 @@ const CoursesManager: React.FC = () => {
 
         const updated = { ...selectedCourse, [field]: value };
         setSelectedCourse(updated);
-        setCourses(courses.map(c => c.id === updated.id ? updated : c));
+        setCourses(courses.map((c: Course) => c.id === updated.id ? updated : c));
     };
 
     const updateLesson = (lessonId: number, field: keyof Lesson, value: any) => {
@@ -160,7 +161,7 @@ const CoursesManager: React.FC = () => {
 
         const updatedCourse = { ...selectedCourse, lessons: updatedLessons };
         setSelectedCourse(updatedCourse);
-        setCourses(courses.map(c => c.id === updatedCourse.id ? updatedCourse : c));
+        setCourses(courses.map((c: Course) => c.id === updatedCourse.id ? updatedCourse : c));
     };
 
     const deleteLesson = (lessonId: number) => {
@@ -170,7 +171,7 @@ const CoursesManager: React.FC = () => {
         const updatedCourse = { ...selectedCourse, lessons: updatedLessons };
 
         setSelectedCourse(updatedCourse);
-        setCourses(courses.map(c => c.id === updatedCourse.id ? updatedCourse : c));
+        setCourses(courses.map((c: Course) => c.id === updatedCourse.id ? updatedCourse : c));
         toast.success('Dərs silindi');
     };
 
@@ -207,7 +208,7 @@ const CoursesManager: React.FC = () => {
                             <p>Yeni kurs yaratmaq üçün "Yeni Kurs" düyməsini basın</p>
                         </div>
                     ) : (
-                        courses.map(course => (
+                        courses.map((course: Course) => (
                             <div key={course.id} className="course-card">
                                 <div className="course-thumbnail">
                                     <img src={course.thumbnail} alt={course.title} />
@@ -320,7 +321,7 @@ const CoursesManager: React.FC = () => {
                                     <p>Hələ heç bir dərs yoxdur</p>
                                 </div>
                             ) : (
-                                selectedCourse.lessons.map((lesson, index) => (
+                                selectedCourse.lessons.map((lesson: Lesson, index: number) => (
                                     <div key={lesson.id} className="lesson-item">
                                         <div className="lesson-number">{index + 1}</div>
                                         <div className="lesson-content">
