@@ -68,8 +68,9 @@ services:
     networks:
       - edge
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 10s
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
       retries: 5
     labels:
       - "traefik.enable=true"
@@ -90,7 +91,9 @@ services:
       - 'traefik.http.routers.forsaj-dbadmin.rule=Host(`forsaj.octotech.az`) && PathPrefix(`/dbadmin`)'
       - 'traefik.http.routers.forsaj-dbadmin.entrypoints=web'
       - 'traefik.http.routers.forsaj-dbadmin.priority=2000'
-      - 'traefik.http.routers.forsaj-dbadmin.middlewares=forsaj-dbadmin-strip'
+      - 'traefik.http.routers.forsaj-dbadmin.middlewares=forsaj-dbadmin-slash,forsaj-dbadmin-strip'
+      - 'traefik.http.middlewares.forsaj-dbadmin-slash.redirectregex.regex=^https?://forsaj.octotech.az/dbadmin$$'
+      - 'traefik.http.middlewares.forsaj-dbadmin-slash.redirectregex.replacement=https://forsaj.octotech.az/dbadmin/'
       - 'traefik.http.middlewares.forsaj-dbadmin-strip.stripprefix.prefixes=/dbadmin'
       - 'traefik.http.services.forsaj-dbadmin.loadbalancer.server.port=8080'
 
