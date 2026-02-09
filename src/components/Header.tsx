@@ -24,7 +24,7 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
                 </a>
                 <div className="header-profile">
                     <div className="profile-info">
-                        <span className="profile-name">{user?.name || 'Octo Admin'}</span>
+                        <span className="profile-name">{user?.name || 'Forsaj Admin'}</span>
                         <span className="profile-status">{user?.role === 'master' ? 'Admin Master' : 'Sayt Redaktoru'}</span>
                     </div>
                     <img src={`https://ui-avatars.com/api/?name=${user?.name || 'Admin'}&background=random`} alt="Profile" />

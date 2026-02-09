@@ -41,6 +41,7 @@ export const useSiteContent = (scopePageId?: string) => {
                     const mapped = Array.isArray(data) ? data.map((p: any) => ({
                         id: p.page_id || p.id,
                         title: p.title,
+                        active: p.active,
                         sections: p.sections,
                         images: p.images
                     })) : [];

@@ -896,7 +896,6 @@ app.all('/api/extract-content', async (req, res) => {
                     { title: 'Əlaqə Səhifəsi', path: '/?page=contactpage', icon: 'Layout' }
                 ]
             },
-            { title: 'KURS İDARƏETMƏSİ', icon: 'BookOpen', path: '/courses' },
             { title: 'ADMİN HESABLARI', icon: 'Users', path: '/users-management' },
             { title: 'SİSTEM AYARLARI', icon: 'Settings', path: '/frontend-settings' }
         ];

@@ -261,7 +261,7 @@ const VisualEditor: React.FC = () => {
         loadContent();
 
         // Auto-extract if it's the first time and we have no pages
-        const hasExtracted = localStorage.getItem('octo_extracted');
+        const hasExtracted = localStorage.getItem('forsaj_extracted');
         if (!hasExtracted && pages.length === 0 && !isExtracting) {
             // We wait a bit to make sure pages are truly empty (fetch finished)
             setTimeout(() => {
@@ -326,7 +326,7 @@ const VisualEditor: React.FC = () => {
 
             setTimeout(() => {
                 setIsExtracting(false);
-                localStorage.setItem('octo_extracted', 'true');
+                localStorage.setItem('forsaj_extracted', 'true');
                 toast.success('Sinxronizasiya tamamlandı! Baza yeniləndi.', { id: toastId });
                 setTimeout(() => window.location.reload(), 1500);
             }, 500);
@@ -929,7 +929,7 @@ const VisualEditor: React.FC = () => {
         }
     };
 
-    if (pages.length === 0 && !isExtracting && !localStorage.getItem('octo_extracted')) {
+    if (pages.length === 0 && !isExtracting && !localStorage.getItem('forsaj_extracted')) {
         return (
             <div className="extractor-overlay">
                 <div className="extractor-card fade-in">

@@ -23,7 +23,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => {
     { name: getText('txt-laq-251', 'ƏLAQƏ'), id: getUrl('txt-laq-251', 'contact') as any },
   ];
 
-  const languages = ['AZ', 'RU', 'EN'];
+  const languages = ['AZ', 'RU', 'ENG'];
 
   return (
     <nav className="sticky top-0 z-50 bg-[#0A0A0A]/95 backdrop-blur-md border-b border-white/5 px-6 lg:px-20 py-4 flex items-center justify-between shadow-2xl">

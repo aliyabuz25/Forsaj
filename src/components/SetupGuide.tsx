@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FileJson, FolderSync, BookOpen, Search, PlusCircle, Loader2 } from 'lucide-react';
+import { FileJson, FolderSync, Settings, Search, PlusCircle, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './SetupGuide.css';
 
@@ -38,10 +38,10 @@ const SetupGuide: React.FC = () => {
         },
         {
             id: 3,
-            title: 'Kurs Panelini Tənzimləyin',
-            description: 'Tədris materialları, tələbə siyahısı ve dərsləri idarəetmə panelinə əlavə edin.',
-            path: 'OctoPanel Courses',
-            icon: BookOpen,
+            title: 'Sistem Ayarlarını Tənzimləyin',
+            description: 'Saytın ümumi tənzimləmələrini, loqo və əlaqə məlumatlarını idarə edin.',
+            path: 'Sistem Ayarları',
+            icon: Settings,
         }
     ];
 
@@ -49,11 +49,11 @@ const SetupGuide: React.FC = () => {
         <div className="setup-guide">
             <div className="setup-header">
                 <div className="setup-brand">
-                    <div className="octo-logo">🐙</div>
-                    <h2>OctoPanel Kurs İdarəetmə</h2>
+                    <div className="octo-logo">🏎️</div>
+                    <h2>Forsaj Club İdarəetmə</h2>
                 </div>
                 <h1>Xoş Gəlmisiniz! Paneli Qurmağa Başlayaq</h1>
-                <p>Sizin kurs platformanız üçün premium admin paneli artıq hazırdır. Aşağıdakı addımları izləyərək front layihənizi adminlə birləşdirin.</p>
+                <p>Forsaj Club platformanız üçün premium admin paneli artıq hazırdır. Aşağıdakı addımları izləyərək front layihənizi adminlə birləşdirin.</p>
             </div>
 
             <div className="setup-grid">

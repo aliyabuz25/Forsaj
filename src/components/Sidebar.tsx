@@ -94,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems, user, onLogout }) => {
             <div className="sidebar-header">
                 <div className="brand-logo">
                     <LucideIcons.Hexagon className="logo-icon" size={24} fill="currentColor" />
-                    <span className="brand-name">OCTO<span>PANEL</span></span>
+                    <span className="brand-name">FORSAJ<span>PANEL</span></span>
                 </div>
             </div>
 

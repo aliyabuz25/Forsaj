@@ -14,7 +14,7 @@ const Dashboard: React.FC = () => {
         <div className="dashboard">
             <div className="page-header">
                 <div>
-                    <h1 className="page-title">OctoPanel-ə xoş gəlmisiniz!</h1>
+                    <h1 className="page-title">Forsaj Panel-ə xoş gəlmisiniz!</h1>
                     <p className="page-subtitle">Bu gün iş sahənizdə baş verənlər.</p>
                 </div>
                 <div className="header-actions">
