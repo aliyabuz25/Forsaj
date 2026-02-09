@@ -17,7 +17,8 @@ services:
       - 'traefik.enable=true'
       - 'traefik.docker.network=edge'
       - 'traefik.http.routers.forsaj-api.rule=(Host(`forsaj.octotech.az`) || Host(`forsaj.az`) || Host(`admin.forsaj.octotech.az`) || Host(`admin.forsaj.az`)) && (PathPrefix(`/api`) || PathPrefix(`/uploads`))'
-      - 'traefik.http.routers.forsaj-api.entrypoints=web'
+      - 'traefik.http.routers.forsaj-api.entrypoints=web,websecure'
+      - 'traefik.http.routers.forsaj-api.tls=true'
       - 'traefik.http.routers.forsaj-api.priority=300'
       - 'traefik.http.services.forsaj-api.loadbalancer.server.port=3001'
 

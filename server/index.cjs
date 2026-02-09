@@ -332,7 +332,7 @@ const isTrueText = (str) => {
 };
 
 // API: Extract Content (Scan Frontend)
-app.post('/api/extract-content', async (req, res) => {
+app.all('/api/extract-content', async (req, res) => {
     console.log('Starting Clean Content Extraction...');
     try {
         const COMPONENTS_DIR = path.join(__dirname, '../front/components');
