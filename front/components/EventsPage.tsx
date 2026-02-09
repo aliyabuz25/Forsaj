@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, Calendar, MapPin, X, Car, Users as UsersIcon, Download, FileText, ChevronDown } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
+import { supabase } from '../lib/supabaseClient';
 
 interface EventItem {
   id: number;
@@ -43,12 +43,20 @@ const EventsPage: React.FC<EventsPageProps> = ({ onViewChange }) => {
   const [eventsData, setEventsData] = useState<EventItem[]>([]);
 
   useEffect(() => {
-    fetch('/api/events')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) setEventsData(data);
-      })
-      .catch(err => console.error('Failed to load events', err));
+    const loadEvents = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('events')
+          .select('*')
+          .order('date', { ascending: false });
+
+        if (error) throw error;
+        if (data) setEventsData(data as any);
+      } catch (err) {
+        console.error('Failed to load events from Supabase', err);
+      }
+    };
+    loadEvents();
   }, []);
 
   const [activeTab, setActiveTab] = useState<'planned' | 'past'>('planned');

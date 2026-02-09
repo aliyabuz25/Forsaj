@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, User, ShieldAlert, UserPlus, Loader2 } from 'lucide-react';
+import { supabase } from '../lib/supabaseClient';
+import { Lock, User, ShieldAlert, UserPlus, Loader2, Mail } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './Login.css';
 
@@ -9,7 +10,7 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
     const [isLoginMode, setIsLoginMode] = useState(true);
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -17,9 +18,11 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     useEffect(() => {
         const checkSetup = async () => {
             try {
-                const response = await fetch('/api/check-setup');
-                const data = await response.json();
-                if (data.needsSetup) {
+                const { count, error } = await supabase
+                    .from('profiles')
+                    .select('*', { count: 'exact', head: true });
+
+                if (!error && count === 0) {
                     setIsLoginMode(false);
                 }
             } catch (err) {
@@ -33,32 +36,50 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         e.preventDefault();
         setIsLoading(true);
 
-        const endpoint = isLoginMode ? '/api/login' : '/api/setup';
-        const body = isLoginMode ? { username, password } : { username, password, name };
-
         try {
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
-            });
+            if (isLoginMode) {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password,
+                });
 
-            const data = await response.json();
+                if (error) throw error;
 
-            if (data.success) {
-                localStorage.setItem('forsaj_admin_user', JSON.stringify(data.user));
-                toast.success(isLoginMode ? `Xoş gəldiniz, ${data.user.name}` : 'Sistem uğurla quraşdırıldı!');
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', data.user.id)
+                    .single();
 
-                // Small delay to let the user see the success toast before unmounting
+                const userData = { ...data.user, ...profile };
+                localStorage.setItem('forsaj_admin_user', JSON.stringify(userData));
+                toast.success(`Xoş gəldiniz, ${profile?.name || email}`);
+
                 setTimeout(() => {
-                    onLogin(data.user);
+                    onLogin(userData);
                 }, 1000);
+
             } else {
-                // Display specific error from server if available
-                toast.error(data.error || 'Əməliyyat uğursuz oldu');
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                });
+
+                if (error) throw error;
+
+                if (data.user) {
+                    const { error: profileError } = await supabase
+                        .from('profiles')
+                        .insert([{ id: data.user.id, name, role: 'master' }]);
+
+                    if (profileError) throw profileError;
+
+                    toast.success('Sistem uğurla quraşdırıldı! Zəhmət olmasa e-poçtunuzu təsdiqləyin və daxil olun.');
+                    setIsLoginMode(true);
+                }
             }
-        } catch (err) {
-            toast.error('Serverlə bağlantı kəsildi');
+        } catch (err: any) {
+            toast.error(err.message || 'Əməliyyat uğursuz oldu');
         } finally {
             setIsLoading(false);
         }
@@ -90,12 +111,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                     )}
 
                     <div className="form-group">
-                        <label><User size={16} /> İstifadəçi Adı</label>
+                        <label><Mail size={16} /> E-poçt Ünvanı</label>
                         <input
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            placeholder={isLoginMode ? "master / admin" : "Məs: admin"}
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Məs: admin@forsaj.az"
                             required
                         />
                     </div>

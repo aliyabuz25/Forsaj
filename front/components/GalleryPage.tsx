@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PlayCircle, Image as ImageIcon, Video, ArrowRight, Zap, Maximize2, Calendar, X } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
+import { supabase } from '../lib/supabaseClient';
 
 const GalleryPage: React.FC = () => {
   const [activeType, setActiveType] = useState<'photos' | 'videos'>('photos');
@@ -10,15 +11,27 @@ const GalleryPage: React.FC = () => {
   const { getText } = useSiteContent('gallerypage');
 
   useEffect(() => {
-    fetch('/videos.json')
-      .then(res => res.json())
-      .then(data => setDynamicVideos(data))
-      .catch(() => { });
+    const loadGallery = async () => {
+      try {
+        const { data: photos } = await supabase.from('gallery_photos').select('*');
+        if (photos) setDynamicPhotos(photos);
 
-    fetch('/gallery-photos.json')
-      .then(res => res.json())
-      .then(data => setDynamicPhotos(data))
-      .catch(() => { });
+        const { data: videos } = await supabase.from('videos').select('*').order('created_at', { ascending: false });
+        if (videos) {
+          const mapped = videos.map(v => ({
+            id: v.id,
+            title: v.title,
+            videoId: v.video_id,
+            thumbnail: v.thumbnail,
+            duration: v.duration
+          }));
+          setDynamicVideos(mapped);
+        }
+      } catch (err) {
+        console.error('Gallery load failed from Supabase', err);
+      }
+    };
+    loadGallery();
   }, []);
 
   const VideoModal = () => {

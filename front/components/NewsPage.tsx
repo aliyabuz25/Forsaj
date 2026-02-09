@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, Calendar, Facebook, Send, Twitter, MessageCircle } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
+import { supabase } from '../lib/supabaseClient';
 
 interface NewsItem {
   id: number;
@@ -11,7 +11,6 @@ interface NewsItem {
   img: string;
   content: string;
 }
-
 
 const bbcodeToHtml = (bbcode: string) => {
   if (!bbcode) return '';
@@ -32,24 +31,32 @@ const NewsPage: React.FC = () => {
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
 
   useEffect(() => {
-    fetch('/api/news')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          // Map API NewsItem to component NewsItem if needed
-          // Based on admin: { id, title, date, img, description, status }
+    const loadNews = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('news')
+          .select('*')
+          .eq('status', 'published') // Only show published news
+          .order('date', { ascending: false });
+
+        if (error) throw error;
+
+        if (data) {
           const mapped = data.map((item: any) => ({
             id: item.id,
             title: item.title,
             date: item.date,
-            desc: item.description, // using description as excerpt
+            desc: item.description,
             img: item.img,
-            content: item.description // and as full content for now
+            content: item.description
           }));
           setNewsData(mapped);
         }
-      })
-      .catch(err => console.error('Failed to load news', err));
+      } catch (err) {
+        console.error('Failed to load news from Supabase', err);
+      }
+    };
+    loadNews();
   }, []);
 
   useEffect(() => {

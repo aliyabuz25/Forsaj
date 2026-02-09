@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { supabase } from '../lib/supabaseClient';
 import { Save, Type, Image as ImageIcon, Layout, Globe, Plus, Trash2, X, Search, Calendar, MapPin, FileText, Trophy, RotateCcw, Video, Play } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './VisualEditor.css';
@@ -191,81 +192,73 @@ const VisualEditor: React.FC = () => {
     const [selectedDriverId, setSelectedDriverId] = useState<number | null>(null);
     const [driverForm, setDriverForm] = useState<Partial<DriverItem>>({});
 
-    const loadContent = () => {
-        fetch(`/api/get-content?v=${Date.now()}`)
-            .then(res => res.json())
-            .then(data => {
-                if (Array.isArray(data)) setPages(data);
-            })
-            .catch(() => { console.error('content load fail'); });
+    const loadContent = async () => {
+        try {
+            // 1. Load Site Content
+            const { data: contentData } = await supabase.from('site_content').select('*');
+            if (contentData) {
+                const mappedPages = contentData.map(p => ({
+                    id: p.page_id,
+                    title: p.title,
+                    sections: p.sections,
+                    images: p.images
+                }));
+                setPages(mappedPages as any);
+            }
 
-        fetch(`/api/all-images?v=${Date.now()}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.local) setAllAvailableImages(data.local);
-            })
-            .catch(() => { console.error('image list load fail'); });
+            // 2. Load Available Images (Keep legacy API for local scan)
+            fetch(`/api/all-images?v=${Date.now()}`)
+                .then(res => res.json())
+                .then(data => { if (data.local) setAllAvailableImages(data.local); });
 
-        fetch(`/api/events?v=${Date.now()}`)
-            .then(res => res.json())
-            .then(data => {
-                if (Array.isArray(data)) {
-                    setEvents(data);
-                    if (data.length > 0 && selectedEventId === null) {
-                        setSelectedEventId(data[0].id);
-                        setEventForm(data[0]);
-                    }
+            // 3. Load Events
+            const { data: eventsData } = await supabase.from('events').select('*').order('date', { ascending: false });
+            if (eventsData) {
+                setEvents(eventsData as any);
+                if (eventsData.length > 0 && selectedEventId === null) {
+                    setSelectedEventId(eventsData[0].id as any);
+                    setEventForm(eventsData[0] as any);
                 }
-            })
-            .catch(() => { console.error('events load fail'); });
+            }
 
-        fetch(`/api/news?v=${Date.now()}`)
-            .then(res => {
-                if (!res.ok) throw new Error(`Status: ${res.status}`);
-                return res.json();
-            })
-            .then(data => {
-                if (Array.isArray(data)) {
-                    setNews(data);
-                    if (data.length > 0 && selectedNewsId === null) {
-                        handleNewsSelect(data[0].id);
-                    }
+            // 4. Load News
+            const { data: newsData } = await supabase.from('news').select('*').order('date', { ascending: false });
+            if (newsData) {
+                setNews(newsData as any);
+                if (newsData.length > 0 && selectedNewsId === null) {
+                    handleNewsSelect(newsData[0].id as any);
                 }
-            })
-            .catch((err) => {
-                console.error('news load fail:', err);
-            });
+            }
 
-        fetch(`/api/drivers?v=${Date.now()}`)
-            .then(res => res.json())
-            .then(data => {
-                if (Array.isArray(data)) {
-                    setDriverCategories(data);
-                    if (data.length > 0 && selectedCatId === null) {
-                        setSelectedCatId(data[0].id);
-                    }
+            // 5. Load Drivers
+            const { data: driversData } = await supabase.from('drivers').select('*');
+            if (driversData) {
+                const cats = driversData.map(d => ({
+                    id: d.id,
+                    name: d.category_name,
+                    drivers: d.drivers
+                }));
+                setDriverCategories(cats as any);
+                if (cats.length > 0 && selectedCatId === null) {
+                    setSelectedCatId(cats[0].id);
                 }
-            })
-            .catch(() => { console.error('drivers load fail'); });
+            }
 
-        fetch(`/api/gallery-photos?v=${Date.now()}`)
-            .then(res => res.json())
-            .then(data => {
-                if (Array.isArray(data)) setGalleryPhotos(data);
-            })
-            .catch(() => { console.error('gallery photos load fail'); });
+            // 6. Load Gallery Photos
+            const { data: photosData } = await supabase.from('gallery_photos').select('*');
+            if (photosData) setGalleryPhotos(photosData as any);
 
-        fetch(`/api/videos?v=${Date.now()}`)
-            .then(res => res.json())
-            .then(data => {
-                if (Array.isArray(data)) {
-                    setVideos(data);
-                    if (data.length > 0 && selectedVideoId === null) {
-                        handleVideoSelect(data[0].id);
-                    }
+            // 7. Load Videos
+            const { data: videosData } = await supabase.from('videos').select('*');
+            if (videosData) {
+                setVideos(videosData as any);
+                if (videosData.length > 0 && selectedVideoId === null) {
+                    handleVideoSelect(videosData[0].id as any);
                 }
-            })
-            .catch(() => { console.error('videos load fail'); });
+            }
+        } catch (err) {
+            console.error('Supabase load error:', err);
+        }
     };
 
     useEffect(() => {
@@ -312,16 +305,29 @@ const VisualEditor: React.FC = () => {
                 throw new Error(errText || 'Extraction failed');
             }
 
-            setProgress(70);
-            setExtractStep('Məlumatlar emal olunur...');
+            setProgress(60);
+            setExtractStep('Bulud bazası ilə sinxronizasiya edilir...');
 
             const data = await response.json();
+            const extractedPages = data.pages || data;
 
-            // Artificial delay for UX if it was too fast
+            // Sync with Supabase site_content
+            for (const page of extractedPages) {
+                await supabase.from('site_content').upsert({
+                    page_id: page.id,
+                    title: page.title,
+                    sections: page.sections,
+                    images: page.images,
+                    updated_at: new Date().toISOString()
+                }, { onConflict: 'page_id' });
+            }
+
+            setProgress(90);
+            setPages(extractedPages);
+
+            // Artificial delay for UX
             const elapsed = Date.now() - startTime;
             if (elapsed < 800) await new Promise(r => setTimeout(r, 800 - elapsed));
-
-            setPages(data.pages || data); // Handle both array and object returns
 
             setProgress(100);
             setExtractStep('Tamamlandı!');
@@ -329,20 +335,14 @@ const VisualEditor: React.FC = () => {
             setTimeout(() => {
                 setIsExtracting(false);
                 localStorage.setItem('octo_extracted', 'true');
-
-                const stats = data.stats || { total: Array.isArray(data) ? data.length : 0 };
-                const msg = `Sinxronizasiya tamamlandı! ${stats.total || 0} səhifə yeniləndi. Səhifə yenilənir...`;
-
-                toast.success(msg, { id: toastId });
-
-                // Reload to refresh sitemap in Sidebar
+                toast.success('Sinxronizasiya tamamlandı! Baza yeniləndi.', { id: toastId });
                 setTimeout(() => window.location.reload(), 1500);
             }, 500);
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Extraction error:', error);
             setIsExtracting(false);
-            toast.error('Sinxronizasiya xətası! Serverlə əlaqə yaradılmadı.', { id: toastId });
+            toast.error(`Sinxronizasiya xətası: ${error.message}`, { id: toastId });
         }
     };
 
@@ -502,42 +502,51 @@ const VisualEditor: React.FC = () => {
         setIsSaving(true);
         const toastId = toast.loading('Yadda saxlanılır...');
         try {
-            let endpoint = '/api/save-content';
-            let bodyData: PageContent[] | EventItem[] | NewsItem[] | DriverCategory[] | VideoItem[] | GalleryPhotoItem[] = pages;
-
-            if (editorMode === 'events') {
-                endpoint = '/api/events';
-                bodyData = events;
+            if (editorMode === 'extract') {
+                for (const page of pages) {
+                    await supabase.from('site_content').upsert({
+                        page_id: page.id,
+                        title: page.title,
+                        sections: page.sections,
+                        images: page.images,
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'page_id' });
+                }
+            } else if (editorMode === 'events') {
+                const { error } = await supabase.from('events').upsert(events);
+                if (error) throw error;
             } else if (editorMode === 'news') {
-                endpoint = '/api/news';
-                bodyData = news;
+                const { error } = await supabase.from('news').upsert(news);
+                if (error) throw error;
             } else if (editorMode === 'drivers') {
-                endpoint = '/api/drivers';
-                bodyData = driverCategories;
+                const driversData = driverCategories.map(c => ({
+                    id: c.id,
+                    category_name: c.name,
+                    drivers: c.drivers,
+                    updated_at: new Date().toISOString()
+                }));
+                const { error } = await supabase.from('drivers').upsert(driversData);
+                if (error) throw error;
             } else if (editorMode === 'videos') {
-                endpoint = '/api/videos';
-                bodyData = videos;
+                const formattedVideos = videos.map(v => ({
+                    id: v.id,
+                    title: v.title,
+                    youtube_url: v.youtubeUrl,
+                    video_id: v.videoId,
+                    duration: v.duration,
+                    thumbnail: v.thumbnail
+                }));
+                const { error } = await supabase.from('videos').upsert(formattedVideos);
+                if (error) throw error;
             } else if (editorMode === 'photos') {
-                endpoint = '/api/gallery-photos';
-                bodyData = galleryPhotos;
+                const { error } = await supabase.from('gallery_photos').upsert(galleryPhotos);
+                if (error) throw error;
             }
 
-            console.log(`Saving to ${endpoint}`, bodyData);
-
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(bodyData)
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText || `Server error: ${response.status}`);
-            }
-
-            toast.success('Dəyişikliklər qeyd edildi!', { id: toastId });
+            toast.success('Dəyişikliklər bulud bazasına qeyd edildi!', { id: toastId });
+            await loadContent();
         } catch (err: any) {
-            console.error('Save error details:', err);
+            console.error('Save error:', err);
             toast.error(`Yadda saxlama xətası: ${err.message}`, { id: toastId });
         } finally {
             setIsSaving(false);
@@ -587,9 +596,12 @@ const VisualEditor: React.FC = () => {
         toast.success('Yeni tədbir yaradıldı');
     };
 
-    const deleteEvent = (id: number, e: React.MouseEvent) => {
+    const deleteEvent = async (id: any, e: React.MouseEvent) => {
         e.stopPropagation();
         if (window.confirm('Bu tədbiri silmək istədiyinizə əminsiniz?')) {
+            if (typeof id === 'string') {
+                await supabase.from('events').delete().eq('id', id);
+            }
             setEvents(events.filter(ev => ev.id !== id));
             if (selectedEventId === id) setSelectedEventId(null);
             toast.success('Tədbir silindi');
@@ -705,14 +717,18 @@ const VisualEditor: React.FC = () => {
         handlePhotoSelect(newId);
     };
 
-    const deleteGalleryPhoto = (id: number, e: React.MouseEvent) => {
+    const deleteGalleryPhoto = async (id: any, e: React.MouseEvent) => {
         e.stopPropagation();
         if (window.confirm('Bu şəkli silmək istədiyinizə əminsiniz?')) {
+            if (typeof id === 'string') {
+                await supabase.from('gallery_photos').delete().eq('id', id);
+            }
             setGalleryPhotos(prev => prev.filter(p => p.id !== id));
             if (selectedPhotoId === id) {
                 setSelectedPhotoId(null);
                 setPhotoForm({});
             }
+            toast.success('Şəkil silindi');
         }
     };
 
@@ -752,18 +768,24 @@ const VisualEditor: React.FC = () => {
         toast.success('Yeni video əlavə edildi');
     };
 
-    const deleteVideo = (id: number, e: React.MouseEvent) => {
+    const deleteVideo = async (id: any, e: React.MouseEvent) => {
         e.stopPropagation();
         if (window.confirm('Bu videonu silmək istədiyinizə əminsiniz?')) {
+            if (typeof id === 'string') {
+                await supabase.from('videos').delete().eq('id', id);
+            }
             setVideos(videos.filter(v => v.id !== id));
             if (selectedVideoId === id) setSelectedVideoId(null);
             toast.success('Video silindi');
         }
     };
 
-    const deleteNews = (id: number, e: React.MouseEvent) => {
+    const deleteNews = async (id: any, e: React.MouseEvent) => {
         e.stopPropagation();
         if (window.confirm('Bu xəbəri silmək istədiyinizə əminsiniz?')) {
+            if (typeof id === 'string') {
+                await supabase.from('news').delete().eq('id', id);
+            }
             setNews(news.filter(n => n.id !== id));
             if (selectedNewsId === id) setSelectedNewsId(null);
             toast.success('Xəbər silindi');

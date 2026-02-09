@@ -6,16 +6,37 @@ interface VideoArchiveProps {
   onViewChange: (view: any) => void;
 }
 
+import { supabase } from '../lib/supabaseClient';
+
 const VideoArchive: React.FC<VideoArchiveProps> = ({ onViewChange }) => {
   const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
   const [videos, setVideos] = React.useState<any[]>([]);
   const { getText } = useSiteContent('videoarchive');
 
   React.useEffect(() => {
-    fetch('/videos.json')
-      .then(res => res.json())
-      .then(data => setVideos(data))
-      .catch(err => console.error('Videos load fail:', err));
+    const loadVideos = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('videos')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(4);
+
+        if (error) throw error;
+        if (data) {
+          const mapped = data.map(v => ({
+            id: v.id,
+            title: v.title,
+            videoId: v.video_id,
+            thumbnail: v.thumbnail
+          }));
+          setVideos(mapped);
+        }
+      } catch (err) {
+        console.error('Videos load fail from Supabase:', err);
+      }
+    };
+    loadVideos();
   }, []);
 
   const VideoModal = () => {

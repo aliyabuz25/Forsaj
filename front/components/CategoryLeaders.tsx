@@ -6,24 +6,29 @@ interface CategoryLeadersProps {
   onViewChange: (view: 'home' | 'about' | 'news' | 'events' | 'drivers' | 'rules' | 'contact', category?: string) => void;
 }
 
+import { supabase } from '../lib/supabaseClient';
+
 const CategoryLeaders: React.FC<CategoryLeadersProps> = ({ onViewChange }) => {
   const { getText } = useSiteContent('categoryleaders');
   const [leaders, setLeaders] = React.useState<any[]>([]);
 
   React.useEffect(() => {
-    fetch('/api/drivers')
-      .then(res => {
-        if (!res.ok) throw new Error('API unavailable');
-        return res.json();
-      })
-      .then(data => {
-        if (Array.isArray(data)) {
+    const loadLeaders = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('drivers')
+          .select('*')
+          .order('category_name');
+
+        if (error) throw error;
+
+        if (data) {
           const topLeaders = data.map(cat => {
             const drivers = Array.isArray(cat.drivers) ? cat.drivers : [];
             const topDriver = [...drivers].sort((a: any, b: any) => a.rank - b.rank)[0];
             return {
               id: cat.id,
-              title: `${cat.name} LİDERİ`,
+              title: `${cat.category_name} LİDERİ`,
               name: topDriver?.name || '---',
               team: topDriver?.team || '---',
               score: topDriver?.points || 0,
@@ -32,8 +37,11 @@ const CategoryLeaders: React.FC<CategoryLeadersProps> = ({ onViewChange }) => {
           });
           setLeaders(topLeaders);
         }
-      })
-      .catch(err => console.error('Leaders fetch failed:', err));
+      } catch (err) {
+        console.error('Leaders fetch failed from Supabase:', err);
+      }
+    };
+    loadLeaders();
   }, []);
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabaseClient';
 import { BookOpen, Plus, Trash2, Edit, Users, Video, FileText, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './CoursesManager.css';
@@ -13,7 +13,7 @@ interface Lesson {
 }
 
 interface Course {
-    id: number;
+    id: string | number; // Support both local numeric and Supabase UUID IDs
     title: string;
     description: string;
     instructor: string;
@@ -37,13 +37,27 @@ const CoursesManager: React.FC = () => {
 
     const loadCourses = async () => {
         try {
-            const response = await fetch('/api/courses');
-            if (response.ok) {
-                const data = await response.json();
-                setCourses(data);
+            const { data, error } = await supabase
+                .from('courses')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            if (data) {
+                // Map DB names to interface names if different
+                const mappedData = data.map(item => ({
+                    ...item,
+                    instructor: item.instructor || 'Naməlum',
+                    thumbnail: item.image || item.thumbnail,
+                    price: parseFloat(item.price) || 0,
+                    lessons: Array.isArray(item.lessons) ? item.lessons : []
+                }));
+                setCourses(mappedData);
             }
         } catch (error) {
             console.error('Failed to load courses:', error);
+            toast.error('Kurslar yüklənərkən xəta baş verdi');
         } finally {
             setIsLoading(false);
         }
@@ -51,14 +65,30 @@ const CoursesManager: React.FC = () => {
 
     const saveCourses = async () => {
         try {
-            await fetch('/api/courses', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(courses)
-            });
-            toast.success('Kurslar yadda saxlanıldı!');
-        } catch (error) {
-            toast.error('Saxlama xətası!');
+            const toastId = toast.loading('Yadda saxlanılır...');
+
+            // Format data for DB
+            const dataToSave = courses.map(c => ({
+                id: typeof c.id === 'number' ? undefined : c.id, // Let DB generate UUID for new items
+                title: c.title,
+                description: c.description,
+                instructor: c.instructor,
+                image: c.thumbnail,
+                price: c.price.toString(),
+                status: c.status,
+                lessons: c.lessons
+            }));
+
+            const { error } = await supabase
+                .from('courses')
+                .upsert(dataToSave);
+
+            if (error) throw error;
+
+            toast.success('Kurslar yadda saxlanıldı!', { id: toastId });
+            await loadCourses(); // Refresh to get proper UUIDs
+        } catch (error: any) {
+            toast.error(`Saxlama xətası: ${error.message}`);
         }
     };
 

@@ -9,6 +9,7 @@ import UsersManager from './pages/UsersManager';
 import SetupGuide from './components/SetupGuide';
 import Login from './pages/Login';
 import { Toaster } from 'react-hot-toast';
+import { supabase } from './lib/supabaseClient';
 import type { SidebarItem } from './types/navigation';
 import './index.css';
 
@@ -23,6 +24,26 @@ const App: React.FC = () => {
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+
+        const userData = { ...session.user, ...profile };
+        setUser(userData);
+        localStorage.setItem('forsaj_admin_user', JSON.stringify(userData));
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        localStorage.removeItem('forsaj_admin_user');
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabaseClient';
 
 interface ContentSection {
     id: string;
@@ -26,21 +27,31 @@ export const useSiteContent = (scopePageId?: string) => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetch('/api/get-content')
-            .then(res => {
-                if (!res.ok) throw new Error('Content API unreachable');
-                return res.json();
-            })
-            .then(data => {
-                if (Array.isArray(data)) {
-                    setContent(data);
+        const loadContent = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('site_content')
+                    .select('*');
+
+                if (error) throw error;
+
+                if (data) {
+                    const mapped = data.map(p => ({
+                        id: p.page_id,
+                        title: p.title,
+                        sections: p.sections,
+                        images: p.images
+                    }));
+                    setContent(mapped as any);
                 }
+            } catch (err) {
+                console.error('Failed to load site content from Supabase:', err);
+            } finally {
                 setIsLoading(false);
-            })
-            .catch(err => {
-                console.error('Failed to load site content:', err);
-                setIsLoading(false);
-            });
+            }
+        };
+
+        loadContent();
     }, []);
 
     const getPage = (id: string) => {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, Trophy, Zap } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
+import { supabase } from '../lib/supabaseClient';
 
 interface Driver {
   id: number;
@@ -29,19 +30,23 @@ const DriversPage: React.FC<DriversPageProps> = ({ initialCategoryId }) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const { getText } = useSiteContent('driverspage');
+
   useEffect(() => {
-    fetch('/api/drivers')
-      .then(res => {
-        if (!res.ok) throw new Error('API unavailable');
-        return res.json();
-      })
-      .then(data => {
-        if (Array.isArray(data)) {
+    const loadDrivers = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('drivers')
+          .select('*')
+          .order('category_name');
+
+        if (error) throw error;
+
+        if (data) {
           const mappedCats = data.map((c: any) => {
             const drivers = Array.isArray(c.drivers) ? c.drivers : [];
             return {
               id: c.id,
-              name: c.name,
+              name: c.category_name,
               leaders: drivers.slice(0, 3), // Top 3
               fullStandings: [...drivers].sort((a: any, b: any) => a.rank - b.rank)
             };
@@ -53,8 +58,11 @@ const DriversPage: React.FC<DriversPageProps> = ({ initialCategoryId }) => {
             if (cat) setSelectedCategory(cat);
           }
         }
-      })
-      .catch(err => console.error('Drivers fetch failed:', err));
+      } catch (err) {
+        console.error('Drivers fetch failed from Supabase:', err);
+      }
+    };
+    loadDrivers();
   }, [initialCategoryId]);
 
   if (!selectedCategory && categories.length > 0 && !initialCategoryId) {
