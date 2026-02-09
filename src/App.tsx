@@ -4,7 +4,6 @@ import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import VisualEditor from './pages/VisualEditor';
 import FrontendSettings from './pages/FrontendSettings';
-import CoursesManager from './pages/CoursesManager';
 import UsersManager from './pages/UsersManager';
 import SetupGuide from './components/SetupGuide';
 import Login from './pages/Login';
@@ -82,7 +81,6 @@ const App: React.FC = () => {
                   ) : (
                     <>
                       <Route path="/" element={<VisualEditor />} />
-                      <Route path="/courses" element={<CoursesManager />} />
 
                       <Route path="/users-management" element={<UsersManager currentUser={user} />} />
 

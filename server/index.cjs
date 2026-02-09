@@ -111,7 +111,6 @@ const UPLOAD_DIR_PATH = process.env.UPLOAD_DIR || path.join(FRONT_PUBLIC_DIR, 'u
 const USERS_FILE_PATH = path.join(WEB_DATA_DIR, 'users.json');
 const EVENTS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'events.json');
 const NEWS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'news.json');
-const COURSES_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'courses.json');
 const GALLERY_PHOTOS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'gallery-photos.json');
 const VIDEOS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'videos.json');
 const DRIVERS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'drivers.json');
@@ -541,33 +540,6 @@ app.post('/api/drivers', async (req, res) => {
     }
 });
 
-// API: Get Courses
-app.get('/api/courses', async (req, res) => {
-    try {
-        try {
-            await fsPromises.access(COURSES_FILE_PATH);
-        } catch {
-            return res.json([]);
-        }
-        const data = await fsPromises.readFile(COURSES_FILE_PATH, 'utf8');
-        res.json(JSON.parse(data));
-    } catch (error) {
-        console.error('Error reading courses:', error);
-        res.status(500).json({ error: 'Failed to read courses' });
-    }
-});
-
-// API: Save Courses
-app.post('/api/courses', async (req, res) => {
-    try {
-        const courses = req.body;
-        await fsPromises.writeFile(COURSES_FILE_PATH, JSON.stringify(courses, null, 2));
-        res.json({ success: true });
-    } catch (error) {
-        console.error('Error saving courses:', error);
-        res.status(500).json({ error: 'Failed to save courses' });
-    }
-});
 
 // Logic from extractJsonMap.cjs
 const isTrueText = (str) => {
@@ -921,8 +893,7 @@ app.get('/api/sitemap', async (req, res) => {
         } catch {
             // Default sitemap if file doesn't exist
             sitemap = [
-                { title: 'Dashboard', icon: 'Layout', path: '/' },
-                { title: 'Kurs İdarəetməsi', icon: 'BookOpen', path: '/courses' }
+                { title: 'Dashboard', icon: 'Layout', path: '/' }
             ];
         }
 
