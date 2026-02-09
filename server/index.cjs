@@ -136,7 +136,6 @@ app.get('/api', async (req, res) => {
         fileInfo.mtime = stats.mtime;
         fileInfo.size = stats.size;
     } catch (e) { }
-
     res.json({
         status: 'ready',
         version: '1.2.6',
@@ -146,6 +145,10 @@ app.get('/api', async (req, res) => {
         adminEnabled: true,
         message: 'Forsaj API is fully operational'
     });
+});
+
+app.get('/api/ping', (req, res) => {
+    res.json({ pong: true, time: new Date().toISOString() });
 });
 
 // API: Database Connectivity Check
