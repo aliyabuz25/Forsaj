@@ -34,11 +34,20 @@ app.use((req, res, next) => {
 
 app.get('/api', async (req, res) => {
     const users = await getUsers();
+    let fileInfo = { exists: false, path: USERS_FILE_PATH };
+    try {
+        const stats = await fsPromises.stat(USERS_FILE_PATH);
+        fileInfo.exists = true;
+        fileInfo.mtime = stats.mtime;
+        fileInfo.size = stats.size;
+    } catch (e) { }
+
     res.json({
         status: 'ready',
-        version: '1.2.1',
+        version: '1.2.2',
         port: PORT,
         userCount: users.length,
+        database: fileInfo,
         message: 'Forsaj API is fully operational'
     });
 });
@@ -277,6 +286,30 @@ app.all('/api/login', async (req, res) => {
     console.log(`Login successful for user: ${username}`);
     const { password: _, ...userWithoutPassword } = user;
     res.json({ success: true, user: userWithoutPassword });
+});
+
+// API: Emergency Reset Admin (Guaranteed Recovery)
+app.post('/api/emergency-reset-admin', async (req, res) => {
+    const { confirm } = req.body;
+    if (confirm !== 'RESET_NOW') {
+        return res.status(400).json({ error: 'Sıfırlama üçün "RESET_NOW" yazın' });
+    }
+
+    try {
+        if (fs.existsSync(USERS_FILE_PATH)) {
+            await fsPromises.unlink(USERS_FILE_PATH);
+            console.log('Emergency Reset: User database deleted.');
+        }
+        res.json({ success: true, message: 'Sistem sıfırlandı. İndi səhifəni yeniləyib yeni admin quraşdıra bilərsiniz.' });
+    } catch (error) {
+        console.error('Reset error:', error);
+        res.status(500).json({ error: 'Sıfırlama baş tutmadı' });
+    }
+});
+
+// API: Logout
+app.post('/api/logout', (req, res) => {
+    res.json({ success: true, message: 'Çıxış uğurla başa çatdı' });
 });
 
 // ==========================================
