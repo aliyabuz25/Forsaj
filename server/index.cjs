@@ -20,8 +20,8 @@ console.log('- Supabase URL:', supabaseUrl ? 'Set' : 'Missing');
 console.log('- Service Role Key:', supabaseServiceRoleKey ? 'Set' : 'Missing');
 
 // Use Service Role Key for administrative operations if available
-const supabase = createClient(supabaseUrl || '', supabaseServiceRoleKey || supabaseAnonKey || '');
-const supabaseAdmin = supabaseServiceRoleKey ? createClient(supabaseUrl || '', supabaseServiceRoleKey) : null;
+const supabase = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseServiceRoleKey || supabaseAnonKey || 'placeholder');
+const supabaseAdmin = (supabaseUrl && supabaseServiceRoleKey) ? createClient(supabaseUrl, supabaseServiceRoleKey) : null;
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -964,6 +964,6 @@ app.use((req, res) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`Admin Backend running at http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Admin Backend running at http://0.0.0.0:${PORT}`);
 });
