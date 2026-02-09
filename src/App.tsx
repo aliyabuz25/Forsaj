@@ -58,7 +58,7 @@ const App: React.FC = () => {
   return (
     <Router basename={import.meta.env.PROD ? '/admin' : '/'}>
       <div className="app-container">
-        <Toaster position="top-right" reverseOrder={false} />
+        <Toaster containerStyle={{ zIndex: 10001 }} position="top-right" reverseOrder={false} />
         {!user ? (
           <Login onLogin={setUser} />
         ) : (

@@ -47,8 +47,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
             if (data.success) {
                 localStorage.setItem('forsaj_admin_user', JSON.stringify(data.user));
-                onLogin(data.user);
                 toast.success(isLoginMode ? `Xoş gəldiniz, ${data.user.name}` : 'Sistem uğurla quraşdırıldı!');
+
+                // Small delay to let the user see the success toast before unmounting
+                setTimeout(() => {
+                    onLogin(data.user);
+                }, 1000);
             } else {
                 // Display specific error from server if available
                 toast.error(data.error || 'Əməliyyat uğursuz oldu');
