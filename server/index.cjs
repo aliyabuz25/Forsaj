@@ -200,8 +200,6 @@ app.post('/api/news', async (req, res) => {
     }
 });
 
-const VIDEOS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'videos.json');
-
 // API: Get Videos
 app.get('/api/videos', async (req, res) => {
     try {
