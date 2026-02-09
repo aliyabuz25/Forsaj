@@ -50,6 +50,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 onLogin(data.user);
                 toast.success(isLoginMode ? `Xoş gəldiniz, ${data.user.name}` : 'Sistem uğurla quraşdırıldı!');
             } else {
+                // Display specific error from server if available
                 toast.error(data.error || 'Əməliyyat uğursuz oldu');
             }
         } catch (err) {

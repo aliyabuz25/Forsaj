@@ -32,10 +32,13 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/api', (req, res) => {
+app.get('/api', async (req, res) => {
+    const users = await getUsers();
     res.json({
         status: 'ready',
-        version: '1.2.0',
+        version: '1.2.1',
+        port: PORT,
+        userCount: users.length,
         message: 'Forsaj API is fully operational'
     });
 });
@@ -256,16 +259,24 @@ app.all('/api/login', async (req, res) => {
     }
 
     const { username, password } = req.body;
+    console.log(`Login attempt for username: ${username}`);
+
     const users = await getUsers();
+    const user = users.find(u => u.username === username);
 
-    const user = users.find(u => u.username === username && u.password === password);
-
-    if (user) {
-        const { password, ...userWithoutPassword } = user;
-        res.json({ success: true, user: userWithoutPassword });
-    } else {
-        res.status(401).json({ success: false, error: 'İstifadəçi adı və ya şifrə yanlışdır' });
+    if (!user) {
+        console.warn(`Login failed: User '${username}' not found`);
+        return res.status(401).json({ success: false, error: 'İstifadəçi adı yanlışdır' });
     }
+
+    if (user.password !== password) {
+        console.warn(`Login failed: Incorrect password for user '${username}'`);
+        return res.status(401).json({ success: false, error: 'Şifrə yanlışdır' });
+    }
+
+    console.log(`Login successful for user: ${username}`);
+    const { password: _, ...userWithoutPassword } = user;
+    res.json({ success: true, user: userWithoutPassword });
 });
 
 // ==========================================
