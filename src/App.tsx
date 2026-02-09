@@ -78,10 +78,7 @@ const App: React.FC = () => {
                       <Route path="/" element={<VisualEditor />} />
                       <Route path="/courses" element={<CoursesManager />} />
 
-                      {/* Protect sensitive pages from Secondary Admins */}
-                      <Route path="/users-management" element={
-                        user.role === 'master' ? <UsersManager /> : <div className="fade-in"><h1>İcazə yoxdur</h1><p>Bu səhifə yalnız Master Admin üçündür.</p></div>
-                      } />
+                      <Route path="/users-management" element={<UsersManager currentUser={user} />} />
 
                       <Route path="/frontend-settings" element={
                         user.role === 'master' ? <FrontendSettings /> : <div className="fade-in"><h1>İcazə yoxdur</h1><p>Bu səhifə yalnız Master Admin üçündür.</p></div>

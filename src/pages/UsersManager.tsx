@@ -10,7 +10,13 @@ interface AdminUser {
     role: 'master' | 'secondary';
 }
 
-const UsersManager: React.FC = () => {
+interface UsersManagerProps {
+    currentUser: {
+        role: 'master' | 'secondary';
+    };
+}
+
+const UsersManager: React.FC<UsersManagerProps> = ({ currentUser }) => {
     const [users, setUsers] = useState<AdminUser[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -90,9 +96,11 @@ const UsersManager: React.FC = () => {
                     <h1>Admin Hesabları</h1>
                     <p>Sistemi idarə edən bütün administratorların siyahısı və yetkiləri</p>
                 </div>
-                <button className="add-user-btn" onClick={() => openModal()}>
-                    <UserPlus size={18} /> Yeni Admin
-                </button>
+                {currentUser.role === 'master' && (
+                    <button className="add-user-btn" onClick={() => openModal()}>
+                        <UserPlus size={18} /> Yeni Admin
+                    </button>
+                )}
             </div>
 
             <div className="users-grid">
@@ -108,14 +116,16 @@ const UsersManager: React.FC = () => {
                             <h3>{user.name}</h3>
                             <span>@{user.username}</span>
                         </div>
-                        <div className="user-actions">
-                            <button className="edit-btn" onClick={() => openModal(user)} title="Düzəliş et">
-                                <Edit size={16} />
-                            </button>
-                            <button className="delete-btn" onClick={() => handleDeleteUser(user.id)} title="Sil">
-                                <Trash2 size={16} />
-                            </button>
-                        </div>
+                        {currentUser.role === 'master' && (
+                            <div className="user-actions">
+                                <button className="edit-btn" onClick={() => openModal(user)} title="Düzəliş et">
+                                    <Edit size={16} />
+                                </button>
+                                <button className="delete-btn" onClick={() => handleDeleteUser(user.id)} title="Sil">
+                                    <Trash2 size={16} />
+                                </button>
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>

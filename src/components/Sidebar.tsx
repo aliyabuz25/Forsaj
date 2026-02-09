@@ -110,7 +110,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems, userRole, onLogout }) => {
                 <ul className="sidebar-menu">
                     {menuItems
                         .filter(item => {
-                            if (userRole === 'secondary' && (item.path === '/frontend-settings' || item.path === '/users-management')) return false;
+                            if (userRole === 'secondary' && item.path === '/frontend-settings') return false;
                             return true;
                         })
                         .map(item => renderMenuItem(item))}
