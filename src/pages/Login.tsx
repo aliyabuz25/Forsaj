@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { Lock, User, ShieldAlert, UserPlus, Loader2, Mail } from 'lucide-react';
+import { Lock, User, ShieldAlert, UserPlus, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './Login.css';
 
@@ -10,7 +10,7 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
     const [isLoginMode, setIsLoginMode] = useState(true);
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -36,10 +36,13 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         e.preventDefault();
         setIsLoading(true);
 
+        // Virtual email mapping for Supabase Auth
+        const virtualEmail = `${username.trim().toLowerCase()}@forsaj.admin`;
+
         try {
             if (isLoginMode) {
                 const { data, error } = await supabase.auth.signInWithPassword({
-                    email,
+                    email: virtualEmail,
                     password,
                 });
 
@@ -53,7 +56,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
                 const userData = { ...data.user, ...profile };
                 localStorage.setItem('forsaj_admin_user', JSON.stringify(userData));
-                toast.success(`Xoş gəldiniz, ${profile?.name || email}`);
+                toast.success(`Xoş gəldiniz, ${profile?.name || username}`);
 
                 setTimeout(() => {
                     onLogin(userData);
@@ -61,7 +64,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
             } else {
                 const { data, error } = await supabase.auth.signUp({
-                    email,
+                    email: virtualEmail,
                     password,
                 });
 
@@ -74,7 +77,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
                     if (profileError) throw profileError;
 
-                    toast.success('Sistem uğurla quraşdırıldı! Zəhmət olmasa e-poçtunuzu təsdiqləyin və daxil olun.');
+                    toast.success('Sistem uğurla quraşdırıldı! İndi daxil ola bilərsiniz.');
                     setIsLoginMode(true);
                 }
             }
@@ -111,12 +114,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                     )}
 
                     <div className="form-group">
-                        <label><Mail size={16} /> E-poçt Ünvanı</label>
+                        <label><User size={16} /> İstifadəçi Adı</label>
                         <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="Məs: admin@forsaj.az"
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Məs: admin"
                             required
                         />
                     </div>
