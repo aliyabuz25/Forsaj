@@ -9,6 +9,9 @@ services:
       WEB_DATA_DIR: "/app/data/web-data"
       ADMIN_PUBLIC_DIR: "/app/data/web-data"
       UPLOAD_DIR: "/app/data/uploads"
+      VITE_SUPABASE_URL: "https://mrgnxibkjqsyolidyelp.supabase.co"
+      VITE_SUPABASE_ANON_KEY: "sb_publishable_6WzNDxYgXsTlShf4W2Y97w_lJefRrz4"
+      SUPABASE_SERVICE_ROLE_KEY: "${SUPABASE_SERVICE_ROLE_KEY}"
     volumes:
       - /datastore/forsaj/data:/app/data
     networks:

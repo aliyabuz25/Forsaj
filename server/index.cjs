@@ -10,13 +10,18 @@ const { createClient } = require('@supabase/supabase-js');
 // ------------------------------------------
 // SUPABASE CONFIGURATION
 // ------------------------------------------
-const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+console.log('Backend Configuration:');
+console.log('- PORT:', PORT);
+console.log('- Supabase URL:', supabaseUrl ? 'Set' : 'Missing');
+console.log('- Service Role Key:', supabaseServiceRoleKey ? 'Set' : 'Missing');
+
 // Use Service Role Key for administrative operations if available
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey || supabaseAnonKey);
-const supabaseAdmin = supabaseServiceRoleKey ? createClient(supabaseUrl, supabaseServiceRoleKey) : null;
+const supabase = createClient(supabaseUrl || '', supabaseServiceRoleKey || supabaseAnonKey || '');
+const supabaseAdmin = supabaseServiceRoleKey ? createClient(supabaseUrl || '', supabaseServiceRoleKey) : null;
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -76,12 +81,18 @@ app.get('/api', async (req, res) => {
 
     res.json({
         status: 'ready',
-        version: '1.2.4',
+        version: '1.2.5',
         port: PORT,
         userCount: users.length,
         database: fileInfo,
+        supabaseConnected: !!supabaseUrl,
+        adminEnabled: !!supabaseAdmin,
         message: 'Forsaj API is fully operational'
     });
+});
+
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 app.use('/uploads', express.static(UPLOAD_DIR_PATH));
