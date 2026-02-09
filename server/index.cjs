@@ -469,6 +469,22 @@ app.post('/api/save-content', async (req, res) => {
     }
 });
 
+// API: Get Site Content
+app.get('/api/site-content', async (req, res) => {
+    try {
+        try {
+            await fsPromises.access(SITE_CONTENT_PATH);
+        } catch {
+            return res.json([]);
+        }
+        const data = await fsPromises.readFile(SITE_CONTENT_PATH, 'utf8');
+        res.json(JSON.parse(data));
+    } catch (error) {
+        console.error('Error reading site content:', error);
+        res.status(500).json({ error: 'Failed to read site content' });
+    }
+});
+
 // API: Get Drivers
 app.get('/api/drivers', async (req, res) => {
     try {

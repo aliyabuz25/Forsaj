@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient';
 import { Save, Type, Image as ImageIcon, Layout, Globe, Plus, Trash2, X, Search, Calendar, MapPin, FileText, Trophy, RotateCcw, Video, Play } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './VisualEditor.css';
@@ -195,15 +194,10 @@ const VisualEditor: React.FC = () => {
     const loadContent = async () => {
         try {
             // 1. Load Site Content
-            const { data: contentData } = await supabase.from('site_content').select('*');
-            if (contentData) {
-                const mappedPages = contentData.map((p: any) => ({
-                    id: p.page_id,
-                    title: p.title,
-                    sections: p.sections,
-                    images: p.images
-                }));
-                setPages(mappedPages as any);
+            const resContent = await fetch('/api/site-content');
+            const contentData = await resContent.json();
+            if (Array.isArray(contentData)) {
+                setPages(contentData);
             }
 
             // 2. Load Available Images (Keep legacy API for local scan)
@@ -212,52 +206,52 @@ const VisualEditor: React.FC = () => {
                 .then(data => { if (data.local) setAllAvailableImages(data.local); });
 
             // 3. Load Events
-            const { data: eventsData } = await supabase.from('events').select('*').order('date', { ascending: false });
-            if (eventsData) {
-                setEvents(eventsData as any);
+            const resEvents = await fetch('/api/events');
+            const eventsData = await resEvents.json();
+            if (Array.isArray(eventsData)) {
+                setEvents(eventsData);
                 if (eventsData.length > 0 && selectedEventId === null) {
-                    setSelectedEventId(eventsData[0].id as any);
-                    setEventForm(eventsData[0] as any);
+                    setSelectedEventId(eventsData[0].id);
+                    setEventForm(eventsData[0]);
                 }
             }
 
             // 4. Load News
-            const { data: newsData } = await supabase.from('news').select('*').order('date', { ascending: false });
-            if (newsData) {
-                setNews(newsData as any);
+            const resNews = await fetch('/api/news');
+            const newsData = await resNews.json();
+            if (Array.isArray(newsData)) {
+                setNews(newsData);
                 if (newsData.length > 0 && selectedNewsId === null) {
-                    handleNewsSelect(newsData[0].id as any);
+                    handleNewsSelect(newsData[0].id);
                 }
             }
 
             // 5. Load Drivers
-            const { data: driversData } = await supabase.from('drivers').select('*');
-            if (driversData) {
-                const cats = driversData.map(d => ({
-                    id: d.id,
-                    name: d.category_name,
-                    drivers: d.drivers
-                }));
-                setDriverCategories(cats as any);
-                if (cats.length > 0 && selectedCatId === null) {
-                    setSelectedCatId(cats[0].id);
+            const resDrivers = await fetch('/api/drivers');
+            const driversData = await resDrivers.json();
+            if (Array.isArray(driversData)) {
+                setDriverCategories(driversData);
+                if (driversData.length > 0 && selectedCatId === null) {
+                    setSelectedCatId(driversData[0].id);
                 }
             }
 
             // 6. Load Gallery Photos
-            const { data: photosData } = await supabase.from('gallery_photos').select('*');
-            if (photosData) setGalleryPhotos(photosData as any);
+            const resPhotos = await fetch('/api/gallery-photos');
+            const photosData = await resPhotos.json();
+            if (Array.isArray(photosData)) setGalleryPhotos(photosData);
 
             // 7. Load Videos
-            const { data: videosData } = await supabase.from('videos').select('*');
-            if (videosData) {
-                setVideos(videosData as any);
+            const resVideos = await fetch('/api/videos');
+            const videosData = await resVideos.json();
+            if (Array.isArray(videosData)) {
+                setVideos(videosData);
                 if (videosData.length > 0 && selectedVideoId === null) {
-                    handleVideoSelect(videosData[0].id as any);
+                    handleVideoSelect(videosData[0].id);
                 }
             }
         } catch (err) {
-            console.error('Supabase load error:', err);
+            console.error('Content load error:', err);
         }
     };
 
@@ -311,16 +305,12 @@ const VisualEditor: React.FC = () => {
             const data = await response.json();
             const extractedPages = data.pages || data;
 
-            // Sync with Supabase site_content
-            for (const page of extractedPages) {
-                await supabase.from('site_content').upsert({
-                    page_id: page.id,
-                    title: page.title,
-                    sections: page.sections,
-                    images: page.images,
-                    updated_at: new Date().toISOString()
-                }, { onConflict: 'page_id' });
-            }
+            // Sync with JSON storage
+            await fetch('/api/save-content', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(extractedPages)
+            });
 
             setProgress(90);
             setPages(extractedPages);
@@ -503,44 +493,41 @@ const VisualEditor: React.FC = () => {
         const toastId = toast.loading('Yadda saxlanılır...');
         try {
             if (editorMode === 'extract') {
-                for (const page of pages) {
-                    await supabase.from('site_content').upsert({
-                        page_id: page.id,
-                        title: page.title,
-                        sections: page.sections,
-                        images: page.images,
-                        updated_at: new Date().toISOString()
-                    }, { onConflict: 'page_id' });
-                }
+                await fetch('/api/save-content', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(pages)
+                });
             } else if (editorMode === 'events') {
-                const { error } = await supabase.from('events').upsert(events);
-                if (error) throw error;
+                await fetch('/api/events', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(events)
+                });
             } else if (editorMode === 'news') {
-                const { error } = await supabase.from('news').upsert(news);
-                if (error) throw error;
+                await fetch('/api/news', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(news)
+                });
             } else if (editorMode === 'drivers') {
-                const driversData = driverCategories.map(c => ({
-                    id: c.id,
-                    category_name: c.name,
-                    drivers: c.drivers,
-                    updated_at: new Date().toISOString()
-                }));
-                const { error } = await supabase.from('drivers').upsert(driversData);
-                if (error) throw error;
+                await fetch('/api/drivers', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(driverCategories)
+                });
             } else if (editorMode === 'videos') {
-                const formattedVideos = videos.map(v => ({
-                    id: v.id,
-                    title: v.title,
-                    youtube_url: v.youtubeUrl,
-                    video_id: v.videoId,
-                    duration: v.duration,
-                    thumbnail: v.thumbnail
-                }));
-                const { error } = await supabase.from('videos').upsert(formattedVideos);
-                if (error) throw error;
+                await fetch('/api/videos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(videos)
+                });
             } else if (editorMode === 'photos') {
-                const { error } = await supabase.from('gallery_photos').upsert(galleryPhotos);
-                if (error) throw error;
+                await fetch('/api/gallery-photos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(galleryPhotos)
+                });
             }
 
             toast.success('Dəyişikliklər bulud bazasına qeyd edildi!', { id: toastId });
@@ -600,7 +587,9 @@ const VisualEditor: React.FC = () => {
         e.stopPropagation();
         if (window.confirm('Bu tədbiri silmək istədiyinizə əminsiniz?')) {
             if (typeof id === 'string') {
-                await supabase.from('events').delete().eq('id', id);
+                // For JSON file, we just save the updated list, so deleting from state is enough
+                // But if we wanted to be strict, we'd save immediately. 
+                // For now, saveChanges() handles saving the whole list.
             }
             setEvents(events.filter(ev => ev.id !== id));
             if (selectedEventId === id) setSelectedEventId(null);
@@ -721,7 +710,7 @@ const VisualEditor: React.FC = () => {
         e.stopPropagation();
         if (window.confirm('Bu şəkli silmək istədiyinizə əminsiniz?')) {
             if (typeof id === 'string') {
-                await supabase.from('gallery_photos').delete().eq('id', id);
+                // Local state update is sufficient until save
             }
             setGalleryPhotos(prev => prev.filter(p => p.id !== id));
             if (selectedPhotoId === id) {
@@ -772,7 +761,7 @@ const VisualEditor: React.FC = () => {
         e.stopPropagation();
         if (window.confirm('Bu videonu silmək istədiyinizə əminsiniz?')) {
             if (typeof id === 'string') {
-                await supabase.from('videos').delete().eq('id', id);
+                // Local state update is sufficient until save
             }
             setVideos(videos.filter(v => v.id !== id));
             if (selectedVideoId === id) setSelectedVideoId(null);
@@ -784,7 +773,7 @@ const VisualEditor: React.FC = () => {
         e.stopPropagation();
         if (window.confirm('Bu xəbəri silmək istədiyinizə əminsiniz?')) {
             if (typeof id === 'string') {
-                await supabase.from('news').delete().eq('id', id);
+                // Local state update is sufficient until save
             }
             setNews(news.filter(n => n.id !== id));
             if (selectedNewsId === id) setSelectedNewsId(null);
