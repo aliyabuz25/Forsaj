@@ -31,26 +31,36 @@ console.log('Backend Configuration:');
 console.log('- PORT:', PORT);
 console.log('- Database Host: forsaj-db');
 
-// Database Initialization
-const initDB = async () => {
-    try {
-        const connection = await pool.getConnection();
-        console.log('Connected to MySQL Database');
+// Database Initialization with Retry logic
+const initDB = async (retries = 5) => {
+    while (retries > 0) {
+        try {
+            const connection = await pool.getConnection();
+            console.log('Connected to MySQL Database');
 
-        await connection.query(`
-            CREATE TABLE IF NOT EXISTS users (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                username VARCHAR(255) UNIQUE NOT NULL,
-                password VARCHAR(255) NOT NULL,
-                name VARCHAR(255),
-                role VARCHAR(50) DEFAULT 'secondary',
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        `);
-        console.log('Database initialized: users table ready');
-        connection.release();
-    } catch (error) {
-        console.error('Database initialization failed:', error.message);
+            await connection.query(`
+                CREATE TABLE IF NOT EXISTS users (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    username VARCHAR(255) UNIQUE NOT NULL,
+                    password VARCHAR(255) NOT NULL,
+                    name VARCHAR(255),
+                    role VARCHAR(50) DEFAULT 'secondary',
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+            console.log('Database initialized: users table ready');
+            connection.release();
+            return; // Success
+        } catch (error) {
+            console.error(`Database initialization attempt failed (${retries} retries left):`, error.message);
+            retries -= 1;
+            if (retries > 0) {
+                console.log('Retrying in 5 seconds...');
+                await new Promise(resolve => setTimeout(resolve, 5000));
+            } else {
+                console.error('All database initialization attempts failed.');
+            }
+        }
     }
 };
 
@@ -337,7 +347,11 @@ app.post('/api/setup', async (req, res) => {
         res.json({ success: true, message: 'Master Admin uğurla yaradıldı' });
     } catch (error) {
         console.error('Setup error:', error);
-        res.status(500).json({ error: 'Quraşdırma zamanı xəta baş verdi' });
+        res.status(500).json({
+            error: 'Quraşdırma zamanı xəta baş verdi',
+            details: error.message,
+            code: error.code
+        });
     }
 });
 
