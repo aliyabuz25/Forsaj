@@ -18,7 +18,7 @@ services:
       - 'traefik.docker.network=edge'
       - 'traefik.http.routers.forsaj-api.rule=(Host(`forsaj.octotech.az`) || Host(`forsaj.az`) || Host(`admin.forsaj.octotech.az`) || Host(`admin.forsaj.az`)) && (PathPrefix(`/api`) || PathPrefix(`/uploads`))'
       - 'traefik.http.routers.forsaj-api.entrypoints=web'
-      - 'traefik.http.routers.forsaj-api.priority=300'
+      - 'traefik.http.routers.forsaj-api.priority=500'
       - 'traefik.http.services.forsaj-api.loadbalancer.server.port=3001'
 
   forsaj-frontend:
@@ -31,7 +31,7 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.docker.network=edge'
-      - 'traefik.http.routers.forsaj.rule=Host(`forsaj.octotech.az`) || Host(`forsaj.az`)'
+      - 'traefik.http.routers.forsaj.rule=Host(`forsaj.octotech.az`) || Host(`forsaj.az`) || Host(`admin.forsaj.octotech.az`) || Host(`admin.forsaj.az`)'
       - 'traefik.http.routers.forsaj.entrypoints=web'
       - 'traefik.http.routers.forsaj.priority=100'
       - 'traefik.http.services.forsaj.loadbalancer.server.port=80'
@@ -46,7 +46,7 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.docker.network=edge'
-      - 'traefik.http.routers.forsaj-admin.rule=(Host(`forsaj.octotech.az`) || Host(`forsaj.az`)) && PathPrefix(`/admin`)'
+      - 'traefik.http.routers.forsaj-admin.rule=(Host(`forsaj.octotech.az`) || Host(`forsaj.az`) || Host(`admin.forsaj.octotech.az`) || Host(`admin.forsaj.az`)) && PathPrefix(`/admin`)'
       - 'traefik.http.routers.forsaj-admin.entrypoints=web'
       - 'traefik.http.routers.forsaj-admin.priority=200'
       - 'traefik.http.services.forsaj-admin.loadbalancer.server.port=80'

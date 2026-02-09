@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, User, ShieldAlert, UserPlus } from 'lucide-react';
+import { Lock, User, ShieldAlert, UserPlus, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './Login.css';
 
@@ -107,12 +107,19 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                     </div>
 
                     <button type="submit" className="login-btn" disabled={isLoading}>
-                        {isLoading ? 'Gözləyin...' : (isLoginMode ? 'Daxil Ol' : 'Hesabı Yarat')}
+                        {isLoading ? (
+                            <div className="loader-container">
+                                <Loader2 className="animate-spin" size={20} />
+                                <span>Gözləyin...</span>
+                            </div>
+                        ) : (
+                            isLoginMode ? 'Daxil Ol' : 'Sistemi Quraşdır'
+                        )}
                     </button>
                 </form>
 
                 <div className="login-footer">
-                    <p>© 2026 Forsaj Club. Bütün hüquqlar qorunur.</p>
+                    <p>© 2026 Forsaj Club. Platformanın təhlükəsizliyi üçün mütəmadi olaraq şifrənizi yeniləyin.</p>
                 </div>
             </div>
         </div>
