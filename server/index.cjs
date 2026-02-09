@@ -681,6 +681,13 @@ app.all('/api/extract-content', async (req, res) => {
                         let text = match[1].trim().replace(/\s+/g, ' ');
                         if (isTrueText(text) && !seenValues.has(text)) {
                             seenValues.add(text);
+
+                            // Look for nearby URL context
+                            const context = clean.slice(Math.max(0, match.index - 150), Math.min(clean.length, match.index + 150));
+                            const urlMatch = context.match(/(?:onViewChange|onClick|handleViewChange|handleAction)\s*\(\s*['"]([^'"]+)['"]/i) ||
+                                context.match(/(?:href|to|id|path|url)=['"]([^'"]+)['"]/i);
+                            const url = urlMatch ? urlMatch[1] : undefined;
+
                             const slug = text.slice(0, 15).toLowerCase().replace(/[^a-z0-9]+/g, '-');
                             items.push({
                                 pos: match.index,
@@ -688,7 +695,8 @@ app.all('/api/extract-content', async (req, res) => {
                                     id: `txt-${slug}-${Math.floor(Math.random() * 1000)}`,
                                     type: 'text',
                                     label: text.length > 20 ? text.slice(0, 20) + '...' : text.toUpperCase(),
-                                    value: text
+                                    value: text,
+                                    url: url
                                 }
                             });
                         }
@@ -747,6 +755,12 @@ app.all('/api/extract-content', async (req, res) => {
                         const isTechnical = /^[a-z]+[A-Z]/.test(text) || text.includes('/') || text.includes('{');
                         if (isTrueText(text) && !seenValues.has(text) && !isTechnical) {
                             seenValues.add(text);
+
+                            // Look for nearby URL context
+                            const context = clean.slice(Math.max(0, match.index - 100), Math.min(clean.length, match.index + 100));
+                            const urlMatch = context.match(/(?:id|url|href|path|to|view)\s*[:=]\s*['"]([^'"]+)['"]/i);
+                            const url = urlMatch ? urlMatch[1] : undefined;
+
                             const slug = text.slice(0, 15).toLowerCase().replace(/[^a-z0-9]+/g, '-');
                             items.push({
                                 pos: match.index,
@@ -754,7 +768,8 @@ app.all('/api/extract-content', async (req, res) => {
                                     id: `lbl-${slug}-${Math.floor(Math.random() * 1000)}`,
                                     type: 'text',
                                     label: text.length > 20 ? text.slice(0, 20) + '...' : text,
-                                    value: text
+                                    value: text,
+                                    url: url
                                 }
                             });
                         }

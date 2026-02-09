@@ -170,70 +170,81 @@
     "title": "Footer",
     "sections": [
       {
-        "id": "txt-forsaj-822",
+        "id": "txt-ana-s-h-f-744",
         "type": "text",
-        "label": "FORSAJ",
-        "value": "FORSAJ"
+        "label": "ANA SƏHİFƏ",
+        "value": "ANA SƏHİFƏ",
+        "url": "home"
       },
       {
-        "id": "txt-club-660",
+        "id": "txt-haqqimizda-942",
         "type": "text",
-        "label": "CLUB",
-        "value": "CLUB"
+        "label": "HAQQIMIZDA",
+        "value": "HAQQIMIZDA",
+        "url": "about"
       },
       {
-        "id": "txt-az-rbaycan-n-n-pres-931",
+        "id": "txt-x-b-rl-r-431",
         "type": "text",
-        "label": "AZƏRBAYCANIN ƏN PRESTIJLI MOTO...",
-        "value": "Azərbaycanın ən prestijli motorsport mərkəzi. Sərhədsiz offroad həyəcanını bizimlə yaşayın."
+        "label": "XƏBƏRLƏR",
+        "value": "XƏBƏRLƏR",
+        "url": "news"
       },
       {
-        "id": "txt-navi-qasi-ya-808",
+        "id": "txt-t-dbi-rl-r-62",
         "type": "text",
-        "label": "NAVİQASİYA",
-        "value": "NAVİQASİYA"
+        "label": "TƏDBİRLƏR",
+        "value": "TƏDBİRLƏR",
+        "url": "events"
       },
       {
-        "id": "txt-motorsport-309",
+        "id": "txt-s-r-c-l-r-931",
         "type": "text",
-        "label": "MOTORSPORT",
-        "value": "MOTORSPORT"
+        "label": "SÜRÜCÜLƏR",
+        "value": "SÜRÜCÜLƏR",
+        "url": "drivers"
       },
       {
-        "id": "txt-x-b-rdar-ol-2",
+        "id": "txt-qalereya-112",
         "type": "text",
-        "label": "XƏBƏRDAR OL",
-        "value": "XƏBƏRDAR OL"
+        "label": "QALEREYA",
+        "value": "QALEREYA",
+        "url": "gallery"
       },
       {
-        "id": "txt-yar-t-qvimi-v-x-b-920",
+        "id": "txt-laq-452",
         "type": "text",
-        "label": "YARIŞ TƏQVIMI VƏ XƏBƏRLƏRDƏN A...",
-        "value": "Yarış təqvimi ve xəbərlərdən anında xəbərdar olmaq üçün abunə olun."
+        "label": "ƏLAQƏ",
+        "value": "ƏLAQƏ",
+        "url": "contact"
       },
       {
-        "id": "txt-2024-forsaj-club-811",
+        "id": "txt-pi-lot-protokolu-31",
         "type": "text",
-        "label": "© 2024 FORSAJ CLUB. ALL RIGHTS...",
-        "value": "© 2024 FORSAJ CLUB. ALL RIGHTS RESERVED."
+        "label": "PİLOT PROTOKOLU",
+        "value": "PİLOT PROTOKOLU",
+        "url": "rules"
       },
       {
-        "id": "txt-privacy-policy-882",
+        "id": "txt-texni-ki-normati-712",
         "type": "text",
-        "label": "PRIVACY POLICY",
-        "value": "Privacy Policy"
+        "label": "TEXNİKİ NORMATİVLƏR",
+        "value": "TEXNİKİ NORMATİVLƏR",
+        "url": "rules"
       },
       {
-        "id": "txt-terms-of-service-101",
+        "id": "txt-t-hl-k-si-zli-k-q-121",
         "type": "text",
-        "label": "TERMS OF SERVICE",
-        "value": "Terms of Service"
+        "label": "TƏHLÜKƏSİZLİK QAYDALARI",
+        "value": "TƏHLÜKƏSİZLİK QAYDALARI",
+        "url": "rules"
       },
       {
-        "id": "attr-email-daxi-l-edi-n-383",
+        "id": "txt-ekoloji-m-suli-yy-612",
         "type": "text",
-        "label": "PLACEHOLDER: EMAIL DAXİL EDİN...",
-        "value": "EMAIL DAXİL EDİN"
+        "label": "EKOLOJİ MƏSULİYYƏT",
+        "value": "EKOLOJİ MƏSULİYYƏT",
+        "url": "rules"
       }
     ],
     "images": []
@@ -262,16 +273,60 @@
     "title": "Navbar",
     "sections": [
       {
-        "id": "txt-forsaj-467",
+        "id": "txt-ana-s-h-f-366",
         "type": "text",
-        "label": "FORSAJ",
-        "value": "FORSAJ"
+        "label": "ANA SƏHİFƏ",
+        "value": "ANA SƏHİFƏ",
+        "url": "home"
       },
       {
-        "id": "txt-club-703",
+        "id": "txt-haqqimizda-387",
         "type": "text",
-        "label": "CLUB",
-        "value": "CLUB"
+        "label": "HAQQIMIZDA",
+        "value": "HAQQIMIZDA",
+        "url": "about"
+      },
+      {
+        "id": "txt-x-b-rl-r-63",
+        "type": "text",
+        "label": "XƏBƏRLƏR",
+        "value": "XƏBƏRLƏR",
+        "url": "news"
+      },
+      {
+        "id": "txt-t-dbi-rl-r-793",
+        "type": "text",
+        "label": "TƏDBİRLƏR",
+        "value": "TƏDBİRLƏR",
+        "url": "events"
+      },
+      {
+        "id": "txt-s-r-c-l-r-119",
+        "type": "text",
+        "label": "SÜRÜCÜLƏR",
+        "value": "SÜRÜCÜLƏR",
+        "url": "drivers"
+      },
+      {
+        "id": "txt-qalereya-784",
+        "type": "text",
+        "label": "QALEREYA",
+        "value": "QALEREYA",
+        "url": "gallery"
+      },
+      {
+        "id": "txt-qaydalar-291",
+        "type": "text",
+        "label": "QAYDALAR",
+        "value": "QAYDALAR",
+        "url": "rules"
+      },
+      {
+        "id": "txt-laq-251",
+        "type": "text",
+        "label": "ƏLAQƏ",
+        "value": "ƏLAQƏ",
+        "url": "contact"
       }
     ],
     "images": []

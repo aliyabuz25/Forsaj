@@ -7,7 +7,7 @@ interface NextRaceProps {
 }
 
 const NextRace: React.FC<NextRaceProps> = ({ onViewChange }) => {
-  const { getText } = useSiteContent('nextrace');
+  const { getText, getUrl } = useSiteContent('nextrace');
 
   return (
     <section className="py-24 px-6 lg:px-20 bg-[#0F0F0F]">
@@ -24,7 +24,14 @@ const NextRace: React.FC<NextRaceProps> = ({ onViewChange }) => {
           </div>
         </div>
         <button
-          onClick={() => onViewChange('events')}
+          onClick={() => {
+            const id = getUrl('VIEW_ALL_BTN', 'events');
+            if (id.startsWith('http')) {
+              window.open(id, '_blank');
+            } else {
+              onViewChange(id as any);
+            }
+          }}
           className="bg-white/5 text-white font-black italic text-[10px] px-8 py-3 rounded-sm transform -skew-x-12 flex items-center gap-2 hover:bg-[#FF4D00] hover:text-black transition-all border border-white/5"
         >
           <span className="transform skew-x-12">{getText('VIEW_ALL_BTN', 'TAM TƏQVİM')}</span> <ChevronRight className="w-4 h-4 transform skew-x-12" />
@@ -59,7 +66,14 @@ const NextRace: React.FC<NextRaceProps> = ({ onViewChange }) => {
           </div>
 
           <button
-            onClick={() => onViewChange('events')}
+            onClick={() => {
+              const id = getUrl('REGISTER_BTN', 'events');
+              if (id.startsWith('http')) {
+                window.open(id, '_blank');
+              } else {
+                onViewChange(id as any);
+              }
+            }}
             className="bg-[#FF4D00] hover:bg-white text-black font-black italic py-5 px-12 rounded-sm flex items-center gap-3 transition-all self-start transform -skew-x-12 group shadow-[0_10px_30px_rgba(255,77,0,0.2)]"
           >
             <span className="transform skew-x-12 uppercase text-lg">{getText('REGISTER_BTN', 'QATILMAQ ÜÇÜN QEYDİYYAT')}</span>

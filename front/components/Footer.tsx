@@ -1,27 +1,30 @@
 
 import React from 'react';
 import { Instagram, Youtube, Facebook, ArrowRight } from 'lucide-react';
+import { useSiteContent } from '../hooks/useSiteContent';
 
 interface FooterProps {
   onViewChange: (view: 'home' | 'about' | 'news' | 'events' | 'drivers' | 'rules' | 'contact' | 'gallery') => void;
 }
 
 const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
+  const { getText, getUrl, isLoading } = useSiteContent('footer');
+
   const navigationLinks = [
-    { name: 'ANA SƏHİFƏ', id: 'home' as const },
-    { name: 'HAQQIMIZDA', id: 'about' as const },
-    { name: 'XƏBƏRLƏR', id: 'news' as const },
-    { name: 'TƏDBİRLƏR', id: 'events' as const },
-    { name: 'SÜRÜCÜLƏR', id: 'drivers' as const },
-    { name: 'QALEREYA', id: 'gallery' as const },
-    { name: 'ƏLAQƏ', id: 'contact' as const },
+    { name: getText('txt-ana-s-h-f-744', 'ANA SƏHİFƏ'), id: getUrl('txt-ana-s-h-f-744', 'home') as any },
+    { name: getText('txt-haqqimizda-942', 'HAQQIMIZDA'), id: getUrl('txt-haqqimizda-942', 'about') as any },
+    { name: getText('txt-x-b-rl-r-431', 'XƏBƏRLƏR'), id: getUrl('txt-x-b-rl-r-431', 'news') as any },
+    { name: getText('txt-t-dbi-rl-r-62', 'TƏDBİRLƏR'), id: getUrl('txt-t-dbi-rl-r-62', 'events') as any },
+    { name: getText('txt-s-r-c-l-r-931', 'SÜRÜCÜLƏR'), id: getUrl('txt-s-r-c-l-r-931', 'drivers') as any },
+    { name: getText('txt-qalereya-112', 'QALEREYA'), id: getUrl('txt-qalereya-112', 'gallery') as any },
+    { name: getText('txt-laq-452', 'ƏLAQƏ'), id: getUrl('txt-laq-452', 'contact') as any },
   ];
 
   const rulesLinks = [
-    { name: 'PİLOT PROTOKOLU', id: 'rules' as const },
-    { name: 'TEXNİKİ NORMATİVLƏR', id: 'rules' as const },
-    { name: 'TƏHLÜKƏSİZLİK QAYDALARI', id: 'rules' as const },
-    { name: 'EKOLOJİ MƏSULİYYƏT', id: 'rules' as const },
+    { name: getText('txt-pi-lot-protokolu-31', 'PİLOT PROTOKOLU'), id: getUrl('txt-pi-lot-protokolu-31', 'rules') as any },
+    { name: getText('txt-texni-ki-normati-712', 'TEXNİKİ NORMATİVLƏR'), id: getUrl('txt-texni-ki-normati-712', 'rules') as any },
+    { name: getText('txt-t-hl-k-si-zli-k-q-121', 'TƏHLÜKƏSİZLİK QAYDALARI'), id: getUrl('txt-t-hl-k-si-zli-k-q-121', 'rules') as any },
+    { name: getText('txt-ekoloji-m-suli-yy-612', 'EKOLOJİ MƏSULİYYƏT'), id: getUrl('txt-ekoloji-m-suli-yy-612', 'rules') as any },
   ];
 
   return (
@@ -57,7 +60,14 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
             {navigationLinks.map(link => (
               <li key={link.name}>
                 <button
-                  onClick={() => onViewChange(link.id)}
+                  onClick={() => {
+                    const id = link.id;
+                    if (id.startsWith('http')) {
+                      window.open(id, '_blank');
+                    } else {
+                      onViewChange(id as any);
+                    }
+                  }}
                   className="text-gray-500 font-black italic text-[11px] uppercase hover:text-white transition-colors tracking-tight text-left"
                 >
                   {link.name}
@@ -73,7 +83,14 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
             {rulesLinks.map(link => (
               <li key={link.name}>
                 <button
-                  onClick={() => onViewChange(link.id)}
+                  onClick={() => {
+                    const id = link.id;
+                    if (id.startsWith('http')) {
+                      window.open(id, '_blank');
+                    } else {
+                      onViewChange(id as any);
+                    }
+                  }}
                   className="text-gray-500 font-black italic text-[11px] uppercase hover:text-white transition-colors tracking-tight text-left"
                 >
                   {link.name}

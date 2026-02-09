@@ -1,24 +1,28 @@
-
 import React from 'react';
 import { Settings, ShieldCheck, Compass, Zap } from 'lucide-react';
+import { useSiteContent } from '../hooks/useSiteContent';
 
 const WhatIsOffroad: React.FC = () => {
+  const { getText, isLoading } = useSiteContent('whatisoffroad');
+
+  if (isLoading) return <div className="h-[400px] bg-gray-100 animate-pulse"></div>;
+
   const features = [
-    { icon: <Settings className="text-[#D12027]" />, title: 'TEXNİKİ TƏCHİZAT', desc: 'Hər bir maşın xüsusi asqı sistemi və gücləndirilmiş mühərriklə təmin olunur.' },
-    { icon: <ShieldCheck className="text-[#D12027]" />, title: 'TƏHLÜKƏSİZLİK', desc: 'Pilotların təhlükəsizliyi bizim üçün prioritetdir. Karkas və kəmərlər məcburidir.' },
-    { icon: <Compass className="text-[#D12027]" />, title: 'NAVİQASİYA', desc: 'GPS və xəritə oxuma bacarığı offroad yarışlarında qalibiyyətin yarısıdır.' },
-    { icon: <Zap className="text-[#D12027]" />, title: 'EKSTREMAL GÜC', desc: 'Sürücünün fiziki hazırlığı ən az avtomobilin gücü qədər əhəmiyyətlidir.' },
+    { icon: <Settings className="text-[#D12027]" />, title: getText('txt-texni-ki-t-chi-z-856', 'TEXNİKİ TƏCHİZAT'), desc: getText('txt-h-r-bir-ma-i-n-x-456', 'Hər bir maşın xüsusi asqı sistemi və gücləndirilmiş mühərriklə təmin olunur.') },
+    { icon: <ShieldCheck className="text-[#D12027]" />, title: getText('txt-t-hl-k-si-zli-k-420', 'TƏHLÜKƏSİZLİK'), desc: getText('txt-pi-lotlar-n-t-hl-k-112', 'Pilotların təhlükəsizliyi bizim üçün prioritetdir. Karkas və kəmərlər məcburidir.') },
+    { icon: <Compass className="text-[#D12027]" />, title: getText('txt-navi-qasi-ya-901', 'NAVİQASİYA'), desc: getText('txt-gps-v-x-ri-t-oxu-452', 'GPS və xəritə oxuma bacarığı offroad yarışlarında qalibiyyətin yarısıdır.') },
+    { icon: <Zap className="text-[#D12027]" />, title: getText('txt-ekstremal-g-c-112', 'EKSTREMAL GÜC'), desc: getText('txt-s-r-c-n-n-fi-zi-ki-912', 'Sürücünün fiziki hazırlığı ən az avtomobilin gücü qədər əhəmiyyətlidir.') },
   ];
 
   return (
     <section className="py-24 px-6 lg:px-20 bg-gray-50 flex flex-col lg:flex-row gap-16 items-center">
       <div className="lg:w-1/2">
-        <h4 className="text-[#D12027] font-black italic uppercase text-xs mb-4 tracking-widest">Offroad nədir?</h4>
+        <h4 className="text-[#D12027] font-black italic uppercase text-xs mb-4 tracking-widest">{getText('txt-offroad-n-dir-134', 'OFFROAD NƏDIR?')}</h4>
         <h2 className="text-5xl font-black italic leading-none mb-8 tracking-tighter uppercase">
-          ADRENALİN VƏ TEXNİKANIN SİMBİOZU
+          {getText('txt-adrenali-n-v-texni-ka-364', 'ADRENALİN VƏ TEXNİKANIN SİMBİOZU')}
         </h2>
         <p className="text-gray-500 font-bold italic text-sm mb-12 uppercase leading-relaxed max-w-xl">
-          Offroad – yalnız yolsuzluq şəraitində hərəkət etmək deyil, həm də dözümlülük, strateji düşüncə və mühəndislik bacarığının sınağıdır. Azərbaycanın çətin dağlıq relyefi bu idman növü üçün dünyada ən maraqlı məkanlardan biri hesab olunur.
+          {getText('txt-offroad-yaln-z-yol-339', 'Offroad – yalnız yolsuzluq şəraitində hərəkət etmək deyil, həm də dözümlülük, strateji düşüncə və mühəndislik bacarığının sınağıdır. Azərbaycanın çətin dağlıq relyefi bu idman növü üçün dünyada ən maraqlı məkanlardan biri hesab olunur.')}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -38,15 +42,15 @@ const WhatIsOffroad: React.FC = () => {
 
       <div className="lg:w-1/2 relative">
         <div className="aspect-video bg-gray-200 shadow-2xl overflow-hidden rounded-sm transform skew-y-3">
-          <img 
-            src="https://picsum.photos/id/107/800/600" 
-            alt="Offroad Culture" 
+          <img
+            src="https://picsum.photos/id/107/800/600"
+            alt="Offroad Culture"
             className="w-full h-full object-cover opacity-90 grayscale"
           />
         </div>
         <div className="absolute -bottom-8 -left-8 bg-[#D12027] p-8 text-white font-black italic transform -skew-x-12 hidden md:block">
-           <span className="text-4xl leading-none">15+</span>
-           <p className="text-[10px] uppercase">Yarış İllik</p>
+          <span className="text-4xl leading-none">15+</span>
+          <p className="text-[10px] uppercase">{getText('txt-yar-i-llik-96', 'YARIŞ İLLIK')}</p>
         </div>
       </div>
     </section>

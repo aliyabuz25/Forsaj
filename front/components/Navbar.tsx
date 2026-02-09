@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Globe, ChevronDown } from 'lucide-react';
+import { useSiteContent } from '../hooks/useSiteContent';
 
 interface NavbarProps {
   currentView: 'home' | 'about' | 'news' | 'events' | 'drivers' | 'rules' | 'contact' | 'gallery';
@@ -7,18 +8,19 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => {
+  const { getText, getUrl, isLoading } = useSiteContent('navbar');
   const [currentLang, setCurrentLang] = useState('AZ');
   const [isLangOpen, setIsLangOpen] = useState(false);
 
   const navItems = [
-    { name: 'ANA SƏHİFƏ', id: 'home' as const },
-    { name: 'HAQQIMIZDA', id: 'about' as const },
-    { name: 'XƏBƏRLƏR', id: 'news' as const },
-    { name: 'TƏDBİRLƏR', id: 'events' as const },
-    { name: 'SÜRÜCÜLƏR', id: 'drivers' as const },
-    { name: 'QALEREYA', id: 'gallery' as const },
-    { name: 'QAYDALAR', id: 'rules' as const },
-    { name: 'ƏLAQƏ', id: 'contact' as const },
+    { name: getText('txt-ana-s-h-f-366', 'ANA SƏHİFƏ'), id: getUrl('txt-ana-s-h-f-366', 'home') as any },
+    { name: getText('txt-haqqimizda-387', 'HAQQIMIZDA'), id: getUrl('txt-haqqimizda-387', 'about') as any },
+    { name: getText('txt-x-b-rl-r-63', 'XƏBƏRLƏR'), id: getUrl('txt-x-b-rl-r-63', 'news') as any },
+    { name: getText('txt-t-dbi-rl-r-793', 'TƏDBİRLƏR'), id: getUrl('txt-t-dbi-rl-r-793', 'events') as any },
+    { name: getText('txt-s-r-c-l-r-119', 'SÜRÜCÜLƏR'), id: getUrl('txt-s-r-c-l-r-119', 'drivers') as any },
+    { name: getText('txt-qalereya-784', 'QALEREYA'), id: getUrl('txt-qalereya-784', 'gallery') as any },
+    { name: getText('txt-qaydalar-291', 'QAYDALAR'), id: getUrl('txt-qaydalar-291', 'rules') as any },
+    { name: getText('txt-laq-251', 'ƏLAQƏ'), id: getUrl('txt-laq-251', 'contact') as any },
   ];
 
   const languages = ['AZ', 'RU', 'EN'];
@@ -43,8 +45,14 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => {
       <div className="hidden lg:flex items-center gap-2 xl:gap-4">
         {navItems.map((item) => (
           <button
-            key={item.id} // Changed key to ID as name is dynamic
-            onClick={() => onViewChange(item.id)}
+            key={item.id}
+            onClick={() => {
+              if (item.id.startsWith('http')) {
+                window.open(item.id, '_blank');
+              } else {
+                onViewChange(item.id as any);
+              }
+            }}
             className={`px-4 py-2 text-[10px] xl:text-[11px] font-black italic transition-all uppercase tracking-tight relative transform -skew-x-12 ${currentView === item.id
               ? 'bg-[#FF4D00] text-black shadow-[0_0_25px_rgba(255,77,0,0.25)] border-2 border-[#FF4D00]'
               : 'text-gray-400 hover:text-white hover:bg-white/5 border-2 border-transparent'
