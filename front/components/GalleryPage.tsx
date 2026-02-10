@@ -59,7 +59,6 @@ const GalleryPage: React.FC = () => {
     return (
       <div
         className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-10 animate-in fade-in duration-300"
-        onClick={() => setPlayingVideoId(null)}
       >
         <div className="relative w-full max-w-5xl aspect-video bg-black border border-white/10 shadow-[0_0_100px_rgba(255,77,0,0.2)]">
           <button
