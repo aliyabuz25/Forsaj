@@ -969,22 +969,39 @@ const VisualEditor: React.FC = () => {
         if (!searchTerm) return true;
         const lower = searchTerm.toLowerCase();
         const matchTitle = page.title.toLowerCase().includes(lower);
-        const matchText = page.sections.some(s => s.label.toLowerCase().includes(lower) || s.value.toLowerCase().includes(lower));
-        const matchImg = page.images.some(i => i.alt.toLowerCase().includes(lower) || i.path.toLowerCase().includes(lower));
+
+        // Only match against sections that are NOT internal (no underscores)
+        const matchText = page.sections.some(s =>
+            !s.id.includes('_') && !s.label.includes('_') &&
+            (s.label.toLowerCase().includes(lower) || s.value.toLowerCase().includes(lower))
+        );
+
+        // Only match against images that are NOT internal (no underscores)
+        const matchImg = page.images.some(i =>
+            !i.id.includes('_') && !i.alt.includes('_') &&
+            (i.alt.toLowerCase().includes(lower) || i.path.toLowerCase().includes(lower))
+        );
+
         return matchTitle || matchText || matchImg;
     });
 
-    const displayedSections = currentPage?.sections.filter(s =>
-        !searchTerm ||
-        s.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.value.toLowerCase().includes(searchTerm.toLowerCase())
-    ) || [];
+    const displayedSections = (currentPage?.sections || []).filter(s => {
+        // Forcibly hide keys with underscores (system/internal keys)
+        if (s.id.includes('_') || s.label.includes('_')) return false;
 
-    const displayedImages = currentPage?.images.filter(i =>
-        !searchTerm ||
-        i.alt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        i.path.toLowerCase().includes(searchTerm.toLowerCase())
-    ) || [];
+        return !searchTerm ||
+            s.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            s.value.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+
+    const displayedImages = (currentPage?.images || []).filter(i => {
+        // Forcibly hide images with underscores in ID or alt (system/internal)
+        if (i.id.includes('_') || i.alt.includes('_')) return false;
+
+        return !searchTerm ||
+            i.alt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            i.path.toLowerCase().includes(searchTerm.toLowerCase());
+    });
 
     return (
         <div className="visual-editor fade-in">
