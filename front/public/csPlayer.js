@@ -34,9 +34,13 @@ var csPlayer = {
   </main>
  <div class="csPlayer-controls">
   <p>00:00</p>
-  <div><span></span>
+  <div class="csPlayer-progress-box"><span></span>
   <input type="range" min="0" max="100" value="0" step="1"></div>
   <p>00:00</p>
+  <div class="csPlayer-volume-box">
+    <i class="ti ti-volume csPlayer-volume-btn"></i>
+    <input type="range" class="csPlayer-volume-slider" min="0" max="100" value="100">
+  </div>
   <i class="ti ti-settings settingsBtn"></i>
   <i class="ti ti-maximize fsBtn"></i>
  </div>
@@ -114,31 +118,87 @@ var csPlayer = {
                                     parent.querySelector(".csPlayer-controls-box .csPlayer-controls .fsBtn").addEventListener("click", toggleFullscreen);
                                     document.fullscreenEnabled ? parent.querySelector(".csPlayer-controls-box .csPlayer-controls .fsBtn").style.display = "block" : parent.querySelector(".csPlayer-controls-box .csPlayer-controls .fsBtn").style.display = "none";
                                     parent.querySelector(".csPlayer-controls-box .csPlayer-controls .settingsBtn").addEventListener("click", toggleSettings);
-                                });//iframe onload
-                            });
-                        }
-                    }, //onReady
-                }
-            });
+
+                                    // Volume Controls
+                                    const volumeSlider = parent.querySelector(".csPlayer-volume-slider");
+                                    const volumeBtn = parent.querySelector(".csPlayer-volume-btn");
+
+                                    volumeSlider.addEventListener("input", (e) => {
+                                        const vol = parseInt(e.target.value);
+                                        csPlayer.csPlayers[videoTag]["videoTag"].setVolume(vol);
+                                        updateVolumeIcon(vol);
+                                        if (vol > 0) csPlayer.csPlayers[videoTag]["videoTag"].unMute();
+                                    });
+
+                                    volumeBtn.addEventListener("click", () => {
+                                        if (csPlayer.csPlayers[videoTag]["videoTag"].isMuted()) {
+                                            csPlayer.csPlayers[videoTag]["videoTag"].unMute();
+                                            volumeSlider.value = csPlayer.csPlayers[videoTag]["videoTag"].getVolume() || 100;
+                                            updateVolumeIcon(volumeSlider.value);
+                                        } else {
+                                            csPlayer.csPlayers[videoTag]["videoTag"].mute();
+                                            volumeSlider.value = 0;
+                                            updateVolumeIcon(0);
+                                        }
+                                    });
+
+                                    function updateVolumeIcon(vol) {
+                                        volumeBtn.className = vol == 0 ? "ti ti-volume-off csPlayer-volume-btn" :
+                                            vol < 50 ? "ti ti-volume-2 csPlayer-volume-btn" : "ti ti-volume csPlayer-volume-btn";
+                                    }
+
+                                    // Keyboard Shortcuts
+                                    const handleKey = (e) => {
+                                        if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+                                        switch (e.key.toLowerCase()) {
+                                            case " ": e.preventDefault(); togglePlayPause(); break;
+                                            case "k": e.preventDefault(); togglePlayPause(); break;
+                                            case "f": e.preventDefault(); toggleFullscreen(); break;
+                                            case "m": e.preventDefault(); volumeBtn.click(); break;
+                                            case "arrowleft": e.preventDefault(); backward(); break;
+                                            case "arrowright": e.preventDefault(); forward(); break;
+                                            case "j": e.preventDefault(); backward(); break;
+                                            case "l": e.preventDefault(); forward(); break;
+                                        }
+                                    };
+                                    window.addEventListener("keydown", handleKey);
+                                    csPlayer.csPlayers[videoTag]["keyHandler"] = handleKey;
+                                }); // iframe load
+                            }); // pauseVideoWithPromise .then
+                        } // if
+                    }, // onReady
+                } // events
+            }); // new YT.Player
             resolve();
         }); //promise
-        //backward 
         function backward() {
-            updateTextTime()
-            updateTimeSlider()
-            var currentTime = csPlayer.csPlayers[videoTag]["videoTag"].getCurrentTime();
-            csPlayer.csPlayers[videoTag]["videoTag"].seekTo(Math.max(0, currentTime - 10), true);
-            clearTimeout(controlsTimeout);
-            controlsTimeout = setTimeout(() => { parent.querySelector(".csPlayer-controls-box").classList.remove("csPlayer-controls-open"); }, 3000);
+            if (!csPlayer.csPlayers[videoTag] || !csPlayer.csPlayers[videoTag]["videoTag"]) return;
+            var player = csPlayer.csPlayers[videoTag]["videoTag"];
+            var currentTime = player.getCurrentTime();
+            player.seekTo(Math.max(0, currentTime - 10), true);
+            updateTextTime();
+            updateTimeSlider();
+            showControls();
         }
-        //forward
         function forward() {
-            updateTextTime()
-            updateTimeSlider()
-            var currentTime = csPlayer.csPlayers[videoTag]["videoTag"].getCurrentTime();
-            csPlayer.csPlayers[videoTag]["videoTag"].seekTo(currentTime + 10, true);
-            clearTimeout(controlsTimeout);
-            controlsTimeout = setTimeout(() => { parent.querySelector(".csPlayer-controls-box").classList.remove("csPlayer-controls-open"); }, 3000);
+            if (!csPlayer.csPlayers[videoTag] || !csPlayer.csPlayers[videoTag]["videoTag"]) return;
+            var player = csPlayer.csPlayers[videoTag]["videoTag"];
+            var currentTime = player.getCurrentTime();
+            var duration = player.getDuration();
+            player.seekTo(Math.min(duration, currentTime + 10), true);
+            updateTextTime();
+            updateTimeSlider();
+            showControls();
+        }
+        function showControls() {
+            const ctrlBox = parent.querySelector(".csPlayer-controls-box");
+            if (ctrlBox) {
+                ctrlBox.classList.add("csPlayer-controls-open");
+                clearTimeout(controlsTimeout);
+                controlsTimeout = setTimeout(() => {
+                    ctrlBox.classList.remove("csPlayer-controls-open");
+                }, 3000);
+            }
         }
         //togglePlayPause
         function togglePlayPause() {
@@ -172,18 +232,18 @@ var csPlayer = {
         }
         //update slider
         function updateTimeSlider() {
-            var slider = parent.querySelector(".csPlayer-controls-box .csPlayer-controls div input");
+            var slider = parent.querySelector(".csPlayer-controls-box .csPlayer-controls .csPlayer-progress-box input");
             var currentTime = csPlayer.csPlayers[videoTag]["videoTag"].getCurrentTime();
             var duration = csPlayer.csPlayers[videoTag]["videoTag"].getDuration();
             var progress = (currentTime / duration) * 100;
             var loaded = (csPlayer.csPlayers[videoTag]["videoTag"].getVideoLoadedFraction()) * 100;
             slider.value = progress;
             slider.style.background = `linear-gradient(to right, var(--sliderSeekTrackColor) ${progress}%, transparent ${progress}%)`;
-            parent.querySelector(".csPlayer-controls-box .csPlayer-controls div span").style.width = loaded + "%";
+            parent.querySelector(".csPlayer-controls-box .csPlayer-controls .csPlayer-progress-box span").style.width = loaded + "%";
         }
         function updateSlider() {
             clearTimeout(controlsTimeout);
-            var slider = parent.querySelector(".csPlayer-controls-box .csPlayer-controls div input");
+            var slider = parent.querySelector(".csPlayer-controls-box .csPlayer-controls .csPlayer-progress-box input");
             var duration = csPlayer.csPlayers[videoTag]["videoTag"].getDuration();
             var progress = slider.value;
             slider.style.background = `linear-gradient(to right, var(--sliderSeekTrackColor) ${progress}%, transparent ${progress}%)`;
@@ -486,21 +546,26 @@ var csPlayer = {
     },
     destroy: (videoTag) => {
         if (videoTag) {
-            if ((videoTag in csPlayer.csPlayers) && csPlayer.csPlayers[videoTag]["initialized"] == true) {
+            if (videoTag in csPlayer.csPlayers) {
+                if (csPlayer.csPlayers[videoTag]["keyHandler"]) {
+                    window.removeEventListener("keydown", csPlayer.csPlayers[videoTag]["keyHandler"]);
+                }
                 if ("TimeSliderInterval" in csPlayer.csPlayers[videoTag]) {
                     clearInterval(csPlayer.csPlayers[videoTag]["TimeSliderInterval"]);
                 }
                 if ("TextTimeInterval" in csPlayer.csPlayers[videoTag]) {
                     clearInterval(csPlayer.csPlayers[videoTag]["TextTimeInterval"]);
                 }
-                csPlayer.csPlayers[videoTag]["videoTag"].destroy();
+                if (csPlayer.csPlayers[videoTag]["videoTag"] && typeof csPlayer.csPlayers[videoTag]["videoTag"].destroy === 'function') {
+                    csPlayer.csPlayers[videoTag]["videoTag"].destroy();
+                }
                 delete csPlayer.csPlayers[videoTag];
-                $("#" + videoTag + " .csPlayer").remove();
-            } else {
-                throw new Error("Player " + videoTag + " is not initialized yet.")
+                const playerEl = $("#" + videoTag + " .csPlayer");
+                if (playerEl) playerEl.remove();
             }
+            return true;
         } else {
-            throw new Error("changeVideo function must have two parameters, first parameter as player Id and second as the new YouTube video ID.")
+            throw new Error("destroy function must have player id as a parameter.")
         }
     },
     initialized: (videoTag) => {

@@ -289,7 +289,7 @@
     display: flex;
     align-items: center;
     position: relative;
-    padding: 8px 10px;
+    padding: 10px 15px;
     transform: scale(0);
     transition: transform 0s ease-in-out;
 }
@@ -333,16 +333,51 @@
     color: var(--fullscreenBtnColor);
 }
 
-.csPlayer .csPlayer-controls-box .csPlayer-controls div {
+.csPlayer .csPlayer-controls-box .csPlayer-controls div.csPlayer-progress-box {
     display: flex;
     align-items: center;
     white-space: nowrap;
     width: 100%;
     height: calc(var(--sliderThumbSize)/3);
-    margin: 0 5px;
+    margin: 0 10px;
     position: relative;
     background: var(--sliderBg);
     border-radius: calc(var(--sliderThumbSize)/3);
+}
+
+.csPlayer-volume-box {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.csPlayer-volume-slider {
+    width: 0px;
+    opacity: 0;
+    transition: width 0.3s ease, opacity 0.3s ease;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: var(--sliderSeekTrackColor);
+    border-radius: 2px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.csPlayer-volume-box:hover .csPlayer-volume-slider {
+    width: 60px;
+    opacity: 1;
+}
+
+.csPlayer-volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 50%;
 }
 
 .csPlayer .csPlayer-controls-box .csPlayer-controls div span {
