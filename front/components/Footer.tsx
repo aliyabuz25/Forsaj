@@ -8,7 +8,10 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
-  const { getText, getUrl, isLoading } = useSiteContent('footer');
+  const { getText, getUrl } = useSiteContent('footer');
+  const { getUrl: getImg } = useSiteContent('general');
+
+  const logoImg = getImg('SITE_LOGO_LIGHT');
 
   const navigationLinks = [
     { name: getText('txt-ana-s-h-f-744', 'ANA SƏHİFƏ'), id: getUrl('txt-ana-s-h-f-744', 'home') as any },
@@ -33,10 +36,14 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
 
         <div className="lg:col-span-1">
           <div className="flex items-center gap-3 mb-8 cursor-pointer" onClick={() => onViewChange('home')}>
-            <h2 className="text-4xl font-black italic tracking-tighter flex items-center">
-              <span className="text-white">FORSAJ</span>
-              <span className="text-[#FF4D00] ml-1">CLUB</span>
-            </h2>
+            {logoImg ? (
+              <img src={logoImg} alt="Forsaj Logo" className="h-10 w-auto object-contain" />
+            ) : (
+              <h2 className="text-4xl font-black italic tracking-tighter flex items-center">
+                <span className="text-white">FORSAJ</span>
+                <span className="text-[#FF4D00] ml-1">CLUB</span>
+              </h2>
+            )}
           </div>
           <p className="text-gray-500 font-bold italic text-[11px] uppercase leading-relaxed mb-10 max-w-xs tracking-tight">
             Azərbaycanın ən prestijli motorsport mərkəzi. Sərhədsiz offroad həyəcanını bizimlə yaşayın.

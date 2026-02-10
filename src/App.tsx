@@ -8,6 +8,7 @@ import UsersManager from './pages/UsersManager';
 import SetupGuide from './components/SetupGuide';
 import Login from './pages/Login';
 import ApplicationsManager from './pages/ApplicationsManager';
+import GeneralSettings from './pages/GeneralSettings';
 import { Toaster } from 'react-hot-toast';
 import type { SidebarItem } from './types/navigation';
 import './index.css';
@@ -54,7 +55,7 @@ const App: React.FC = () => {
           let items = Array.isArray(data) ? data : [];
 
           // Inject "Müraciətlər" item if not present
-          const hasApplications = items.find(i => i.path === '/applications');
+          const hasApplications = items.find((i: any) => i.path === '/applications');
           if (!hasApplications) {
             items = [
               ...items,
@@ -67,6 +68,19 @@ const App: React.FC = () => {
             ];
           } else if (unreadCount > 0) {
             hasApplications.badge = { text: unreadCount.toString(), color: 'bg-red-500' };
+          }
+
+          // Inject "Sistem Ayarları"
+          const hasSettings = items.find((i: any) => i.path === '/general-settings');
+          if (!hasSettings) {
+            items = [
+              ...items,
+              {
+                title: 'Sistem Ayarları',
+                path: '/general-settings',
+                icon: 'Settings'
+              }
+            ];
           }
 
           setSitemap(items);
@@ -117,6 +131,8 @@ const App: React.FC = () => {
                       <Route path="/" element={<VisualEditor />} />
 
                       <Route path="/applications" element={<ApplicationsManager />} />
+
+                      <Route path="/general-settings" element={<GeneralSettings />} />
 
                       <Route path="/users-management" element={<UsersManager currentUser={user} />} />
 

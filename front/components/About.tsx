@@ -4,11 +4,12 @@ import { useSiteContent } from '../hooks/useSiteContent';
 
 const About: React.FC = () => {
   const { getText, getImage } = useSiteContent('about');
+  const { getText: getGeneralText } = useSiteContent('general');
 
   const stats = [
-    { label: getText('txt-pi-lotlar-label-123', 'PİLOTLAR'), value: getText('txt-pi-lotlar-value-123', '140+') },
-    { label: getText('txt-yari-lar-label-123', 'YARIŞLAR'), value: getText('txt-yari-lar-value-123', '50+') },
-    { label: getText('txt-g-ncl-r-label-123', 'GƏNCLƏR'), value: getText('txt-g-ncl-r-value-123', '20+') },
+    { label: getText('txt-pi-lotlar-label-123', 'PİLOTLAR'), value: getGeneralText('STATS_PILOTS') || getText('txt-pi-lotlar-value-123', '140+') },
+    { label: getText('txt-yari-lar-label-123', 'YARIŞLAR'), value: getGeneralText('STATS_RACES') || getText('txt-yari-lar-value-123', '50+') },
+    { label: getText('txt-g-ncl-r-label-123', 'GƏNCLƏR'), value: getGeneralText('STATS_YOUTH') || getText('txt-g-ncl-r-value-123', '20+') },
   ];
 
   const values = [
