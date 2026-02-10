@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Instagram, Youtube, Facebook, ArrowRight } from 'lucide-react';
+import { Instagram, Youtube, Facebook, ArrowRight, MapPin, Phone } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
 
 interface FooterProps {
@@ -76,7 +76,7 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
           <p className="text-gray-500 font-bold italic text-[11px] uppercase leading-relaxed mb-10 max-w-xs tracking-tight">
             Azərbaycanın ən prestijli motorsport mərkəzi. Sərhədsiz offroad həyəcanını bizimlə yaşayın.
           </p>
-          <div className="flex gap-4">
+          <div className="flex gap-4 mb-8">
             {socialLinks.map(({ Icon, url }, idx) => (
               <a
                 key={idx}
@@ -88,6 +88,32 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
                 <Icon className="w-5 h-5" />
               </a>
             ))}
+          </div>
+
+          <div className="space-y-4 pt-4 border-t border-white/5">
+            <div className="flex items-start gap-4 text-gray-500 group">
+              <div className="bg-white/5 p-3 rounded-sm text-[#FF4D00]">
+                <MapPin size={18} />
+              </div>
+              <div>
+                <p className="text-[9px] font-black italic uppercase tracking-widest text-[#FF4D00] mb-1">ÜNVAN</p>
+                <p className="text-[11px] font-bold italic uppercase leading-tight">
+                  {getGeneralText('CONTACT_ADDRESS_1') || 'AZADLIQ 102, BAKI'}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 text-gray-500 group">
+              <div className="bg-white/5 p-3 rounded-sm text-[#FF4D00]">
+                <Phone size={18} />
+              </div>
+              <div>
+                <p className="text-[9px] font-black italic uppercase tracking-widest text-[#FF4D00] mb-1">ƏLAQƏ</p>
+                <p className="text-[11px] font-bold italic uppercase leading-none">
+                  {getGeneralText('CONTACT_PHONE') || '+994 50 123 45 67'}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 

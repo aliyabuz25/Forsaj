@@ -191,7 +191,7 @@ const GeneralSettings: React.FC = () => {
                 <div className="settings-card shadow-sm">
                     <div className="card-header">
                         <ImageIcon size={20} className="text-red-500" />
-                        <h2>Əlaqə Təfərrüatları</h2>
+                        <h2>Əlaqə & Ünvan Məlumatları</h2>
                     </div>
                     <div className="card-body">
                         <div className="field-group">

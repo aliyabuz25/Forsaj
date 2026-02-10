@@ -11,13 +11,16 @@ const ContactPage: React.FC = () => {
   const socialsPage = getSocialsPage('socials');
 
   const socialLinks = socialsPage?.sections?.length > 0
-    ? socialsPage.sections.map(s => ({
-      Icon: s.label?.toLowerCase().includes('insta') ? Instagram :
-        s.label?.toLowerCase().includes('face') ? Facebook :
-          s.label?.toLowerCase().includes('yout') ? Youtube :
-            Instagram,
-      url: s.value
-    }))
+    ? socialsPage.sections.map(s => {
+      const label = s.label?.toLowerCase() || '';
+      return {
+        Icon: label.includes('insta') ? Instagram :
+          label.includes('youtube') ? Youtube :
+            label.includes('facebook') ? Facebook :
+              Instagram,
+        url: s.value
+      };
+    })
     : [
       { Icon: Instagram, url: getGeneralText('SOCIAL_INSTAGRAM') || '#' },
       { Icon: Youtube, url: getGeneralText('SOCIAL_YOUTUBE') || '#' },
