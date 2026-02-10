@@ -201,6 +201,7 @@ const GeneralSettings: React.FC = () => {
                                     type="text"
                                     value={getFieldValue('STATS_PILOTS')}
                                     onChange={(e) => updateField('STATS_PILOTS', e.target.value)}
+                                    placeholder="Susmaya görə: 140+"
                                 />
                             </div>
                             <div className="field-group">
@@ -209,6 +210,7 @@ const GeneralSettings: React.FC = () => {
                                     type="text"
                                     value={getFieldValue('STATS_RACES')}
                                     onChange={(e) => updateField('STATS_RACES', e.target.value)}
+                                    placeholder="Susmaya görə: 50+"
                                 />
                             </div>
                             <div className="field-group">
@@ -217,6 +219,7 @@ const GeneralSettings: React.FC = () => {
                                     type="text"
                                     value={getFieldValue('STATS_YOUTH')}
                                     onChange={(e) => updateField('STATS_YOUTH', e.target.value)}
+                                    placeholder="Susmaya görə: 20+"
                                 />
                             </div>
                         </div>

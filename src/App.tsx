@@ -70,18 +70,24 @@ const App: React.FC = () => {
             hasApplications.badge = { text: unreadCount.toString(), color: 'bg-red-500' };
           }
 
-          // Inject "Sistem Ayarları"
-          const hasSettings = items.find((i: any) => i.path === '/general-settings');
-          if (!hasSettings) {
-            items = [
-              ...items,
-              {
-                title: 'Sistem Ayarları',
-                path: '/general-settings',
-                icon: 'Settings'
-              }
-            ];
-          }
+          // Prevent duplicates by filtering out any existing "General" or "Sistem Ayarları" items
+          // The API might return it if it finds a "general" page in site-content.json
+          items = items.filter((i: any) =>
+            i.path !== '/general-settings' &&
+            i.title !== 'Sistem Ayarları' &&
+            i.title !== 'System Settings' &&
+            i.id !== 'general'
+          );
+
+          // Force inject "Sistem Ayarları" at the end to ensure it points to the correct React page
+          items = [
+            ...items,
+            {
+              title: 'Sistem Ayarları',
+              path: '/general-settings',
+              icon: 'Settings'
+            }
+          ];
 
           setSitemap(items);
         }
