@@ -64,7 +64,15 @@ const initDB = async (retries = 10) => {
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             `);
-            console.log('Database initialized: users and applications tables ready');
+            await connection.query(`
+                CREATE TABLE IF NOT EXISTS site_content (
+                    id VARCHAR(255) PRIMARY KEY,
+                    content_data LONGTEXT NOT NULL,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                )
+            `);
+            console.log('Database initialized: users, applications, and site_content tables ready');
+            await migrateFilesToDB();
             connection.release();
             return; // Success
         } catch (error) {
@@ -80,7 +88,7 @@ const initDB = async (retries = 10) => {
     }
 };
 
-initDB();
+
 
 // Auth Middleware
 const authenticateToken = (req, res, next) => {
@@ -130,6 +138,66 @@ const NEWS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'news.json');
 const GALLERY_PHOTOS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'gallery-photos.json');
 const VIDEOS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'videos.json');
 const DRIVERS_FILE_PATH = path.join(FRONT_PUBLIC_DIR, 'drivers.json');
+
+// ------------------------------------------
+// DATABASE HELPERS & MIGRATION
+// ------------------------------------------
+// ... (migration logic uses these paths)
+
+const getContentFromDB = async (id) => {
+    try {
+        const [rows] = await pool.query('SELECT content_data FROM site_content WHERE id = ?', [id]);
+        if (rows.length > 0) {
+            return JSON.parse(rows[0].content_data);
+        }
+        return null;
+    } catch (error) {
+        console.error(`Error getting content for ${id}:`, error);
+        return null;
+    }
+};
+
+const saveContentToDB = async (id, data) => {
+    try {
+        const jsonData = JSON.stringify(data);
+        await pool.query(
+            'INSERT INTO site_content (id, content_data) VALUES (?, ?) ON DUPLICATE KEY UPDATE content_data = ?',
+            [id, jsonData, jsonData]
+        );
+        return true;
+    } catch (error) {
+        console.error(`Error saving content for ${id}:`, error);
+        return false;
+    }
+};
+
+const migrateFilesToDB = async () => {
+    const filesToMigrate = [
+        { id: 'site-content', path: SITE_CONTENT_PATH },
+        { id: 'events', path: EVENTS_FILE_PATH },
+        { id: 'news', path: NEWS_FILE_PATH },
+        { id: 'gallery-photos', path: GALLERY_PHOTOS_FILE_PATH },
+        { id: 'videos', path: VIDEOS_FILE_PATH },
+        { id: 'drivers', path: DRIVERS_FILE_PATH }
+    ];
+
+    for (const file of filesToMigrate) {
+        try {
+            const existingInDB = await getContentFromDB(file.id);
+            if (!existingInDB) {
+                if (fs.existsSync(file.path)) {
+                    const data = await fsPromises.readFile(file.path, 'utf8');
+                    await saveContentToDB(file.id, JSON.parse(data));
+                    console.log(`[MIGRATION] ${file.id} data moved to database.`);
+                }
+            }
+        } catch (err) {
+            console.error(`[MIGRATION] Failed for ${file.id}:`, err);
+        }
+    }
+};
+
+initDB();
 
 // ------------------------------------------
 // CORE ROUTES
@@ -203,13 +271,8 @@ app.use('/uploads', express.static(UPLOAD_DIR_PATH));
 // API: Get Gallery Photos
 app.get('/api/gallery-photos', async (req, res) => {
     try {
-        try {
-            await fsPromises.access(GALLERY_PHOTOS_FILE_PATH);
-        } catch {
-            return res.json([]);
-        }
-        const data = await fsPromises.readFile(GALLERY_PHOTOS_FILE_PATH, 'utf8');
-        res.json(JSON.parse(data));
+        const data = await getContentFromDB('gallery-photos');
+        res.json(data || []);
     } catch (error) {
         console.error('Error reading gallery photos:', error);
         res.status(500).json({ error: 'Failed to read gallery photos' });
@@ -220,7 +283,7 @@ app.get('/api/gallery-photos', async (req, res) => {
 app.post('/api/gallery-photos', async (req, res) => {
     try {
         const photos = req.body;
-        await fsPromises.writeFile(GALLERY_PHOTOS_FILE_PATH, JSON.stringify(photos, null, 2));
+        await saveContentToDB('gallery-photos', photos);
         res.json({ success: true });
     } catch (error) {
         console.error('Error saving gallery photos:', error);
@@ -247,13 +310,8 @@ const saveUsers = async (users) => {
 // API: Get Events
 app.get('/api/events', async (req, res) => {
     try {
-        try {
-            await fsPromises.access(EVENTS_FILE_PATH);
-        } catch {
-            return res.json([]);
-        }
-        const data = await fsPromises.readFile(EVENTS_FILE_PATH, 'utf8');
-        res.json(JSON.parse(data));
+        const data = await getContentFromDB('events');
+        res.json(data || []);
     } catch (error) {
         console.error('Error reading events:', error);
         res.status(500).json({ error: 'Failed to read events' });
@@ -264,7 +322,7 @@ app.get('/api/events', async (req, res) => {
 app.post('/api/events', async (req, res) => {
     try {
         const events = req.body;
-        await fsPromises.writeFile(EVENTS_FILE_PATH, JSON.stringify(events, null, 2));
+        await saveContentToDB('events', events);
         res.json({ success: true });
     } catch (error) {
         console.error('Error saving events:', error);
@@ -274,15 +332,9 @@ app.post('/api/events', async (req, res) => {
 
 // API: Get News
 app.get('/api/news', async (req, res) => {
-    console.log('GET /api/news request received');
     try {
-        try {
-            await fsPromises.access(NEWS_FILE_PATH);
-        } catch {
-            return res.json([]);
-        }
-        const data = await fsPromises.readFile(NEWS_FILE_PATH, 'utf8');
-        res.json(JSON.parse(data));
+        const data = await getContentFromDB('news');
+        res.json(data || []);
     } catch (error) {
         console.error('Error reading news:', error);
         res.status(500).json({ error: 'Failed to read news' });
@@ -292,7 +344,7 @@ app.get('/api/news', async (req, res) => {
 app.post('/api/news', async (req, res) => {
     try {
         const news = req.body;
-        await fsPromises.writeFile(NEWS_FILE_PATH, JSON.stringify(news, null, 2));
+        await saveContentToDB('news', news);
         res.json({ success: true });
     } catch (error) {
         console.error('Error saving news:', error);
@@ -463,13 +515,8 @@ app.get('/api/check-setup', async (req, res) => {
 // API: Get Videos
 app.get('/api/videos', async (req, res) => {
     try {
-        try {
-            await fsPromises.access(VIDEOS_FILE_PATH);
-        } catch {
-            return res.json([]);
-        }
-        const data = await fsPromises.readFile(VIDEOS_FILE_PATH, 'utf8');
-        res.json(JSON.parse(data));
+        const data = await getContentFromDB('videos');
+        res.json(data || []);
     } catch (error) {
         console.error('Error reading videos:', error);
         res.status(500).json({ error: 'Failed to read videos' });
@@ -480,7 +527,7 @@ app.get('/api/videos', async (req, res) => {
 app.post('/api/videos', async (req, res) => {
     try {
         const videos = req.body;
-        await fsPromises.writeFile(VIDEOS_FILE_PATH, JSON.stringify(videos, null, 2));
+        await saveContentToDB('videos', videos);
         res.json({ success: true });
     } catch (error) {
         console.error('Error saving videos:', error);
@@ -521,7 +568,7 @@ app.post('/api/upload-image', upload.single('image'), (req, res) => {
 app.post('/api/save-content', async (req, res) => {
     try {
         const content = req.body;
-        await fsPromises.writeFile(SITE_CONTENT_PATH, JSON.stringify(content, null, 2));
+        await saveContentToDB('site-content', content);
         res.json({ success: true });
     } catch (error) {
         console.error('Save error:', error);
@@ -532,13 +579,8 @@ app.post('/api/save-content', async (req, res) => {
 // API: Get Site Content
 app.get('/api/site-content', async (req, res) => {
     try {
-        try {
-            await fsPromises.access(SITE_CONTENT_PATH);
-        } catch {
-            return res.json([]);
-        }
-        const data = await fsPromises.readFile(SITE_CONTENT_PATH, 'utf8');
-        res.json(JSON.parse(data));
+        const data = await getContentFromDB('site-content');
+        res.json(data || []);
     } catch (error) {
         console.error('Error reading site content:', error);
         res.status(500).json({ error: 'Failed to read site content' });
@@ -548,13 +590,8 @@ app.get('/api/site-content', async (req, res) => {
 // API: Get Drivers
 app.get('/api/drivers', async (req, res) => {
     try {
-        try {
-            await fsPromises.access(DRIVERS_FILE_PATH);
-        } catch {
-            return res.json([]);
-        }
-        const data = await fsPromises.readFile(DRIVERS_FILE_PATH, 'utf8');
-        res.json(JSON.parse(data));
+        const data = await getContentFromDB('drivers');
+        res.json(data || []);
     } catch (error) {
         console.error('Error reading drivers:', error);
         res.status(500).json({ error: 'Failed to read drivers' });
@@ -583,7 +620,7 @@ app.post('/api/drivers', async (req, res) => {
             });
         }
 
-        await fsPromises.writeFile(DRIVERS_FILE_PATH, JSON.stringify(categories, null, 2));
+        await saveContentToDB('drivers', categories);
         res.json({ success: true, data: categories });
     } catch (error) {
         console.error('Error saving drivers:', error);
@@ -996,13 +1033,8 @@ app.all('/api/extract-content', async (req, res) => {
 // API: Get Content
 app.get('/api/get-content', async (req, res) => {
     try {
-        try {
-            await fsPromises.access(SITE_CONTENT_PATH);
-        } catch {
-            return res.json([]);
-        }
-        const data = await fsPromises.readFile(SITE_CONTENT_PATH, 'utf8');
-        res.json(JSON.parse(data));
+        const data = await getContentFromDB('site-content');
+        res.json(data || []);
     } catch (error) {
         res.status(500).json({ error: 'Failed to read content' });
     }
