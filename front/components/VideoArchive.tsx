@@ -14,6 +14,13 @@ const VideoArchive: React.FC<VideoArchiveProps> = ({ onViewChange }) => {
   const [videos, setVideos] = React.useState<any[]>([]);
   const { getText } = useSiteContent('videoarchive');
 
+  const extractYoutubeId = (url: string) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
   React.useEffect(() => {
     const loadVideos = async () => {
       try {
@@ -26,12 +33,15 @@ const VideoArchive: React.FC<VideoArchiveProps> = ({ onViewChange }) => {
           const mapped = data
             .sort((a: any, b: any) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
             .slice(0, 4)
-            .map((v: any) => ({
-              id: v.id,
-              title: v.title,
-              videoId: v.video_id,
-              thumbnail: v.thumbnail
-            }));
+            .map((v: any) => {
+              const videoId = v.videoId || v.video_id || extractYoutubeId(v.youtubeUrl || v.url);
+              return {
+                id: v.id,
+                title: v.title,
+                videoId: videoId,
+                thumbnail: v.thumbnail || (videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : '')
+              };
+            });
           setVideos(mapped);
         }
       } catch (err) {

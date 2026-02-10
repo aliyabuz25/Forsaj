@@ -68,6 +68,7 @@ interface VideoItem {
     videoId: string;
     duration: string;
     thumbnail: string;
+    created_at?: string;
 }
 
 interface GalleryPhotoItem {
@@ -627,7 +628,7 @@ const VisualEditor: React.FC = () => {
             id: newId,
             title: 'Yeni Xəbər',
             date: new Date().toISOString().split('T')[0],
-            img: 'https://images.unsplash.com/photo-1504711432869-53c23e6b47a9?q=80&w=2070&auto=format&fit=crop',
+            img: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070&auto=format&fit=crop',
             description: '',
             category: 'BLOQ',
             status: 'draft'
@@ -751,7 +752,8 @@ const VisualEditor: React.FC = () => {
             youtubeUrl: '',
             videoId: '',
             duration: '00:00',
-            thumbnail: ''
+            thumbnail: '',
+            created_at: new Date().toISOString()
         };
         setVideos([...videos, newItem]);
         setSelectedVideoId(newId);

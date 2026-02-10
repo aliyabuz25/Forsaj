@@ -11,6 +11,13 @@ const GalleryPage: React.FC = () => {
   const [dynamicPhotos, setDynamicPhotos] = useState<any[]>([]);
   const { getText } = useSiteContent('gallerypage');
 
+  const extractYoutubeId = (url: string) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
   useEffect(() => {
     const loadGallery = async () => {
       try {
@@ -26,13 +33,16 @@ const GalleryPage: React.FC = () => {
           if (videos) {
             const mapped = videos
               .sort((a: any, b: any) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
-              .map((v: any) => ({
-                id: v.id,
-                title: v.title,
-                videoId: v.video_id,
-                thumbnail: v.thumbnail,
-                duration: v.duration
-              }));
+              .map((v: any) => {
+                const videoId = v.videoId || v.video_id || extractYoutubeId(v.youtubeUrl || v.url);
+                return {
+                  id: v.id,
+                  title: v.title,
+                  videoId: videoId,
+                  thumbnail: v.thumbnail || (videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : ''),
+                  duration: v.duration || '00:00'
+                };
+              });
             setDynamicVideos(mapped);
           }
         }

@@ -1,20 +1,29 @@
 [
     {
         "id": 1,
-        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "videoId": "dQw4w9WgXcQ",
         "title": "Forsaj Club 2024 Teaser",
-        "thumbnail": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=800&fit=crop"
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "duration": "03:32",
+        "created_at": "2024-01-01T00:00:00Z"
     },
     {
         "id": 2,
-        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "videoId": "dQw4w9WgXcQ",
         "title": "Dakar 2026 Hazırlıqları",
-        "thumbnail": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800&fit=crop"
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "duration": "03:32",
+        "created_at": "2024-01-02T00:00:00Z"
     },
     {
         "id": 3,
-        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "videoId": "dQw4w9WgXcQ",
         "title": "Offroad Texnika Dərsləri",
-        "thumbnail": "https://images.unsplash.com/photo-1485291571150-772bcfc10da5?q=80&w=800&fit=crop"
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "duration": "03:32",
+        "created_at": "2024-01-03T00:00:00Z"
     }
 ]
