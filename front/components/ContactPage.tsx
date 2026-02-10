@@ -1,6 +1,7 @@
 import React from 'react';
 import { MapPin, Phone, Mail, Instagram, Youtube, Facebook, Send, Info, ChevronDown, Clock, Map as MapIcon } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
+import toast from 'react-hot-toast';
 
 const ContactPage: React.FC = () => {
   const { getText } = useSiteContent('contactpage');
@@ -112,7 +113,32 @@ const ContactPage: React.FC = () => {
             <span className="bg-[#FF4D00] px-4 py-1.5 text-black font-black italic text-[10px] uppercase tracking-widest shadow-lg">STATUS: ONLINE</span>
           </div>
 
-          <form className="space-y-10" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-10" onSubmit={async (e) => {
+            e.preventDefault();
+            const form = e.target as HTMLFormElement;
+            const data = {
+              name: (form.querySelector('input[placeholder*="AD SOYAD"]') as HTMLInputElement).value,
+              contact: (form.querySelector('input[placeholder*="TELEFON"]') as HTMLInputElement).value,
+              type: (form.querySelector('select') as HTMLSelectElement).value,
+              content: (form.querySelector('textarea') as HTMLTextAreaElement).value
+            };
+
+            try {
+              const res = await fetch('/api/applications', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+              });
+              if (res.ok) {
+                toast.success('Müraciətiniz uğurla göndərildi!');
+                form.reset();
+              } else {
+                throw new Error();
+              }
+            } catch {
+              toast.error('Gondərilmə zamanı xəta baş verdi.');
+            }
+          }}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
               <div className="space-y-3">
                 <label className="text-gray-600 font-black italic text-[10px] uppercase tracking-[0.3em]">{getText('FIELD_NAME_LABEL', 'AD VƏ SOYAD')}</label>

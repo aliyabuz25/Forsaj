@@ -7,6 +7,7 @@ import FrontendSettings from './pages/FrontendSettings';
 import UsersManager from './pages/UsersManager';
 import SetupGuide from './components/SetupGuide';
 import Login from './pages/Login';
+import ApplicationsManager from './pages/ApplicationsManager';
 import { Toaster } from 'react-hot-toast';
 import type { SidebarItem } from './types/navigation';
 import './index.css';
@@ -14,6 +15,7 @@ import './index.css';
 const App: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [sitemap, setSitemap] = useState<SidebarItem[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -31,23 +33,55 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const loadSitemap = async () => {
+    const fetchData = async () => {
+      const token = localStorage.getItem('forsaj_admin_token');
+      if (!token) return;
+
       try {
-        const response = await fetch(`/api/sitemap?v=${Date.now()}`);
-        if (!response.ok) {
-          setSitemap([]);
-          return;
+        // Fetch unread count
+        const unreadRes = await fetch('/api/applications/unread-count', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (unreadRes.ok) {
+          const { count } = await unreadRes.json();
+          setUnreadCount(count);
         }
-        const data = await response.json();
-        setSitemap(Array.isArray(data) ? data : []);
+
+        // Fetch sitemap
+        const response = await fetch(`/api/sitemap?v=${Date.now()}`);
+        if (response.ok) {
+          const data = await response.json();
+          let items = Array.isArray(data) ? data : [];
+
+          // Inject "Müraciətlər" item if not present
+          const hasApplications = items.find(i => i.path === '/applications');
+          if (!hasApplications) {
+            items = [
+              ...items,
+              {
+                title: 'Müraciətlər',
+                path: '/applications',
+                icon: 'Inbox',
+                badge: unreadCount > 0 ? { text: unreadCount.toString(), color: 'bg-red-500' } : undefined
+              }
+            ];
+          } else if (unreadCount > 0) {
+            hasApplications.badge = { text: unreadCount.toString(), color: 'bg-red-500' };
+          }
+
+          setSitemap(items);
+        }
       } catch (err) {
-        setSitemap([]);
+        console.error('Fetch data failed', err);
       } finally {
         setIsLoading(false);
       }
     };
-    loadSitemap();
-  }, []);
+
+    fetchData();
+    const interval = setInterval(fetchData, 30000); // Check every 30s
+    return () => clearInterval(interval);
+  }, [user, unreadCount]);
 
   if (isLoading) {
     return <div style={{
@@ -81,6 +115,8 @@ const App: React.FC = () => {
                   ) : (
                     <>
                       <Route path="/" element={<VisualEditor />} />
+
+                      <Route path="/applications" element={<ApplicationsManager />} />
 
                       <Route path="/users-management" element={<UsersManager currentUser={user} />} />
 

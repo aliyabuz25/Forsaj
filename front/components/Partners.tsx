@@ -7,28 +7,32 @@ const Partners: React.FC = () => {
 
   const partners = [
     {
-      name: 'AZMF',
+      id: 'partner_1',
+      name: getText('partner_1_name', 'AZMF'),
       icon: <ShieldCheck className="w-10 h-10" />,
       color: 'text-[#FF4D00]',
       bg: 'group-hover:bg-[#FF4D00]/10',
       glow: 'group-hover:shadow-[#FF4D00]/20'
     },
     {
-      name: 'OFFROAD AZ',
+      id: 'partner_2',
+      name: getText('partner_2_name', 'OFFROAD AZ'),
       icon: <Truck className="w-10 h-10" />,
       color: 'text-white',
       bg: 'group-hover:bg-white/10',
       glow: 'group-hover:shadow-white/10'
     },
     {
-      name: 'GLOBAL 4X4',
+      id: 'partner_3',
+      name: getText('partner_3_name', 'GLOBAL 4X4'),
       icon: <Globe className="w-10 h-10" />,
       color: 'text-gray-400',
       bg: 'group-hover:bg-gray-400/10',
       glow: 'group-hover:shadow-gray-400/10'
     },
     {
-      name: 'RACE TECH',
+      id: 'partner_4',
+      name: getText('partner_4_name', 'RACE TECH'),
       icon: <Zap className="w-10 h-10" />,
       color: 'text-[#FF4D00]',
       bg: 'group-hover:bg-[#FF4D00]/10',
@@ -54,7 +58,7 @@ const Partners: React.FC = () => {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {partners.map((p) => (
             <div
-              key={p.name}
+              key={p.id}
               className="group flex flex-col items-center justify-center p-10 bg-[#0A0A0A] border border-white/5 rounded-sm transition-all duration-500 hover:border-[#FF4D00]/30 hover:shadow-[0_20px_50px_rgba(255,77,0,0.1)] cursor-pointer"
             >
               <div className={`mb-6 p-6 rounded-sm transition-all duration-500 text-gray-700 ${p.color} ${p.bg} ${p.glow} group-hover:scale-110 group-hover:rotate-3`}>
@@ -69,7 +73,7 @@ const Partners: React.FC = () => {
               </div>
 
               <p className="mt-6 text-[9px] font-black italic text-[#FF4D00] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                OFFICIAL PARTNER
+                {getText(`${p.id}_label`, 'OFFICIAL PARTNER')}
               </p>
             </div>
           ))}

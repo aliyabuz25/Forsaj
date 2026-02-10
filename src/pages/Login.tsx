@@ -53,6 +53,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
             if (isLoginMode) {
                 localStorage.setItem('forsaj_admin_token', result.token);
+                localStorage.setItem('forsaj_admin_user', JSON.stringify(result.user));
                 onLogin(result.user);
                 toast.success('Xoş gəldiniz!');
             } else {

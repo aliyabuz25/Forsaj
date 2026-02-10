@@ -53,7 +53,18 @@ const initDB = async (retries = 10) => {
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             `);
-            console.log('Database initialized: users table ready');
+            await connection.query(`
+                CREATE TABLE IF NOT EXISTS applications (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    name VARCHAR(255) NOT NULL,
+                    contact VARCHAR(255) NOT NULL,
+                    type VARCHAR(100) NOT NULL,
+                    content TEXT,
+                    status ENUM('unread', 'read') DEFAULT 'unread',
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+            console.log('Database initialized: users and applications tables ready');
             connection.release();
             return; // Success
         } catch (error) {
@@ -577,6 +588,55 @@ app.post('/api/drivers', async (req, res) => {
     } catch (error) {
         console.error('Error saving drivers:', error);
         res.status(500).json({ error: 'Failed to save drivers' });
+    }
+});
+
+// API: Submit Application
+app.post('/api/applications', async (req, res) => {
+    const { name, contact, type, content } = req.body;
+    try {
+        await pool.query(
+            'INSERT INTO applications (name, contact, type, content) VALUES (?, ?, ?, ?)',
+            [name, contact, type, content]
+        );
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error submitting application:', error);
+        res.status(500).json({ error: 'Müraciət göndərilərkən xəta baş verdi' });
+    }
+});
+
+// API: Get Applications (Auth)
+app.get('/api/applications', authenticateToken, async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM applications ORDER BY created_at DESC');
+        res.json(rows);
+    } catch (error) {
+        console.error('Error fetching applications:', error);
+        res.status(500).json({ error: 'Müraciətlər yüklənərkən xəta baş verdi' });
+    }
+});
+
+// API: Mark Application as Read (Auth)
+app.post('/api/applications/:id/read', authenticateToken, async (req, res) => {
+    const { id } = req.params;
+    try {
+        await pool.query('UPDATE applications SET status = "read" WHERE id = ?', [id]);
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error marking application as read:', error);
+        res.status(500).json({ error: 'Xəta baş verdi' });
+    }
+});
+
+// API: Unread Count (Auth)
+app.get('/api/applications/unread-count', authenticateToken, async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT COUNT(*) as count FROM applications WHERE status = "unread"');
+        res.json({ count: rows[0].count });
+    } catch (error) {
+        console.error('Error fetching unread count:', error);
+        res.status(500).json({ error: 'Xəta baş verdi' });
     }
 });
 

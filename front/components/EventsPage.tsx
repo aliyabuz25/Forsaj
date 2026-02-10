@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, Calendar, MapPin, X, Car, Users as UsersIcon, Download, FileText, ChevronDown } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
+import toast from 'react-hot-toast';
 
 interface EventItem {
   id: number;
@@ -145,7 +146,38 @@ const EventsPage: React.FC<EventsPageProps> = ({ onViewChange }) => {
                 <div className="w-16 h-2 bg-[#FF4D00] shadow-[0_0_15px_rgba(255,77,0,0.4)]"></div>
               </div>
 
-              <form className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10" onSubmit={(e) => e.preventDefault()}>
+              <form className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10" onSubmit={async (e) => {
+                e.preventDefault();
+                const form = e.target as HTMLFormElement;
+                const data = {
+                  name: (form.querySelector('input[placeholder*="Tam ad"]') as HTMLInputElement).value,
+                  contact: (form.querySelector('input[placeholder*="+994"]') as HTMLInputElement).value,
+                  type: 'Pilot Registration',
+                  content: JSON.stringify({
+                    event: selectedEvent?.title,
+                    car: (form.querySelector('input[placeholder*="Toyota"]') as HTMLInputElement).value,
+                    tire: (form.querySelector('input[placeholder*="35 DÜYM"]') as HTMLInputElement).value,
+                    engine: (form.querySelector('input[placeholder*="4.4L"]') as HTMLInputElement).value,
+                    club: (form.querySelector('select') as HTMLSelectElement).value
+                  })
+                };
+
+                try {
+                  const res = await fetch('/api/applications', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                  });
+                  if (res.ok) {
+                    toast.success('Qeydiyyat müraciətiniz uğurla göndərildi!');
+                    setRegStep(null);
+                  } else {
+                    throw new Error();
+                  }
+                } catch {
+                  toast.error('Gondərilmə zamanı xəta baş verdi.');
+                }
+              }}>
                 <div className="space-y-4">
                   <label className="text-gray-600 font-black italic text-[10px] uppercase tracking-widest">{getText('FIELD_NAME', 'AD VƏ SOYAD')}</label>
                   <input type="text" className="w-full bg-black border border-white/5 text-white p-5 font-black italic text-sm focus:ring-1 focus:ring-[#FF4D00] outline-none uppercase placeholder:text-gray-800" placeholder={getText('PLACEHOLDER_NAME', 'Tam ad daxil edin')} />
