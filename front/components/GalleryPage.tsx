@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { PlayCircle, Image as ImageIcon, Video, ArrowRight, Zap, Maximize2, Calendar, X } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
 
+import CsPlayer from './CsPlayer';
+
 const GalleryPage: React.FC = () => {
   const [activeType, setActiveType] = useState<'photos' | 'videos'>('photos');
   const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
@@ -57,14 +59,7 @@ const GalleryPage: React.FC = () => {
             <X size={40} strokeWidth={1.5} />
           </button>
 
-          <iframe
-            className="w-full h-full"
-            src={`https://www.youtube.com/embed/${playingVideoId}?autoplay=1`}
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          ></iframe>
+          <CsPlayer videoId={playingVideoId} />
         </div>
       </div>
     );

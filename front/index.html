@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="az">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,23 +14,27 @@
             background-color: #0A0A0A;
             color: #FFFFFF;
         }
+
         .italic-extra-bold {
             font-weight: 900;
             font-style: italic;
         }
+
         /* Custom scrollbar for racing feel */
         ::-webkit-scrollbar {
             width: 8px;
         }
+
         ::-webkit-scrollbar-track {
             background: #0A0A0A;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #FF4D00;
             border-radius: 4px;
         }
     </style>
-<script type="importmap">
+    <script type="importmap">
 {
   "imports": {
     "react/": "https://esm.sh/react@^19.2.3/",
@@ -40,10 +44,15 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <link rel="stylesheet" href="/csPlayer.css">
+    <script src="/csPlayer.js"></script>
+    <link rel="stylesheet" href="/index.css">
 </head>
+
 <body class="bg-[#0A0A0A] text-white">
     <div id="root"></div>
-<script type="module" src="/index.tsx"></script>
+    <script type="module" src="/index.tsx"></script>
 </body>
+
 </html>

@@ -7,6 +7,8 @@ interface VideoArchiveProps {
 }
 
 
+import CsPlayer from './CsPlayer';
+
 const VideoArchive: React.FC<VideoArchiveProps> = ({ onViewChange }) => {
   const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
   const [videos, setVideos] = React.useState<any[]>([]);
@@ -55,14 +57,7 @@ const VideoArchive: React.FC<VideoArchiveProps> = ({ onViewChange }) => {
             <X size={40} strokeWidth={1.5} />
           </button>
 
-          <iframe
-            className="w-full h-full"
-            src={`https://www.youtube.com/embed/${playingVideoId}?autoplay=1`}
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          ></iframe>
+          <CsPlayer videoId={playingVideoId} />
         </div>
       </div>
     );
