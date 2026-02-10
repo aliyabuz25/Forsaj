@@ -966,17 +966,25 @@ const VisualEditor: React.FC = () => {
 
     // Filter logic
     const filteredPages = pages.map((page, idx) => ({ page, idx })).filter(({ page }) => {
+        // First, check if the page has ANY non-internal content
+        const hasVisibleText = page.sections.some(s => !s.id.includes('_') && !s.label.includes('_'));
+        const hasVisibleImg = page.images.some(i => !i.id.includes('_') && !i.alt.includes('_'));
+
+        // If it's completely empty or only contains internal keys, hide it from the list
+        if (!hasVisibleText && !hasVisibleImg) return false;
+
         if (!searchTerm) return true;
+
         const lower = searchTerm.toLowerCase();
         const matchTitle = page.title.toLowerCase().includes(lower);
 
-        // Only match against sections that are NOT internal (no underscores)
+        // Match against visible sections only
         const matchText = page.sections.some(s =>
             !s.id.includes('_') && !s.label.includes('_') &&
             (s.label.toLowerCase().includes(lower) || s.value.toLowerCase().includes(lower))
         );
 
-        // Only match against images that are NOT internal (no underscores)
+        // Match against visible images only
         const matchImg = page.images.some(i =>
             !i.id.includes('_') && !i.alt.includes('_') &&
             (i.alt.toLowerCase().includes(lower) || i.path.toLowerCase().includes(lower))
