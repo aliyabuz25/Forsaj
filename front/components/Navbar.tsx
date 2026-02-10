@@ -8,23 +8,30 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => {
-  const { getText, getUrl, getImage } = useSiteContent('navbar');
+  const { getPage, getImage } = useSiteContent('navbar');
   const { getImage: getImageGeneral } = useSiteContent('general');
   const [currentLang, setCurrentLang] = useState('AZ');
   const [isLangOpen, setIsLangOpen] = useState(false);
 
+  const navbarPage = getPage('navbar');
   const logoImg = getImageGeneral('SITE_LOGO_LIGHT').path;
 
-  const navItems = [
-    { name: getText('txt-ana-s-h-f-366', 'ANA SƏHİFƏ'), id: getUrl('txt-ana-s-h-f-366', 'home') as any },
-    { name: getText('txt-haqqimizda-387', 'HAQQIMIZDA'), id: getUrl('txt-haqqimizda-387', 'about') as any },
-    { name: getText('txt-x-b-rl-r-63', 'XƏBƏRLƏR'), id: getUrl('txt-x-b-rl-r-63', 'news') as any },
-    { name: getText('txt-t-dbi-rl-r-793', 'TƏDBİRLƏR'), id: getUrl('txt-t-dbi-rl-r-793', 'events') as any },
-    { name: getText('txt-s-r-c-l-r-119', 'SÜRÜCÜLƏR'), id: getUrl('txt-s-r-c-l-r-119', 'drivers') as any },
-    { name: getText('txt-qalereya-784', 'QALEREYA'), id: getUrl('txt-qalereya-784', 'gallery') as any },
-    { name: getText('txt-qaydalar-291', 'QAYDALAR'), id: getUrl('txt-qaydalar-291', 'rules') as any },
-    { name: getText('txt-laq-251', 'ƏLAQƏ'), id: getUrl('txt-laq-251', 'contact') as any },
+  // Default items as fallback
+  const defaultNavItems = [
+    { name: 'ANA SƏHİFƏ', id: 'home' },
+    { name: 'HAQQIMIZDA', id: 'about' },
+    { name: 'XƏBƏRLƏR', id: 'news' },
+    { name: 'TƏDBİRLƏR', id: 'events' },
+    { name: 'SÜRÜCÜLƏR', id: 'drivers' },
+    { name: 'QALEREYA', id: 'gallery' },
+    { name: 'QAYDALAR', id: 'rules' },
+    { name: 'ƏLAQƏ', id: 'contact' },
   ];
+
+  const navItems = navbarPage?.sections?.length > 0
+    ? navbarPage.sections.map(s => ({ name: s.value, id: s.url || s.id }))
+    : defaultNavItems;
+
 
   const languages = ['AZ', 'RU', 'ENG'];
 

@@ -4,16 +4,44 @@ import { useSiteContent } from '../hooks/useSiteContent';
 import { bbcodeToHtml } from '../utils/bbcode';
 
 const WhatIsOffroad: React.FC = () => {
-  const { getText, isLoading } = useSiteContent('whatisoffroad');
+  const { getPage, getText, isLoading } = useSiteContent('whatisoffroad');
+  const page = getPage('whatisoffroad');
 
   if (isLoading) return <div className="h-[400px] bg-gray-100 animate-pulse"></div>;
 
-  const features = [
+  const getFeatIcon = (label: string) => {
+    const l = label.toLowerCase();
+    if (l.includes('setting')) return <Settings className="text-[#D12027]" />;
+    if (l.includes('shield')) return <ShieldCheck className="text-[#D12027]" />;
+    if (l.includes('compass')) return <Compass className="text-[#D12027]" />;
+    if (l.includes('zap')) return <Zap className="text-[#D12027]" />;
+    return <Settings className="text-[#D12027]" />;
+  };
+
+  const dynamicFeatures: any[] = [];
+  if (page?.sections) {
+    const featSections = page.sections.filter(s => s.id.startsWith('feat-') || s.id.includes('TEXNİ'));
+    // Group by two
+    for (let i = 0; i < featSections.length; i += 2) {
+      if (featSections[i] && featSections[i + 1]) {
+        dynamicFeatures.push({
+          icon: getFeatIcon(featSections[i].label || ''),
+          title: featSections[i].value,
+          desc: featSections[i + 1].value
+        });
+      }
+    }
+  }
+
+  const defaultFeatures = [
     { icon: <Settings className="text-[#D12027]" />, title: getText('txt-texni-ki-t-chi-z-856', 'TEXNİKİ TƏCHİZAT'), desc: getText('txt-h-r-bir-ma-i-n-x-456', 'Hər bir maşın xüsusi asqı sistemi və gücləndirilmiş mühərriklə təmin olunur.') },
     { icon: <ShieldCheck className="text-[#D12027]" />, title: getText('txt-t-hl-k-si-zli-k-420', 'TƏHLÜKƏSİZLİK'), desc: getText('txt-pi-lotlar-n-t-hl-k-112', 'Pilotların təhlükəsizliyi bizim üçün prioritetdir. Karkas və kəmərlər məcburidir.') },
-    { icon: <Compass className="text-[#D12027]" />, title: getText('txt-navi-qasi-ya-901', 'NAVİQASİYA'), desc: getText('txt-gps-v-x-ri-t-oxu-452', 'GPS və xəritə oxuma bacarığı offroad yarışlarında qalibiyyətin yarısıdır.') },
+    { icon: <Compass className="text-[#D12027]" />, title: getText('txt-navi-qasi-ya-901', 'NAVİQASIYA'), desc: getText('txt-gps-v-x-ri-t-oxu-452', 'GPS və xəritə oxuma bacarığı offroad yarışlarında qalibiyyətin yarısıdır.') },
     { icon: <Zap className="text-[#D12027]" />, title: getText('txt-ekstremal-g-c-112', 'EKSTREMAL GÜC'), desc: getText('txt-s-r-c-n-n-fi-zi-ki-912', 'Sürücünün fiziki hazırlığı ən az avtomobilin gücü qədər əhəmiyyətlidir.') },
   ];
+
+  const features = dynamicFeatures.length > 0 ? dynamicFeatures : defaultFeatures;
+
 
   return (
     <section className="py-24 px-6 lg:px-20 bg-gray-50 flex flex-col lg:flex-row gap-16 items-center">

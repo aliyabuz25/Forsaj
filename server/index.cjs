@@ -719,6 +719,7 @@ app.all('/api/extract-content', async (req, res) => {
                         'navbar': 'Naviqasiya',
                         'nextrace': 'Növbəti Yarış',
                         'partners': 'Tərəfdaşlar',
+                        'socials': 'Sosial Media',
                         'videoarchive': 'Video Arxiv',
                         'whatisoffroad': 'Offroad Nədir?',
                         'home': 'ANA SƏHİFƏ',

@@ -7,11 +7,23 @@ const ContactPage: React.FC = () => {
   const { getText } = useSiteContent('contactpage');
   const { getText: getGeneralText } = useSiteContent('general');
 
-  const socialLinks = [
-    { Icon: Instagram, url: getGeneralText('SOCIAL_INSTAGRAM') || '#' },
-    { Icon: Youtube, url: getGeneralText('SOCIAL_YOUTUBE') || '#' },
-    { Icon: Facebook, url: getGeneralText('SOCIAL_FACEBOOK') || '#' },
-  ];
+  const { getPage: getSocialsPage } = useSiteContent('socials');
+  const socialsPage = getSocialsPage('socials');
+
+  const socialLinks = socialsPage?.sections?.length > 0
+    ? socialsPage.sections.map(s => ({
+      Icon: s.label?.toLowerCase().includes('insta') ? Instagram :
+        s.label?.toLowerCase().includes('face') ? Facebook :
+          s.label?.toLowerCase().includes('yout') ? Youtube :
+            Instagram,
+      url: s.value
+    }))
+    : [
+      { Icon: Instagram, url: getGeneralText('SOCIAL_INSTAGRAM') || '#' },
+      { Icon: Youtube, url: getGeneralText('SOCIAL_YOUTUBE') || '#' },
+      { Icon: Facebook, url: getGeneralText('SOCIAL_FACEBOOK') || '#' },
+    ];
+
 
   return (
     <div className="bg-[#0A0A0A] min-h-screen py-16 px-6 lg:px-20 text-white">

@@ -2468,5 +2468,30 @@
     "title": "S\u0130STEM AYARLARI",
     "sections": [],
     "images": []
+  },
+  {
+    "id": "socials",
+    "title": "Sosial Media",
+    "sections": [
+      {
+        "id": "social_insta",
+        "type": "text",
+        "label": "Instagram",
+        "value": "https://instagram.com/forsajclub"
+      },
+      {
+        "id": "social_fb",
+        "type": "text",
+        "label": "Facebook",
+        "value": "https://facebook.com/forsajclub"
+      },
+      {
+        "id": "social_yt",
+        "type": "text",
+        "label": "Youtube",
+        "value": "https://youtube.com/forsajclub"
+      }
+    ],
+    "images": []
   }
 ]

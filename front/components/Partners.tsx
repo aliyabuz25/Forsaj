@@ -3,42 +3,37 @@ import { ShieldCheck, Truck, Globe, Zap } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
 
 const Partners: React.FC = () => {
-  const { getText } = useSiteContent('partners');
+  const { getPage, getText } = useSiteContent('partners');
+  const partnersPage = getPage('partners');
 
-  const partners = [
-    {
-      id: 'partner_1',
-      name: getText('partner_1_name', 'AZMF'),
-      icon: <ShieldCheck className="w-10 h-10" />,
-      color: 'text-[#FF4D00]',
-      bg: 'group-hover:bg-[#FF4D00]/10',
-      glow: 'group-hover:shadow-[#FF4D00]/20'
-    },
-    {
-      id: 'partner_2',
-      name: getText('partner_2_name', 'OFFROAD AZ'),
-      icon: <Truck className="w-10 h-10" />,
-      color: 'text-white',
-      bg: 'group-hover:bg-white/10',
-      glow: 'group-hover:shadow-white/10'
-    },
-    {
-      id: 'partner_3',
-      name: getText('partner_3_name', 'GLOBAL 4X4'),
-      icon: <Globe className="w-10 h-10" />,
-      color: 'text-gray-400',
-      bg: 'group-hover:bg-gray-400/10',
-      glow: 'group-hover:shadow-gray-400/10'
-    },
-    {
-      id: 'partner_4',
-      name: getText('partner_4_name', 'RACE TECH'),
-      icon: <Zap className="w-10 h-10" />,
-      color: 'text-[#FF4D00]',
-      bg: 'group-hover:bg-[#FF4D00]/10',
-      glow: 'group-hover:shadow-[#FF4D00]/20'
-    },
+  const getIcon = (label: string) => {
+    const l = label.toLowerCase();
+    if (l.includes('shield')) return <ShieldCheck className="w-10 h-10" />;
+    if (l.includes('truck')) return <Truck className="w-10 h-10" />;
+    if (l.includes('globe')) return <Globe className="w-10 h-10" />;
+    if (l.includes('zap')) return <Zap className="w-10 h-10" />;
+    return <ShieldCheck className="w-10 h-10" />; // Fallback
+  };
+
+  const defaultPartners = [
+    { id: 'partner_1', name: 'AZMF', icon: <ShieldCheck className="w-10 h-10" />, color: 'text-[#FF4D00]', bg: 'group-hover:bg-[#FF4D00]/10', glow: 'group-hover:shadow-[#FF4D00]/20' },
+    { id: 'partner_2', name: 'OFFROAD AZ', icon: <Truck className="w-10 h-10" />, color: 'text-white', bg: 'group-hover:bg-white/10', glow: 'group-hover:shadow-white/10' },
+    { id: 'partner_3', name: 'GLOBAL 4X4', icon: <Globe className="w-10 h-10" />, color: 'text-gray-400', bg: 'group-hover:bg-gray-400/10', glow: 'group-hover:shadow-gray-400/10' },
+    { id: 'partner_4', name: 'RACE TECH', icon: <Zap className="w-10 h-10" />, color: 'text-[#FF4D00]', bg: 'group-hover:bg-[#FF4D00]/10', glow: 'group-hover:shadow-[#FF4D00]/20' },
   ];
+
+  const partners = partnersPage?.sections && partnersPage.sections.length > 0
+    ? partnersPage.sections.filter(s => s.type === 'text' && !s.id.includes('TITLE')).map((s, i) => ({
+      id: s.id,
+      name: s.value,
+      icon: getIcon(s.label || ''),
+      color: i % 2 === 0 ? 'text-[#FF4D00]' : 'text-white',
+      bg: i % 2 === 0 ? 'group-hover:bg-[#FF4D00]/10' : 'group-hover:bg-white/10',
+      glow: i % 2 === 0 ? 'group-hover:shadow-[#FF4D00]/20' : 'group-hover:shadow-white/10',
+      tag: s.url || 'OFFICIAL PARTNER'
+    }))
+    : defaultPartners;
+
 
   return (
     <section className="py-32 bg-[#050505] relative overflow-hidden border-t border-white/5">
@@ -73,7 +68,7 @@ const Partners: React.FC = () => {
               </div>
 
               <p className="mt-6 text-[9px] font-black italic text-[#FF4D00] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                {getText(`${p.id}_label`, 'OFFICIAL PARTNER')}
+                {(p as any).tag || getText(`${p.id}_label`, 'OFFICIAL PARTNER')}
               </p>
             </div>
           ))}

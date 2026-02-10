@@ -4,21 +4,57 @@ import { useSiteContent } from '../hooks/useSiteContent';
 import { bbcodeToHtml } from '../utils/bbcode';
 
 const About: React.FC = () => {
-  const { getText, getImage } = useSiteContent('about');
+  const { getPage, getText, getImage } = useSiteContent('about');
   const { getText: getGeneralText } = useSiteContent('general');
+  const page = getPage('about');
 
-  const stats = [
+  const getValIcon = (label: string) => {
+    const l = label.toLowerCase();
+    if (l.includes('shield')) return <Shield className="text-[#FF4D00]" />;
+    if (l.includes('users')) return <Users className="text-[#FF4D00]" />;
+    if (l.includes('leaf')) return <Leaf className="text-[#FF4D00]" />;
+    if (l.includes('zap')) return <Zap className="text-[#FF4D00]" />;
+    return <Shield className="text-[#FF4D00]" />;
+  };
+
+  const dynamicStats: any[] = [];
+  const dynamicValues: any[] = [];
+
+  if (page?.sections) {
+    // Stats: label then value pairs (standard from extraction)
+    const statSections = page.sections.filter(s => s.id.includes('label-123') || s.id.includes('value-123'));
+    for (let i = 0; i < statSections.length; i += 2) {
+      if (statSections[i] && statSections[i + 1]) {
+        dynamicStats.push({ label: statSections[i].value, value: statSections[i + 1].value });
+      }
+    }
+
+    // Values: icon label, title, desc (3 pairs)
+    const valSections = page.sections.filter(s => s.id.includes('val-'));
+    for (let i = 0; i < valSections.length; i += 2) {
+      if (valSections[i] && valSections[i + 1]) {
+        dynamicValues.push({
+          icon: getValIcon(valSections[i].label || ''),
+          title: valSections[i].value,
+          desc: valSections[i + 1].value
+        });
+      }
+    }
+  }
+
+  const stats = dynamicStats.length > 0 ? dynamicStats : [
     { label: getText('txt-pi-lotlar-label-123', 'PİLOTLAR'), value: getGeneralText('STATS_PILOTS') || getText('txt-pi-lotlar-value-123', '140+') },
     { label: getText('txt-yari-lar-label-123', 'YARIŞLAR'), value: getGeneralText('STATS_RACES') || getText('txt-yari-lar-value-123', '50+') },
     { label: getText('txt-g-ncl-r-label-123', 'GƏNCLƏR'), value: getGeneralText('STATS_YOUTH') || getText('txt-g-ncl-r-value-123', '20+') },
   ];
 
-  const values = [
+  const values = dynamicValues.length > 0 ? dynamicValues : [
     { icon: <Shield className="text-[#FF4D00]" />, title: getText('txt-val-safety-title-123', 'TƏHLÜKƏSİZLİK'), desc: getText('txt-val-safety-desc-123', 'EKSTREMAL İDMANDA CAN SAĞLIĞI BİZİM BİR NÖMRƏLİ QAYDAMIZDIR. BÜTÜN TEXNİKALARIMIZ FIA STANDARTLARINA UYĞUN YOXLANILIR.') },
     { icon: <Users className="text-[#FF4D00]" />, title: getText('txt-val-community-title-123', 'İCMA RUHU'), desc: getText('txt-val-community-desc-123', 'FORSAJ BİR KLUBDAN DAHA ÇOX, SADİQ VƏ BÖYÜK BİR AİLƏDİR. BİRİMİZ HAMIMIZ, HAMIMIZ BİRİMİZ ÜÇÜN!') },
     { icon: <Leaf className="text-[#FF4D00]" />, title: getText('txt-val-nature-title-123', 'TƏBİƏTİ QORU'), desc: getText('txt-val-nature-desc-123', 'BİZ OFFROAD EDƏRKƏN TƏBİƏTƏ ZƏRƏR VERMƏMƏYİ ÖZÜMÜZƏ BORC BİLİRİK. EKOLOJİ BALANS BİZİM ÜÇÜN MÜQƏDDƏSDİR.') },
     { icon: <Zap className="text-[#FF4D00]" />, title: getText('txt-val-excellence-title-123', 'MÜKƏMMƏLLİK'), desc: getText('txt-val-excellence-desc-123', 'HƏR YARIŞDA, HƏR DÖNGƏDƏ DAHA YAXŞI OLMAĞA ÇALIŞIRIQ. TƏLİMLƏRİMİZ PEŞƏKAR İNSTRUKTORLAR TƏRƏFİNDƏN İDARƏ OLUNUR.') },
   ];
+
 
   return (
     <div id="haqqımızda" className="bg-[#0A0A0A] text-white">

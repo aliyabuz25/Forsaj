@@ -13,11 +13,26 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
 
   const logoImg = getImageGeneral('SITE_LOGO_LIGHT').path;
 
-  const socialLinks = [
-    { Icon: Instagram, url: getGeneralText('SOCIAL_INSTAGRAM') || '#' },
-    { Icon: Youtube, url: getGeneralText('SOCIAL_YOUTUBE') || '#' },
-    { Icon: Facebook, url: getGeneralText('SOCIAL_FACEBOOK') || '#' },
-  ];
+  const { getPage } = useSiteContent('socials');
+  const socialsPage = getPage('socials');
+
+  const socialIconMap = {
+    instagram: Instagram,
+    youtube: Youtube,
+    facebook: Facebook
+  };
+
+  const socialLinks = socialsPage?.sections?.length > 0
+    ? socialsPage.sections.map(s => ({
+      Icon: socialIconMap[s.label?.toLowerCase() as keyof typeof socialIconMap] || Instagram,
+      url: s.value
+    }))
+    : [
+      { Icon: Instagram, url: getGeneralText('SOCIAL_INSTAGRAM') || '#' },
+      { Icon: Youtube, url: getGeneralText('SOCIAL_YOUTUBE') || '#' },
+      { Icon: Facebook, url: getGeneralText('SOCIAL_FACEBOOK') || '#' },
+    ];
+
 
   const navigationLinks = [
     { name: getText('txt-ana-s-h-f-744', 'ANA SƏHİFƏ'), id: getUrl('txt-ana-s-h-f-744', 'home') as any },
