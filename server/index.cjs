@@ -598,14 +598,16 @@ const isTrueText = (str) => {
     if (trimmed.startsWith('.') || trimmed.includes(' .')) return false; // method chaining
     if (trimmed.includes('/') && trimmed.split('/').length > 2) return false; // likely regex or path
 
-    const codeKeywords = [
+    const technicalKeywords = [
         'return ', 'import ', 'export ', 'function', 'const ', 'let ', 'var ',
         'void', 'REZERV', 'replace', 'map', 'filter', 'join', 'split',
         'true', 'false', 'null', 'undefined', 'NaN', 'string', 'number', 'any',
-        'async', 'await', 'console.', 'process.'
+        'async', 'await', 'console.', 'process.', 'fetch', 'failed', 'error',
+        'API', 'HTTP', '404', '500', 'status', 'token', 'auth', 'database',
+        'MYSQL', 'query', 'payload', 'res.', 'req.', 'next(', 'catch', 'throw'
     ];
 
-    if (codeKeywords.some(kw => trimmed.toLowerCase().includes(kw.toLowerCase()))) return false;
+    if (technicalKeywords.some(kw => trimmed.toLowerCase().includes(kw.toLowerCase()))) return false;
 
     return true;
 };
@@ -671,7 +673,9 @@ app.all('/api/extract-content', async (req, res) => {
                     const clean = content
                         .replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm, '$1')
                         .replace(/import\s+.*?from\s+['"].*?['"];?/g, '')
-                        .replace(/style=\{\{[\s\S]*?\}\}/g, '');
+                        .replace(/style=\{\{[\s\S]*?\}\}/g, '')
+                        .replace(/console\.(log|error|warn|info)\s*\([\s\S]*?\);?/g, '')
+                        .replace(/throw\s+new\s+Error\s*\([\s\S]*?\);?/g, '');
 
                     let match;
 

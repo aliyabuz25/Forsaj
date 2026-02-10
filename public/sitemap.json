@@ -1,92 +1,154 @@
 [
   {
-    "title": "Sayt Redaktoru",
-    "icon": "Globe",
+    "title": "DASHBOARD",
+    "icon": "Layout",
     "path": "/"
   },
   {
-    "title": "Xəbər İdarəetmə",
-    "icon": "FileText",
-    "path": "/?mode=news"
-  },
-  {
-    "title": "Tədbir Təqvimi",
-    "icon": "Calendar",
-    "path": "/?mode=events"
-  },
-  {
-    "title": "Sürücü Reytinqi",
-    "icon": "Trophy",
-    "path": "/?mode=drivers"
-  },
-  {
-    "title": "Komponentlər",
-    "icon": "Layers",
+    "title": "ANA SƏHİFƏ",
+    "icon": "Home",
     "children": [
       {
-        "title": "About",
-        "path": "/?page=about",
+        "title": "Ümumi Görünüş",
+        "path": "/?page=home",
         "icon": "Layout"
       },
       {
-        "title": "Contact Page",
-        "path": "/?page=contactpage",
-        "icon": "Layout"
-      },
-      {
-        "title": "Events Page",
-        "path": "/?page=eventspage",
-        "icon": "Layout"
-      },
-      {
-        "title": "Footer",
-        "path": "/?page=footer",
-        "icon": "Layout"
-      },
-      {
-        "title": "Gallery Page",
-        "path": "/?page=gallerypage",
-        "icon": "Layout"
-      },
-      {
-        "title": "Navbar",
+        "title": "Naviqasiya",
         "path": "/?page=navbar",
-        "icon": "Layout"
+        "icon": "Menu"
       },
       {
-        "title": "News",
-        "path": "/?page=news",
-        "icon": "Layout"
+        "title": "Giriş Hissəsi",
+        "path": "/?page=hero",
+        "icon": "Maximize"
       },
       {
-        "title": "News Page",
+        "title": "Sürüşən Yazı",
+        "path": "/?page=marquee",
+        "icon": "Type"
+      },
+      {
+        "title": "Kateqoriya Liderləri",
+        "path": "/?page=categoryleaders",
+        "icon": "Star"
+      },
+      {
+        "title": "Sayt Sonu",
+        "path": "/?page=footer",
+        "icon": "Anchor"
+      }
+    ]
+  },
+  {
+    "title": "HAQQIMIZDA",
+    "icon": "Info",
+    "children": [
+      {
+        "title": "Ümumi Məlumat",
+        "path": "/?page=about",
+        "icon": "FileText"
+      }
+    ]
+  },
+  {
+    "title": "XƏBƏRLƏR",
+    "icon": "FileText",
+    "children": [
+      {
+        "title": "Xəbər Siyahısı",
+        "path": "/?mode=news",
+        "icon": "List"
+      },
+      {
+        "title": "Xəbər Səhifəsi",
         "path": "/?page=newspage",
-        "icon": "Layout"
-      },
-      {
-        "title": "Next Race",
-        "path": "/?page=nextrace",
-        "icon": "Layout"
-      },
-      {
-        "title": "Partners",
-        "path": "/?page=partners",
-        "icon": "Layout"
-      },
-      {
-        "title": "Video Archive",
-        "path": "/?page=videoarchive",
-        "icon": "Layout"
-      },
-      {
-        "title": "What Is Offroad",
-        "path": "/?page=whatisoffroad",
         "icon": "Layout"
       }
     ]
   },
   {
-    "title": "Frontend Ayarları",
+    "title": "TƏDBİRLƏR",
+    "icon": "Calendar",
+    "children": [
+      {
+        "title": "Tədbir Təqvimi",
+        "path": "/?mode=events",
+        "icon": "Clock"
+      },
+      {
+        "title": "Tədbir Səhifəsi",
+        "path": "/?page=eventspage",
+        "icon": "Layout"
+      }
+    ]
+  },
+  {
+    "title": "SÜRÜCÜLƏR",
+    "icon": "Trophy",
+    "children": [
+      {
+        "title": "Sürücü Reytinqi",
+        "path": "/?mode=drivers",
+        "icon": "Award"
+      },
+      {
+        "title": "Sürücülər Səhifəsi",
+        "path": "/?page=driverspage",
+        "icon": "Layout"
+      }
+    ]
+  },
+  {
+    "title": "QALEREYA",
+    "icon": "Image",
+    "children": [
+      {
+        "title": "Video Arxivi",
+        "path": "/?mode=videos",
+        "icon": "Video"
+      },
+      {
+        "title": "Foto Arxiv",
+        "path": "/?mode=photos",
+        "icon": "Image"
+      },
+      {
+        "title": "Qalereya Səhifəsi",
+        "path": "/?page=gallerypage",
+        "icon": "Layout"
+      }
+    ]
+  },
+  {
+    "title": "QAYDALAR",
+    "icon": "Shield",
+    "children": [
+      {
+        "title": "Qaydalar Səhifəsi",
+        "path": "/?page=rulespage",
+        "icon": "Layout"
+      }
+    ]
+  },
+  {
+    "title": "ƏLAQƏ",
+    "icon": "Phone",
+    "children": [
+      {
+        "title": "Əlaqə Səhifəsi",
+        "path": "/?page=contactpage",
+        "icon": "Layout"
+      }
+    ]
+  },
+  {
+    "title": "ADMİN HESABLARI",
+    "icon": "Users",
+    "path": "/users-management"
+  },
+  {
+    "title": "SİSTEM AYARLARI",
     "icon": "Settings",
     "path": "/frontend-settings"
   }
