@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import Marquee from './components/Marquee';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
@@ -24,6 +25,7 @@ const App: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <Toaster position="top-right" />
       <Marquee />
       <Navbar currentView={currentView} onViewChange={(view) => handleViewChange(view, null)} />
       <main className="flex-grow">
