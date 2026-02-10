@@ -37,7 +37,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => {
         {logoImg ? (
           <img src={logoImg} alt="Forsaj Logo" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
         ) : (
-          <>
+          <div className="flex items-center gap-3">
             <div className="bg-[#FF4D00] w-10 h-10 rounded-sm flex items-center justify-center relative shadow-[0_0_20px_rgba(255,77,0,0.4)] group-hover:scale-110 transition-transform">
               <svg viewBox="0 0 24 24" className="w-6 h-6 text-black fill-current transform -rotate-12">
                 <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
@@ -47,7 +47,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => {
               <span className="text-white">FORSAJ</span>
               <span className="text-[#FF4D00] ml-1">CLUB</span>
             </h1>
-          </>
+          </div>
         )}
       </div>
 

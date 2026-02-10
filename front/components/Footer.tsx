@@ -39,10 +39,17 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
             {logoImg ? (
               <img src={logoImg} alt="Forsaj Logo" className="h-10 w-auto object-contain" />
             ) : (
-              <h2 className="text-4xl font-black italic tracking-tighter flex items-center">
-                <span className="text-white">FORSAJ</span>
-                <span className="text-[#FF4D00] ml-1">CLUB</span>
-              </h2>
+              <div className="flex items-center gap-3">
+                <div className="bg-[#FF4D00] w-10 h-10 rounded-sm flex items-center justify-center relative shadow-[0_0_20px_rgba(255,77,0,0.4)] group-hover:scale-110 transition-transform">
+                  <svg viewBox="0 0 24 24" className="w-6 h-6 text-black fill-current transform -rotate-12">
+                    <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-black italic tracking-tighter flex items-center">
+                  <span className="text-white">FORSAJ</span>
+                  <span className="text-[#FF4D00] ml-1">CLUB</span>
+                </h2>
+              </div>
             )}
           </div>
           <p className="text-gray-500 font-bold italic text-[11px] uppercase leading-relaxed mb-10 max-w-xs tracking-tight">
