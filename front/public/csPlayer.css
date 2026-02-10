@@ -156,7 +156,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    pointer-events: none;
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 .csPlayer .csPlayer-container span i {
@@ -170,6 +171,12 @@
     border-radius: 100%;
     background: var(--startBtnBg);
     font-size: calc(var(--startBtnSize)/2.5);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.csPlayer .csPlayer-container span i:hover {
+    transform: scale(1.1);
 }
 
 .csPlayer-loading {
@@ -244,8 +251,15 @@
 
 .csPlayer .csPlayer-controls-box main i {
     font-size: 2rem;
-    padding: 8px;
+    padding: 15px;
     border-radius: 100%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.csPlayer .csPlayer-controls-box main i:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #FF4D00 !important;
 }
 
 .csPlayer .csPlayer-controls-box main i:active {
@@ -296,8 +310,15 @@
 .csPlayer .csPlayer-controls-box .csPlayer-controls i {
     font-size: 1.4rem;
     margin: 0 0 0 6px;
-    padding: 4px;
+    padding: 8px;
     border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.csPlayer .csPlayer-controls-box .csPlayer-controls i:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #FF4D00 !important;
 }
 
 .csPlayer .csPlayer-controls-box .csPlayer-controls i:active {
