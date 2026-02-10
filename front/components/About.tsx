@@ -1,19 +1,21 @@
-
 import React from 'react';
 import { Shield, Users, Leaf, Zap, Target, Globe } from 'lucide-react';
+import { useSiteContent } from '../hooks/useSiteContent';
 
 const About: React.FC = () => {
+  const { getText, getImage } = useSiteContent('about');
+
   const stats = [
-    { label: 'PİLOTLAR', value: '140+' },
-    { label: 'YARIŞLAR', value: '50+' },
-    { label: 'GƏNCLƏR', value: '20+' },
+    { label: getText('txt-pi-lotlar-label-123', 'PİLOTLAR'), value: getText('txt-pi-lotlar-value-123', '140+') },
+    { label: getText('txt-yari-lar-label-123', 'YARIŞLAR'), value: getText('txt-yari-lar-value-123', '50+') },
+    { label: getText('txt-g-ncl-r-label-123', 'GƏNCLƏR'), value: getText('txt-g-ncl-r-value-123', '20+') },
   ];
 
   const values = [
-    { icon: <Shield className="text-[#FF4D00]" />, title: 'TƏHLÜKƏSİZLİK', desc: 'EKSTREMAL İDMANDA CAN SAĞLIĞI BİZİM BİR NÖMRƏLİ QAYDAMIZDIR. BÜTÜN TEXNİKALARIMIZ FIA STANDARTLARINA UYĞUN YOXLANILIR.' },
-    { icon: <Users className="text-[#FF4D00]" />, title: 'İCMA RUHU', desc: 'FORSAJ BİR KLUBDAN DAHA ÇOX, SADİQ VƏ BÖYÜK BİR AİLƏDİR. BİRİMİZ HAMIMIZ, HAMIMIZ BİRİMİZ ÜÇÜN!' },
-    { icon: <Leaf className="text-[#FF4D00]" />, title: 'TƏBİƏTİ QORU', desc: 'BİZ OFFROAD EDƏRKƏN TƏBİƏTƏ ZƏRƏR VERMƏMƏYİ ÖZÜMÜZƏ BORC BİLİRİK. EKOLOJİ BALANS BİZİM ÜÇÜN MÜQƏDDƏSDİR.' },
-    { icon: <Zap className="text-[#FF4D00]" />, title: 'MÜKƏMMƏLLİK', desc: 'HƏR YARIŞDA, HƏR DÖNGƏDƏ DAHA YAXŞI OLMAĞA ÇALIŞIRIQ. TƏLİMLƏRİMİZ PEŞƏKAR İNSTRUKTORLAR TƏRƏFİNDƏN İDARƏ OLUNUR.' },
+    { icon: <Shield className="text-[#FF4D00]" />, title: getText('txt-val-safety-title-123', 'TƏHLÜKƏSİZLİK'), desc: getText('txt-val-safety-desc-123', 'EKSTREMAL İDMANDA CAN SAĞLIĞI BİZİM BİR NÖMRƏLİ QAYDAMIZDIR. BÜTÜN TEXNİKALARIMIZ FIA STANDARTLARINA UYĞUN YOXLANILIR.') },
+    { icon: <Users className="text-[#FF4D00]" />, title: getText('txt-val-community-title-123', 'İCMA RUHU'), desc: getText('txt-val-community-desc-123', 'FORSAJ BİR KLUBDAN DAHA ÇOX, SADİQ VƏ BÖYÜK BİR AİLƏDİR. BİRİMİZ HAMIMIZ, HAMIMIZ BİRİMİZ ÜÇÜN!') },
+    { icon: <Leaf className="text-[#FF4D00]" />, title: getText('txt-val-nature-title-123', 'TƏBİƏTİ QORU'), desc: getText('txt-val-nature-desc-123', 'BİZ OFFROAD EDƏRKƏN TƏBİƏTƏ ZƏRƏR VERMƏMƏYİ ÖZÜMÜZƏ BORC BİLİRİK. EKOLOJİ BALANS BİZİM ÜÇÜN MÜQƏDDƏSDİR.') },
+    { icon: <Zap className="text-[#FF4D00]" />, title: getText('txt-val-excellence-title-123', 'MÜKƏMMƏLLİK'), desc: getText('txt-val-excellence-desc-123', 'HƏR YARIŞDA, HƏR DÖNGƏDƏ DAHA YAXŞI OLMAĞA ÇALIŞIRIQ. TƏLİMLƏRİMİZ PEŞƏKAR İNSTRUKTORLAR TƏRƏFİNDƏN İDARƏ OLUNUR.') },
   ];
 
   return (
@@ -25,10 +27,10 @@ const About: React.FC = () => {
             <div className="w-2 h-16 bg-[#FF4D00] shadow-[0_0_15px_rgba(255,77,0,0.4)]"></div>
             <div>
               <h2 className="text-6xl md:text-8xl font-black italic tracking-tighter uppercase leading-none text-white">
-                HAQQIMIZDA
+                {getText('txt-haqqimizda-904', 'HAQQIMIZDA')}
               </h2>
               <p className="text-[#FF4D00] font-black italic text-[11px] md:text-sm mt-2 uppercase tracking-[0.4em]">
-                BİZİM HEKAYƏMİZ // MİSSİYAMIZ VƏ GƏLƏCƏYİMİZ
+                {getText('txt-bi-zi-m-hekay-mi-z-m-888', 'BİZİM HEKAYƏMİZ // MİSSİYAMIZ VƏ GƏLƏCƏYİMİZ')}
               </p>
             </div>
           </div>
@@ -38,13 +40,13 @@ const About: React.FC = () => {
           <div className="lg:w-7/12 relative z-10">
             <div className="mt-4">
               <h4 className="text-[#FF4D00] font-black italic text-2xl mb-4 tracking-tight">
-                EST. 2018 // MOTORSPORT MƏRKƏZİ
+                {getText('txt-est-2018-motorsp-949', 'EST. 2018 // MOTORSPORT MƏRKƏZİ')}
               </h4>
               <h2 className="text-3xl md:text-5xl font-black italic leading-tight mb-8 uppercase max-w-2xl text-white tracking-tighter">
-                "FORSAJ CLUB" AZƏRBAYCANIN OFFROAD MƏDƏNİYYƏTİNİ PEŞƏKAR SƏVİYYƏYƏ ÇATDIRMAQ ÜÇÜN YARADILMIŞDIR.
+                {getText('txt-forsaj-club-az-rba-66', '"FORSAJ CLUB" AZƏRBAYCANIN OFFROAD MƏDƏNİYYƏTİNİ PEŞƏKAR SƏVİYYƏYƏ ÇATDIRMAQ ÜÇÜN YARADILMIŞDIR.')}
               </h2>
               <p className="text-gray-400 font-bold italic text-sm md:text-base leading-relaxed mb-12 max-w-xl uppercase tracking-wide">
-                Klubumuz sadəcə bir həvəskar qrupu deyil, ölkəmizi beynəlxalq ralli xəritəsinə daxil etməyi hədəfləyən rəsmi və peşəkar bir platformadır. 2018-ci ildən bəri biz 50-dən çox rəsmi yarış, 100-dən çox ekspedisiya və saysız-hesabsız adrenalin dolu anlar yaşamışıq.
+                {getText('txt-klubumuz-sad-c-bir-552', 'Klubumuz sadəcə bir həvəskar qrupu deyil, ölkəmizi beynəlxalq ralli xəritəsinə daxil etməyi hədəfləyən rəsmi və peşəkar bir platformadır. 2018-ci ildən bəri biz 50-dən çox rəsmi yarış, 100-dən çox ekspedisiya və saysız-hesabsız adrenalin dolu anlar yaşamışıq.')}
               </p>
 
               <div className="flex flex-wrap gap-4">
@@ -61,8 +63,8 @@ const About: React.FC = () => {
           <div className="lg:w-5/12 relative hidden lg:block">
             <div className="absolute right-[-10%] top-0 w-[120%] h-full bg-[#111] transform -skew-x-12 overflow-hidden shadow-2xl border-l-8 border-[#FF4D00]/20">
               <img
-                src="https://images.unsplash.com/photo-1541447271487-09612b3f49f7?q=80&w=1974&auto=format&fit=crop"
-                alt="Forsaj Club Detail"
+                src={getImage('img-992', 'https://images.unsplash.com/photo-1541447271487-09612b3f49f7?q=80&w=1974&auto=format&fit=crop').path}
+                alt={getImage('img-992', '').alt || getText('attr-forsaj-club-detail-405', 'Forsaj Club Detail')}
                 className="w-full h-full object-cover opacity-40 grayscale"
               />
             </div>
@@ -76,17 +78,17 @@ const About: React.FC = () => {
           <div className="relative">
             <div className="w-10 h-1 bg-[#FF4D00] mb-8"></div>
             <h3 className="text-5xl font-black italic mb-8 uppercase tracking-tighter">
-              BİZİM MİSSİYAMIZ
+              {getText('txt-bi-zi-m-mi-ssi-yamiz-424', 'BİZİM MİSSİYAMIZ')}
             </h3>
             <p className="text-gray-400 font-bold italic text-sm leading-relaxed mb-12 max-w-lg uppercase tracking-wide">
-              Azərbaycanın hər bir guşəsində offroad idmanını təbliğ etmək, yerli pilotları beynəlxalq standartlara uyğun yetişdirmək və təbiəti qoruyaraq ekstremal adrenalin təcrübəsi bəxş etmək.
+              {getText('txt-az-rbaycan-n-h-r-bir-45', 'Azərbaycanın hər bir guşəsində offroad idmanını təbliğ etmək, yerli pilotları beynəlxalq standartlara uyğun yetişdirmək və təbiəti qoruyaraq ekstremal adrenalin təcrübəsi bəxş etmək.')}
             </p>
             <div className="bg-[#FF4D00] p-5 inline-flex items-center gap-4 transform -skew-x-12 text-black shadow-[0_0_30px_rgba(255,77,0,0.2)]">
               <div className="bg-black p-2 text-[#FF4D00] transform skew-x-12 rounded-full">
                 <Target size={20} />
               </div>
               <span className="font-black italic text-xs transform skew-x-12 uppercase">
-                HƏDƏFİMİZ: DAKAR RALLİ 2026
+                {getText('txt-h-d-fi-mi-z-dakar-ral-50', 'HƏDƏFİMİZ: DAKAR RALLİ 2026')}
               </span>
             </div>
           </div>
@@ -94,17 +96,17 @@ const About: React.FC = () => {
           <div className="relative">
             <div className="w-10 h-1 bg-white/20 mb-8"></div>
             <h3 className="text-5xl font-black italic mb-8 uppercase tracking-tighter">
-              BİZİM BAXIŞIMIZ
+              {getText('txt-bi-zi-m-baxi-imiz-944', 'BİZİM BAXIŞIMIZ')}
             </h3>
             <p className="text-gray-400 font-bold italic text-sm leading-relaxed mb-12 max-w-lg uppercase tracking-wide">
-              Regionun ən böyük motorsport hubuna çevrilmək, rəqəmsal və fiziki infrastrukturlarla pilotlarımızı dəstəkləmək və motorsportu hər kəs üçün əlçatan bir ehtirasa çevirmək.
+              {getText('txt-regionun-n-b-y-k-mo-901', 'Regionun ən böyük motorsport hubuna çevrilmək, rəqəmsal və fiziki infrastrukturlarla pilotlarımızı dəstəkləmək və motorsportu hər kəs üçün əlçatan bir ehtirasa çevirmək.')}
             </p>
             <div className="bg-white/5 border border-white/10 p-5 inline-flex items-center gap-4 transform -skew-x-12">
               <div className="bg-white/10 p-2 text-white transform skew-x-12 rounded-full border border-white/10">
                 <Globe size={20} />
               </div>
               <span className="font-black italic text-xs text-white transform skew-x-12 uppercase">
-                QAFQAZIN LİDER KLUBUNA ÇEVRİLMƏK
+                {getText('txt-qafqazin-li-der-klubu-758', 'QAFQAZIN LİDER KLUBUNA ÇEVRİLMƏK')}
               </span>
             </div>
           </div>
@@ -115,10 +117,10 @@ const About: React.FC = () => {
       <section className="py-24 px-6 lg:px-20 bg-[#0A0A0A]">
         <div className="text-center mb-20">
           <h4 className="text-[#FF4D00] font-black italic text-[10px] tracking-[0.4em] mb-4 uppercase">
-            FUNDAMENTAL PRİNSİPLƏR
+            {getText('txt-fundamental-pri-nsi-pl-219', 'FUNDAMENTAL PRİNSİPLƏR')}
           </h4>
           <h2 className="text-6xl font-black italic tracking-tighter uppercase leading-none text-white">
-            ƏSAS DƏYƏRLƏRİMİZ
+            {getText('txt-sas-d-y-rl-ri-mi-z-482', 'ƏSAS DƏYƏRLƏRİMİZ')}
           </h2>
         </div>
 

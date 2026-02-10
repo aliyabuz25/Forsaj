@@ -82,6 +82,90 @@
         "value": "ƏSAS DƏYƏRLƏRİMİZ"
       },
       {
+        "id": "txt-pi-lotlar-label-123",
+        "type": "text",
+        "label": "STAT: Pilotlar Etiketi",
+        "value": "PİLOTLAR"
+      },
+      {
+        "id": "txt-pi-lotlar-value-123",
+        "type": "text",
+        "label": "STAT: Pilotlar Sayı",
+        "value": "140+"
+      },
+      {
+        "id": "txt-yari-lar-label-123",
+        "type": "text",
+        "label": "STAT: Yarışlar Etiketi",
+        "value": "YARIŞLAR"
+      },
+      {
+        "id": "txt-yari-lar-value-123",
+        "type": "text",
+        "label": "STAT: Yarışlar Sayı",
+        "value": "50+"
+      },
+      {
+        "id": "txt-g-ncl-r-label-123",
+        "type": "text",
+        "label": "STAT: Gənclər Etiketi",
+        "value": "GƏNCLƏR"
+      },
+      {
+        "id": "txt-g-ncl-r-value-123",
+        "type": "text",
+        "label": "STAT: Gənclər Sayı",
+        "value": "20+"
+      },
+      {
+        "id": "txt-val-safety-title-123",
+        "type": "text",
+        "label": "VALUE: Təhlükəsizlik Başlıq",
+        "value": "TƏHLÜKƏSİZLİK"
+      },
+      {
+        "id": "txt-val-safety-desc-123",
+        "type": "text",
+        "label": "VALUE: Təhlükəsizlik Mətn",
+        "value": "EKSTREMAL İDMANDA CAN SAĞLIĞI BİZİM BİR NÖMRƏLİ QAYDAMIZDIR. BÜTÜN TEXNİKALARIMIZ FIA STANDARTLARINA UYĞUN YOXLANILIR."
+      },
+      {
+        "id": "txt-val-community-title-123",
+        "type": "text",
+        "label": "VALUE: İcma Ruhu Başlıq",
+        "value": "İCMA RUHU"
+      },
+      {
+        "id": "txt-val-community-desc-123",
+        "type": "text",
+        "label": "VALUE: İcma Ruhu Mətn",
+        "value": "FORSAJ BİR KLUBDAN DAHA ÇOX, SADİQ VƏ BÖYÜK BİR AİLƏDİR. BİRİMİZ HAMIMIZ, HAMIMIZ BİRİMİZ ÜÇÜN!"
+      },
+      {
+        "id": "txt-val-nature-title-123",
+        "type": "text",
+        "label": "VALUE: Təbiəti Qoru Başlıq",
+        "value": "TƏBİƏTİ QORU"
+      },
+      {
+        "id": "txt-val-nature-desc-123",
+        "type": "text",
+        "label": "VALUE: Təbiəti Qoru Mətn",
+        "value": "BİZ OFFROAD EDƏRKƏN TƏBİƏTƏ ZƏRƏR VERMƏMƏYİ ÖZÜMÜZƏ BORC BİLİRİK. EKOLOJİ BALANS BİZİM ÜÇÜN MÜQƏDDƏSDİR."
+      },
+      {
+        "id": "txt-val-excellence-title-123",
+        "type": "text",
+        "label": "VALUE: Mükəmməllik Başlıq",
+        "value": "MÜKƏMMƏLLİK"
+      },
+      {
+        "id": "txt-val-excellence-desc-123",
+        "type": "text",
+        "label": "VALUE: Mükəmməllik Mətn",
+        "value": "HƏR YARIŞDA, HƏR DÖNGƏDƏ DAHA YAXŞI OLMAĞA ÇALIŞIRIQ. TƏLİMLƏRİMİZ PEŞƏKAR İNSTRUKTORLAR TƏRƏFİNDƏN İDARƏ OLUNUR."
+      },
+      {
         "id": "attr-forsaj-club-detail-405",
         "type": "text",
         "label": "ALT: Forsaj Club Detail...",
