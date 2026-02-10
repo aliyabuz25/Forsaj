@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface CsPlayerProps {
     videoId: string;
@@ -10,31 +10,48 @@ interface CsPlayerProps {
 declare global {
     interface Window {
         csPlayer: any;
+        YT: any;
+        onYouTubeIframeAPIReady: (() => void) | undefined;
     }
 }
 
 const CsPlayer: React.FC<CsPlayerProps> = ({
     videoId,
-    id = 'cs-player-' + Math.random().toString(36).substr(2, 9),
+    id: providedId,
     theme = 'default',
     loop = false
 }) => {
+    // Use a stable ID for the lifetime of this component instance if not provided
+    const [playerId] = useState(() => providedId || 'csp_' + Math.random().toString(36).substr(2, 9));
     const containerRef = useRef<HTMLDivElement>(null);
     const initializedRef = useRef(false);
 
     useEffect(() => {
-        if (!window.csPlayer) {
-            console.error('csPlayer not found in window');
-            return;
-        }
+        let isMounted = true;
 
         const initPlayer = async () => {
+            if (!isMounted) return;
+
+            if (!window.csPlayer) {
+                console.error('csPlayer library not found');
+                return;
+            }
+
+            // Wait for YouTube API to be ready
+            if (!window.YT || !window.YT.Player) {
+                console.log('Waiting for YouTube IFrame API...');
+                setTimeout(initPlayer, 200);
+                return;
+            }
+
             try {
-                if (initializedRef.current) {
-                    window.csPlayer.destroy(id);
+                // Destroy existing instance with the same ID if any
+                if (initializedRef.current || window.csPlayer.initialized?.(playerId)) {
+                    window.csPlayer.destroy(playerId);
                 }
 
-                await window.csPlayer.init(id, {
+                console.log('Initializing csPlayer for:', videoId);
+                await window.csPlayer.init(playerId, {
                     defaultId: videoId,
                     thumbnail: true,
                     theme: theme,
@@ -47,25 +64,26 @@ const CsPlayer: React.FC<CsPlayerProps> = ({
             }
         };
 
-        // Give a small timeout to ensure DOM is ready and csPlayer is loaded
-        const timeoutId = setTimeout(initPlayer, 100);
+        // Ensure the container is in the DOM before initializing
+        const timeoutId = setTimeout(initPlayer, 200);
 
         return () => {
+            isMounted = false;
             clearTimeout(timeoutId);
             if (initializedRef.current && window.csPlayer) {
                 try {
-                    window.csPlayer.destroy(id);
+                    window.csPlayer.destroy(playerId);
                 } catch (err) {
-                    // Ignore destruction errors on unmount
+                    // Ignore destruction errors
                 }
             }
         };
-    }, [videoId, id, theme, loop]);
+    }, [videoId, playerId, theme, loop]);
 
     return (
         <div
             ref={containerRef}
-            id={id}
+            id={playerId}
             className="w-full h-full min-h-[300px] bg-black"
         />
     );
