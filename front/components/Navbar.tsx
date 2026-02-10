@@ -8,12 +8,12 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => {
-  const { getText, getUrl } = useSiteContent('navbar');
-  const { getUrl: getImg } = useSiteContent('general');
+  const { getText, getUrl, getImage } = useSiteContent('navbar');
+  const { getImage: getImageGeneral } = useSiteContent('general');
   const [currentLang, setCurrentLang] = useState('AZ');
   const [isLangOpen, setIsLangOpen] = useState(false);
 
-  const logoImg = getImg('SITE_LOGO_LIGHT');
+  const logoImg = getImageGeneral('SITE_LOGO_LIGHT').path;
 
   const navItems = [
     { name: getText('txt-ana-s-h-f-366', 'ANA SƏHİFƏ'), id: getUrl('txt-ana-s-h-f-366', 'home') as any },

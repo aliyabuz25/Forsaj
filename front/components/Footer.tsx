@@ -8,10 +8,10 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
-  const { getText, getUrl } = useSiteContent('footer');
-  const { getUrl: getImg } = useSiteContent('general');
+  const { getText, getUrl, getImage } = useSiteContent('footer');
+  const { getImage: getImageGeneral } = useSiteContent('general');
 
-  const logoImg = getImg('SITE_LOGO_LIGHT');
+  const logoImg = getImageGeneral('SITE_LOGO_LIGHT').path;
 
   const navigationLinks = [
     { name: getText('txt-ana-s-h-f-744', 'ANA SƏHİFƏ'), id: getUrl('txt-ana-s-h-f-744', 'home') as any },

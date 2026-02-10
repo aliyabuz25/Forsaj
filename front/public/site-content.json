@@ -7,67 +7,67 @@
         "id": "txt-pi-lotlar-label-123",
         "type": "text",
         "label": "KEY: txt-pi-lotlar-label-123",
-        "value": "PİLOTLAR"
+        "value": "P\u0130LOTLAR"
       },
       {
         "id": "txt-yari-lar-label-123",
         "type": "text",
         "label": "KEY: txt-yari-lar-label-123",
-        "value": "YARIŞLAR"
+        "value": "YARI\u015eLAR"
       },
       {
         "id": "txt-g-ncl-r-label-123",
         "type": "text",
         "label": "KEY: txt-g-ncl-r-label-123",
-        "value": "GƏNCLƏR"
+        "value": "G\u018fNCL\u018fR"
       },
       {
         "id": "txt-val-safety-title-123",
         "type": "text",
         "label": "KEY: txt-val-safety-title-123",
-        "value": "TƏHLÜKƏSİZLİK"
+        "value": "T\u018fHL\u00dcK\u018fS\u0130ZL\u0130K"
       },
       {
         "id": "txt-val-safety-desc-123",
         "type": "text",
         "label": "KEY: txt-val-safety-desc-123",
-        "value": "EKSTREMAL İDMANDA CAN SAĞLIĞI BİZİM BİR NÖMRƏLİ QAYDAMIZDIR. BÜTÜN TEXNİKALARIMIZ FIA STANDARTLARINA UYĞUN YOXLANILIR."
+        "value": "EKSTREMAL \u0130DMANDA CAN SA\u011eLI\u011eI B\u0130Z\u0130M B\u0130R N\u00d6MR\u018fL\u0130 QAYDAMIZDIR. B\u00dcT\u00dcN TEXN\u0130KALARIMIZ FIA STANDARTLARINA UY\u011eUN YOXLANILIR."
       },
       {
         "id": "txt-val-community-title-123",
         "type": "text",
         "label": "KEY: txt-val-community-title-123",
-        "value": "İCMA RUHU"
+        "value": "\u0130CMA RUHU"
       },
       {
         "id": "txt-val-community-desc-123",
         "type": "text",
         "label": "KEY: txt-val-community-desc-123",
-        "value": "FORSAJ BİR KLUBDAN DAHA ÇOX, SADİQ VƏ BÖYÜK BİR AİLƏDİR. BİRİMİZ HAMIMIZ, HAMIMIZ BİRİMİZ ÜÇÜN!"
+        "value": "FORSAJ B\u0130R KLUBDAN DAHA \u00c7OX, SAD\u0130Q V\u018f B\u00d6Y\u00dcK B\u0130R A\u0130L\u018fD\u0130R. B\u0130R\u0130M\u0130Z HAMIMIZ, HAMIMIZ B\u0130R\u0130M\u0130Z \u00dc\u00c7\u00dcN!"
       },
       {
         "id": "txt-val-nature-title-123",
         "type": "text",
         "label": "KEY: txt-val-nature-title-123",
-        "value": "TƏBİƏTİ QORU"
+        "value": "T\u018fB\u0130\u018fT\u0130 QORU"
       },
       {
         "id": "txt-val-nature-desc-123",
         "type": "text",
         "label": "KEY: txt-val-nature-desc-123",
-        "value": "BİZ OFFROAD EDƏRKƏN TƏBİƏTƏ ZƏRƏR VERMƏMƏYİ ÖZÜMÜZƏ BORC BİLİRİK. EKOLOJİ BALANS BİZİM ÜÇÜN MÜQƏDDƏSDİR."
+        "value": "B\u0130Z OFFROAD ED\u018fRK\u018fN T\u018fB\u0130\u018fT\u018f Z\u018fR\u018fR VERM\u018fM\u018fY\u0130 \u00d6Z\u00dcM\u00dcZ\u018f BORC B\u0130L\u0130R\u0130K. EKOLOJ\u0130 BALANS B\u0130Z\u0130M \u00dc\u00c7\u00dcN M\u00dcQ\u018fDD\u018fSD\u0130R."
       },
       {
         "id": "txt-val-excellence-title-123",
         "type": "text",
         "label": "KEY: txt-val-excellence-title-123",
-        "value": "MÜKƏMMƏLLİK"
+        "value": "M\u00dcK\u018fMM\u018fLL\u0130K"
       },
       {
         "id": "txt-val-excellence-desc-123",
         "type": "text",
         "label": "KEY: txt-val-excellence-desc-123",
-        "value": "HƏR YARIŞDA, HƏR DÖNGƏDƏ DAHA YAXŞI OLMAĞA ÇALIŞIRIQ. TƏLİMLƏRİMİZ PEŞƏKAR İNSTRUKTORLAR TƏRƏFİNDƏN İDARƏ OLUNUR."
+        "value": "H\u018fR YARI\u015eDA, H\u018fR D\u00d6NG\u018fD\u018f DAHA YAX\u015eI OLMA\u011eA \u00c7ALI\u015eIRIQ. T\u018fL\u0130ML\u018fR\u0130M\u0130Z PE\u015e\u018fKAR \u0130NSTRUKTORLAR T\u018fR\u018fF\u0130ND\u018fN \u0130DAR\u018f OLUNUR."
       },
       {
         "id": "txt-haqqimizda-904",
@@ -85,7 +85,7 @@
         "id": "txt-klubumuz-sad-c-bir-552",
         "type": "text",
         "label": "KEY: txt-klubumuz-sad-c-bir-552",
-        "value": "Klubumuz sadəcə bir həvəskar qrupu deyil, ölkəmizi beynəlxalq ralli xəritəsinə daxil etməyi hədəfləyən rəsmi və peşəkar bir platformadır. 2018-ci ildən bəri biz 50-dən çox rəsmi yarış, 100-dən çox ekspedisiya və saysız-hesabsız adrenalin dolu anlar yaşamışıq."
+        "value": "Klubumuz sad\u0259c\u0259 bir h\u0259v\u0259skar qrupu deyil, \u00f6lk\u0259mizi beyn\u0259lxalq ralli x\u0259rit\u0259sin\u0259 daxil etm\u0259yi h\u0259d\u0259fl\u0259y\u0259n r\u0259smi v\u0259 pe\u015f\u0259kar bir platformad\u0131r. 2018-ci ild\u0259n b\u0259ri biz 50-d\u0259n \u00e7ox r\u0259smi yar\u0131\u015f, 100-d\u0259n \u00e7ox ekspedisiya v\u0259 says\u0131z-hesabs\u0131z adrenalin dolu anlar ya\u015fam\u0131\u015f\u0131q."
       },
       {
         "id": "attr-forsaj-club-detail-405",
@@ -97,62 +97,62 @@
         "id": "txt-bi-zi-m-mi-ssi-yamiz-424",
         "type": "text",
         "label": "KEY: txt-bi-zi-m-mi-ssi-yamiz-424",
-        "value": "BİZİM MİSSİYAMIZ"
+        "value": "B\u0130Z\u0130M M\u0130SS\u0130YAMIZ"
       },
       {
         "id": "txt-az-rbaycan-n-h-r-bir-45",
         "type": "text",
         "label": "KEY: txt-az-rbaycan-n-h-r-bir-45",
-        "value": "Azərbaycanın hər bir guşəsində offroad idmanını təbliğ etmək, yerli pilotları beynəlxalq standartlara uyğun yetişdirmək və təbiəti qoruyaraq ekstremal adrenalin təcrübəsi bəxş etmək."
+        "value": "Az\u0259rbaycan\u0131n h\u0259r bir gu\u015f\u0259sind\u0259 offroad idman\u0131n\u0131 t\u0259bli\u011f etm\u0259k, yerli pilotlar\u0131 beyn\u0259lxalq standartlara uy\u011fun yeti\u015fdirm\u0259k v\u0259 t\u0259bi\u0259ti qoruyaraq ekstremal adrenalin t\u0259cr\u00fcb\u0259si b\u0259x\u015f etm\u0259k."
       },
       {
         "id": "txt-h-d-fi-mi-z-dakar-ral-50",
         "type": "text",
         "label": "KEY: txt-h-d-fi-mi-z-dakar-ral-50",
-        "value": "HƏDƏFİMİZ: DAKAR RALLİ 2026"
+        "value": "H\u018fD\u018fF\u0130M\u0130Z: DAKAR RALL\u0130 2026"
       },
       {
         "id": "txt-bi-zi-m-baxi-imiz-944",
         "type": "text",
         "label": "KEY: txt-bi-zi-m-baxi-imiz-944",
-        "value": "BİZİM BAXIŞIMIZ"
+        "value": "B\u0130Z\u0130M BAXI\u015eIMIZ"
       },
       {
         "id": "txt-regionun-n-b-y-k-mo-901",
         "type": "text",
         "label": "KEY: txt-regionun-n-b-y-k-mo-901",
-        "value": "Regionun ən böyük motorsport hubuna çevrilmək, rəqəmsal və fiziki infrastrukturlarla pilotlarımızı dəstəkləmək və motorsportu hər kəs üçün əlçatan bir ehtirasa çevirmək."
+        "value": "Regionun \u0259n b\u00f6y\u00fck motorsport hubuna \u00e7evrilm\u0259k, r\u0259q\u0259msal v\u0259 fiziki infrastrukturlarla pilotlar\u0131m\u0131z\u0131 d\u0259st\u0259kl\u0259m\u0259k v\u0259 motorsportu h\u0259r k\u0259s \u00fc\u00e7\u00fcn \u0259l\u00e7atan bir ehtirasa \u00e7evirm\u0259k."
       },
       {
         "id": "txt-qafqazin-li-der-klubu-758",
         "type": "text",
         "label": "KEY: txt-qafqazin-li-der-klubu-758",
-        "value": "QAFQAZIN LİDER KLUBUNA ÇEVRİLMƏK"
+        "value": "QAFQAZIN L\u0130DER KLUBUNA \u00c7EVR\u0130LM\u018fK"
       },
       {
         "id": "txt-fundamental-pri-nsi-pl-219",
         "type": "text",
         "label": "KEY: txt-fundamental-pri-nsi-pl-219",
-        "value": "FUNDAMENTAL PRİNSİPLƏR"
+        "value": "FUNDAMENTAL PR\u0130NS\u0130PL\u018fR"
       },
       {
         "id": "txt-sas-d-y-rl-ri-mi-z-482",
         "type": "text",
         "label": "KEY: txt-sas-d-y-rl-ri-mi-z-482",
-        "value": "ƏSAS DƏYƏRLƏRİMİZ"
+        "value": "\u018fSAS D\u018fY\u018fRL\u018fR\u0130M\u0130Z"
       }
     ],
     "images": []
   },
   {
     "id": "news",
-    "title": "XƏBƏRLƏR",
+    "title": "X\u018fB\u018fRL\u018fR",
     "sections": [
       {
         "id": "SECTION_TITLE",
         "type": "text",
         "label": "KEY: SECTION_TITLE",
-        "value": "SON XƏBƏRLƏR"
+        "value": "SON X\u018fB\u018fRL\u018fR"
       },
       {
         "id": "lbl-section-title-181",
@@ -164,7 +164,7 @@
         "id": "SECTION_SUBTITLE",
         "type": "text",
         "label": "KEY: SECTION_SUBTITLE",
-        "value": "Motorsport və Offroad dünyasından yeniliklər"
+        "value": "Motorsport v\u0259 Offroad d\u00fcnyas\u0131ndan yenilikl\u0259r"
       },
       {
         "id": "lbl-section-subtitl-511",
@@ -188,7 +188,7 @@
         "id": "FEATURED_LABEL",
         "type": "text",
         "label": "KEY: FEATURED_LABEL",
-        "value": "SON XƏBƏR"
+        "value": "SON X\u018fB\u018fR"
       },
       {
         "id": "lbl-featured-label-700",
@@ -201,13 +201,13 @@
   },
   {
     "id": "newspage",
-    "title": "Xəbər Səhifəsi",
+    "title": "X\u0259b\u0259r S\u0259hif\u0259si",
     "sections": [
       {
         "id": "BTN_BACK",
         "type": "text",
         "label": "KEY: BTN_BACK",
-        "value": "GERİ QAYIT"
+        "value": "GER\u0130 QAYIT"
       },
       {
         "id": "lbl-btn-back-960",
@@ -219,7 +219,7 @@
         "id": "SHARE_LABEL",
         "type": "text",
         "label": "KEY: SHARE_LABEL",
-        "value": "BU XƏBƏRİ PAYLAŞIN"
+        "value": "BU X\u018fB\u018fR\u0130 PAYLA\u015eIN"
       },
       {
         "id": "lbl-share-label-207",
@@ -231,7 +231,7 @@
         "id": "OTHER_NEWS",
         "type": "text",
         "label": "KEY: OTHER_NEWS",
-        "value": "DİGƏR XƏBƏRLƏR"
+        "value": "D\u0130G\u018fR X\u018fB\u018fRL\u018fR"
       },
       {
         "id": "lbl-other-news-254",
@@ -243,7 +243,7 @@
         "id": "BTN_ALL_NEWS",
         "type": "text",
         "label": "KEY: BTN_ALL_NEWS",
-        "value": "BÜTÜN XƏBƏRLƏR"
+        "value": "B\u00dcT\u00dcN X\u018fB\u018fRL\u018fR"
       },
       {
         "id": "lbl-btn-all-news-510",
@@ -255,7 +255,7 @@
         "id": "PAGE_TITLE",
         "type": "text",
         "label": "KEY: PAGE_TITLE",
-        "value": "XƏBƏRLƏR"
+        "value": "X\u018fB\u018fRL\u018fR"
       },
       {
         "id": "lbl-page-title-104",
@@ -273,7 +273,7 @@
         "id": "NO_NEWS",
         "type": "text",
         "label": "KEY: NO_NEWS",
-        "value": "HƏLƏ Kİ XƏBƏR YOXDUR"
+        "value": "H\u018fL\u018f K\u0130 X\u018fB\u018fR YOXDUR"
       },
       {
         "id": "lbl-no-news-377",
@@ -285,7 +285,7 @@
         "id": "BTN_READ_NEWS",
         "type": "text",
         "label": "KEY: BTN_READ_NEWS",
-        "value": "XƏBƏRİ OXU"
+        "value": "X\u018fB\u018fR\u0130 OXU"
       },
       {
         "id": "lbl-btn-read-news-622",
@@ -297,7 +297,7 @@
         "id": "LABEL_LATEST",
         "type": "text",
         "label": "KEY: LABEL_LATEST",
-        "value": "SON XƏBƏR"
+        "value": "SON X\u018fB\u018fR"
       },
       {
         "id": "lbl-label-latest-771",
@@ -322,13 +322,13 @@
   },
   {
     "id": "eventspage",
-    "title": "Tədbirlər Səhifəsi",
+    "title": "T\u0259dbirl\u0259r S\u0259hif\u0259si",
     "sections": [
       {
         "id": "lbl-f-rdi-i-tirak--19",
         "type": "text",
-        "label": "Fərdi İştirakçı",
-        "value": "Fərdi İştirakçı"
+        "label": "F\u0259rdi \u0130\u015ftirak\u00e7\u0131",
+        "value": "F\u0259rdi \u0130\u015ftirak\u00e7\u0131"
       },
       {
         "id": "lbl-club-4x4-133",
@@ -375,14 +375,14 @@
       {
         "id": "lbl-z-f-r-4x4-club-466",
         "type": "text",
-        "label": "Zəfər 4X4 Club",
-        "value": "Zəfər 4X4 Club"
+        "label": "Z\u0259f\u0259r 4X4 Club",
+        "value": "Z\u0259f\u0259r 4X4 Club"
       },
       {
         "id": "MODAL_TITLE",
         "type": "text",
         "label": "KEY: MODAL_TITLE",
-        "value": "YARIŞDA İŞTİRAK"
+        "value": "YARI\u015eDA \u0130\u015eT\u0130RAK"
       },
       {
         "id": "lbl-modal-title-674",
@@ -394,31 +394,31 @@
         "id": "JOIN_AS_PILOT",
         "type": "text",
         "label": "KEY: JOIN_AS_PILOT",
-        "value": "PİLOT KİMİ QATIL"
+        "value": "P\u0130LOT K\u0130M\u0130 QATIL"
       },
       {
         "id": "JOIN_PILOT_DESC",
         "type": "text",
         "label": "KEY: JOIN_PILOT_DESC",
-        "value": "TEXNİKİ REQLAMENTƏ UYĞUN OLARAQ"
+        "value": "TEXN\u0130K\u0130 REQLAMENT\u018f UY\u011eUN OLARAQ"
       },
       {
         "id": "JOIN_AS_SPECTATOR",
         "type": "text",
         "label": "KEY: JOIN_AS_SPECTATOR",
-        "value": "İZLƏYİCİ KİMİ QATIL"
+        "value": "\u0130ZL\u018fY\u0130C\u0130 K\u0130M\u0130 QATIL"
       },
       {
         "id": "JOIN_SPECTATOR_DESC",
         "type": "text",
         "label": "KEY: JOIN_SPECTATOR_DESC",
-        "value": "YARIŞI TRİBUNADAN İZLƏ"
+        "value": "YARI\u015eI TR\u0130BUNADAN \u0130ZL\u018f"
       },
       {
         "id": "BTN_BACK",
         "type": "text",
         "label": "KEY: BTN_BACK",
-        "value": "GERİ QAYIT"
+        "value": "GER\u0130 QAYIT"
       },
       {
         "id": "lbl-btn-back-928",
@@ -430,7 +430,7 @@
         "id": "PILOT_REG_TITLE",
         "type": "text",
         "label": "KEY: PILOT_REG_TITLE",
-        "value": "PİLOT QEYDİYYATI"
+        "value": "P\u0130LOT QEYD\u0130YYATI"
       },
       {
         "id": "lbl-pilot-reg-title-550",
@@ -471,20 +471,20 @@
       {
         "id": "lbl-qeydiyyat-m-rac-241",
         "type": "text",
-        "label": "Qeydiyyat müraciətin...",
-        "value": "Qeydiyyat müraciətiniz uğurla göndərildi!"
+        "label": "Qeydiyyat m\u00fcraci\u0259tin...",
+        "value": "Qeydiyyat m\u00fcraci\u0259tiniz u\u011furla g\u00f6nd\u0259rildi!"
       },
       {
         "id": "lbl-gond-rilm-zama-722",
         "type": "text",
-        "label": "Gondərilmə zamanı xə...",
-        "value": "Gondərilmə zamanı xəta baş verdi."
+        "label": "Gond\u0259rilm\u0259 zaman\u0131 x\u0259...",
+        "value": "Gond\u0259rilm\u0259 zaman\u0131 x\u0259ta ba\u015f verdi."
       },
       {
         "id": "FIELD_NAME",
         "type": "text",
         "label": "KEY: FIELD_NAME",
-        "value": "AD VƏ SOYAD"
+        "value": "AD V\u018f SOYAD"
       },
       {
         "id": "lbl-field-name-176",
@@ -520,7 +520,7 @@
         "id": "FIELD_CAR_MODEL",
         "type": "text",
         "label": "KEY: FIELD_CAR_MODEL",
-        "value": "AVTOMOBİLİN MARKA/MODELİ"
+        "value": "AVTOMOB\u0130L\u0130N MARKA/MODEL\u0130"
       },
       {
         "id": "lbl-field-car-model-880",
@@ -532,7 +532,7 @@
         "id": "PLACEHOLDER_CAR",
         "type": "text",
         "label": "KEY: PLACEHOLDER_CAR",
-        "value": "Məs: Toyota LC 105"
+        "value": "M\u0259s: Toyota LC 105"
       },
       {
         "id": "lbl-placeholder-car-743",
@@ -544,7 +544,7 @@
         "id": "FIELD_TIRE_SIZE",
         "type": "text",
         "label": "KEY: FIELD_TIRE_SIZE",
-        "value": "TƏKƏR ÖLÇÜSÜ"
+        "value": "T\u018fK\u018fR \u00d6L\u00c7\u00dcS\u00dc"
       },
       {
         "id": "lbl-field-tire-size-87",
@@ -556,7 +556,7 @@
         "id": "PLACEHOLDER_TIRE",
         "type": "text",
         "label": "KEY: PLACEHOLDER_TIRE",
-        "value": "Məs: 35 DÜYM"
+        "value": "M\u0259s: 35 D\u00dcYM"
       },
       {
         "id": "lbl-placeholder-tir-795",
@@ -568,7 +568,7 @@
         "id": "FIELD_ENGINE",
         "type": "text",
         "label": "KEY: FIELD_ENGINE",
-        "value": "MÜHƏRRİK HƏCMİ"
+        "value": "M\u00dcH\u018fRR\u0130K H\u018fCM\u0130"
       },
       {
         "id": "lbl-field-engine-964",
@@ -580,7 +580,7 @@
         "id": "PLACEHOLDER_ENGINE",
         "type": "text",
         "label": "KEY: PLACEHOLDER_ENGINE",
-        "value": "Məs: 4.4L"
+        "value": "M\u0259s: 4.4L"
       },
       {
         "id": "lbl-placeholder-eng-394",
@@ -592,7 +592,7 @@
         "id": "FIELD_CLUB",
         "type": "text",
         "label": "KEY: FIELD_CLUB",
-        "value": "TƏMSİL ETDİYİ KLUB"
+        "value": "T\u018fMS\u0130L ETD\u0130Y\u0130 KLUB"
       },
       {
         "id": "lbl-field-club-312",
@@ -604,7 +604,7 @@
         "id": "BTN_COMPLETE_REG",
         "type": "text",
         "label": "KEY: BTN_COMPLETE_REG",
-        "value": "QEYDİYYATI TAMAMLA"
+        "value": "QEYD\u0130YYATI TAMAMLA"
       },
       {
         "id": "lbl-btn-complete-re-697",
@@ -616,25 +616,25 @@
         "id": "STATUS_UPCOMING",
         "type": "text",
         "label": "KEY: STATUS_UPCOMING",
-        "value": "GƏLƏCƏK YARIŞ"
+        "value": "G\u018fL\u018fC\u018fK YARI\u015e"
       },
       {
         "id": "STATUS_PAST",
         "type": "text",
         "label": "KEY: STATUS_PAST",
-        "value": "BAŞA ÇATIB"
+        "value": "BA\u015eA \u00c7ATIB"
       },
       {
         "id": "BTN_JOIN_EVENT",
         "type": "text",
         "label": "KEY: BTN_JOIN_EVENT",
-        "value": "TƏDBİRƏ QOŞUL"
+        "value": "T\u018fDB\u0130R\u018f QO\u015eUL"
       },
       {
         "id": "SECTION_DESC",
         "type": "text",
         "label": "KEY: SECTION_DESC",
-        "value": "TƏSVİR"
+        "value": "T\u018fSV\u0130R"
       },
       {
         "id": "lbl-section-desc-55",
@@ -646,7 +646,7 @@
         "id": "DESC_PLACEHOLDER",
         "type": "text",
         "label": "KEY: DESC_PLACEHOLDER",
-        "value": "Bu tədbir haqqında ətraflı məlumat tezliklə paylaşılacaq."
+        "value": "Bu t\u0259dbir haqq\u0131nda \u0259trafl\u0131 m\u0259lumat tezlikl\u0259 payla\u015f\u0131lacaq."
       },
       {
         "id": "lbl-desc-placeholde-719",
@@ -658,7 +658,7 @@
         "id": "DOWNLOAD_TITLE",
         "type": "text",
         "label": "KEY: DOWNLOAD_TITLE",
-        "value": "TƏLİMATI YÜKLƏ"
+        "value": "T\u018fL\u0130MATI Y\u00dcKL\u018f"
       },
       {
         "id": "lbl-download-title-865",
@@ -670,7 +670,7 @@
         "id": "DOWNLOAD_DESC",
         "type": "text",
         "label": "KEY: DOWNLOAD_DESC",
-        "value": "YARIŞA HAZIRLIQ VƏ TEXNİKİ REQLAMENT HAQQINDA BÜTÜN MƏLUMATLAR BU SƏNƏDDƏ QEYD OLUNUB."
+        "value": "YARI\u015eA HAZIRLIQ V\u018f TEXN\u0130K\u0130 REQLAMENT HAQQINDA B\u00dcT\u00dcN M\u018fLUMATLAR BU S\u018fN\u018fDD\u018f QEYD OLUNUB."
       },
       {
         "id": "lbl-download-desc-889",
@@ -682,7 +682,7 @@
         "id": "BTN_DOWNLOAD_PDF",
         "type": "text",
         "label": "KEY: BTN_DOWNLOAD_PDF",
-        "value": "PDF YÜKLƏ"
+        "value": "PDF Y\u00dcKL\u018f"
       },
       {
         "id": "lbl-btn-download-pd-547",
@@ -694,7 +694,7 @@
         "id": "SECTION_RULES",
         "type": "text",
         "label": "KEY: SECTION_RULES",
-        "value": "QAYDALAR VƏ TƏLƏBLƏR"
+        "value": "QAYDALAR V\u018f T\u018fL\u018fBL\u018fR"
       },
       {
         "id": "lbl-section-rules-978",
@@ -706,7 +706,7 @@
         "id": "RULES_PLACEHOLDER",
         "type": "text",
         "label": "KEY: RULES_PLACEHOLDER",
-        "value": "Yarış qaydaları iştirakçılara brifinq zamanı elan ediləcək."
+        "value": "Yar\u0131\u015f qaydalar\u0131 i\u015ftirak\u00e7\u0131lara brifinq zaman\u0131 elan edil\u0259c\u0259k."
       },
       {
         "id": "lbl-rules-placehold-505",
@@ -730,7 +730,7 @@
         "id": "SIDEBAR_QUESTION_DESC",
         "type": "text",
         "label": "KEY: SIDEBAR_QUESTION_DESC",
-        "value": "YARIŞLA BAĞLI ƏLAVƏ SUALLARINIZ ÜÇÜN BİZİMLƏ ƏLAQƏ SAXLAYIN."
+        "value": "YARI\u015eLA BA\u011eLI \u018fLAV\u018f SUALLARINIZ \u00dc\u00c7\u00dcN B\u0130Z\u0130ML\u018f \u018fLAQ\u018f SAXLAYIN."
       },
       {
         "id": "lbl-sidebar-questio-512",
@@ -742,7 +742,7 @@
         "id": "BTN_CONTACT",
         "type": "text",
         "label": "KEY: BTN_CONTACT",
-        "value": "ƏLAQƏ"
+        "value": "\u018fLAQ\u018f"
       },
       {
         "id": "lbl-btn-contact-850",
@@ -754,7 +754,7 @@
         "id": "PAGE_TITLE",
         "type": "text",
         "label": "KEY: PAGE_TITLE",
-        "value": "TƏDBİRLƏR"
+        "value": "T\u018fDB\u0130RL\u018fR"
       },
       {
         "id": "lbl-page-title-674",
@@ -778,7 +778,7 @@
         "id": "TAB_PAST",
         "type": "text",
         "label": "KEY: TAB_PAST",
-        "value": "KEÇMİŞ TƏDBİRLƏR"
+        "value": "KE\u00c7M\u0130\u015e T\u018fDB\u0130RL\u018fR"
       },
       {
         "id": "lbl-tab-past-25",
@@ -802,7 +802,7 @@
         "id": "BTN_MORE_INFO",
         "type": "text",
         "label": "KEY: BTN_MORE_INFO",
-        "value": "DAHA ƏTRAFLI"
+        "value": "DAHA \u018fTRAFLI"
       },
       {
         "id": "lbl-btn-more-info-302",
@@ -814,7 +814,7 @@
         "id": "BTN_VIEW_DETAILS",
         "type": "text",
         "label": "KEY: BTN_VIEW_DETAILS",
-        "value": "ƏTRAFLI BAX"
+        "value": "\u018fTRAFLI BAX"
       },
       {
         "id": "lbl-btn-view-detail-652",
@@ -827,13 +827,13 @@
   },
   {
     "id": "driverspage",
-    "title": "Sürücülər Səhifəsi",
+    "title": "S\u00fcr\u00fcc\u00fcl\u0259r S\u0259hif\u0259si",
     "sections": [
       {
         "id": "CAT_RANKING_SUFFIX",
         "type": "text",
         "label": "KEY: CAT_RANKING_SUFFIX",
-        "value": "REYTİNQ"
+        "value": "REYT\u0130NQ"
       },
       {
         "id": "lbl-cat-ranking-suf-106",
@@ -851,7 +851,7 @@
         "id": "BACK_BUTTON",
         "type": "text",
         "label": "KEY: BACK_BUTTON",
-        "value": "GERİ QAYIT"
+        "value": "GER\u0130 QAYIT"
       },
       {
         "id": "lbl-back-button-333",
@@ -875,7 +875,7 @@
         "id": "PAGE_TITLE",
         "type": "text",
         "label": "KEY: PAGE_TITLE",
-        "value": "SÜRÜCÜLƏR"
+        "value": "S\u00dcR\u00dcC\u00dcL\u018fR"
       },
       {
         "id": "lbl-page-title-614",
@@ -941,7 +941,7 @@
         "id": "FULL_STANDINGS_SUB",
         "type": "text",
         "label": "KEY: FULL_STANDINGS_SUB",
-        "value": "BÜTÜN PİLOTLAR"
+        "value": "B\u00dcT\u00dcN P\u0130LOTLAR"
       },
       {
         "id": "lbl-full-standings--256",
@@ -1002,7 +1002,7 @@
         "id": "TAB_VIDEOS",
         "type": "text",
         "label": "KEY: TAB_VIDEOS",
-        "value": "VİDEOLAR"
+        "value": "V\u0130DEOLAR"
       },
       {
         "id": "lbl-tab-videos-790",
@@ -1044,7 +1044,7 @@
         "id": "TYPE_VIDEO",
         "type": "text",
         "label": "KEY: TYPE_VIDEO",
-        "value": "VİDEO"
+        "value": "V\u0130DEO"
       },
       {
         "id": "lbl-type-video-515",
@@ -1056,7 +1056,7 @@
         "id": "NO_PHOTOS",
         "type": "text",
         "label": "KEY: NO_PHOTOS",
-        "value": "HƏLƏ Kİ FOTO ƏLAVƏ EDİLMƏYİB"
+        "value": "H\u018fL\u018f K\u0130 FOTO \u018fLAV\u018f ED\u0130LM\u018fY\u0130B"
       },
       {
         "id": "lbl-no-photos-653",
@@ -1068,7 +1068,7 @@
         "id": "NO_VIDEOS",
         "type": "text",
         "label": "KEY: NO_VIDEOS",
-        "value": "HƏLƏ Kİ VİDEO ƏLAVƏ EDİLMƏYİB"
+        "value": "H\u018fL\u018f K\u0130 V\u0130DEO \u018fLAV\u018f ED\u0130LM\u018fY\u0130B"
       },
       {
         "id": "lbl-no-videos-358",
@@ -1087,7 +1087,7 @@
         "id": "RULES_PILOT_TITLE",
         "type": "text",
         "label": "KEY: RULES_PILOT_TITLE",
-        "value": "PİLOT PROTOKOLU"
+        "value": "P\u0130LOT PROTOKOLU"
       },
       {
         "id": "lbl-rules-pilot-tit-629",
@@ -1100,7 +1100,7 @@
         "id": "RULES_PILOT_SUB1",
         "type": "text",
         "label": "KEY: RULES_PILOT_SUB1",
-        "value": "İSTİFADƏÇİ ÖHDƏLİKLƏRİ"
+        "value": "\u0130ST\u0130FAD\u018f\u00c7\u0130 \u00d6HD\u018fL\u0130KL\u018fR\u0130"
       },
       {
         "id": "lbl-rules-pilot-sub-15",
@@ -1112,7 +1112,7 @@
         "id": "RULES_PILOT_DESC1",
         "type": "text",
         "label": "KEY: RULES_PILOT_DESC1",
-        "value": "HƏR BİR İŞTİRAKÇI FEDERASİYANIN MÜƏYYƏN ETDİYİ BÜTÜN TEXNİKİ VƏ ETİK NORMALARI QEYD-ŞƏRTSİZ QƏBUL EDİR."
+        "value": "H\u018fR B\u0130R \u0130\u015eT\u0130RAK\u00c7I FEDERAS\u0130YANIN M\u00dc\u018fYY\u018fN ETD\u0130Y\u0130 B\u00dcT\u00dcN TEXN\u0130K\u0130 V\u018f ET\u0130K NORMALARI QEYD-\u015e\u018fRTS\u0130Z Q\u018fBUL ED\u0130R."
       },
       {
         "id": "lbl-rules-pilot-des-188",
@@ -1124,7 +1124,7 @@
         "id": "RULES_PILOT_SUB2",
         "type": "text",
         "label": "KEY: RULES_PILOT_SUB2",
-        "value": "DİSKVALİFİKASİYA"
+        "value": "D\u0130SKVAL\u0130F\u0130KAS\u0130YA"
       },
       {
         "id": "lbl-rules-pilot-sub-489",
@@ -1136,7 +1136,7 @@
         "id": "RULES_PILOT_DESC2",
         "type": "text",
         "label": "KEY: RULES_PILOT_DESC2",
-        "value": "PROTOKOLDAN KƏNARA ÇIXMAQ VƏ YA HAKİM QƏRARLARINA ETİRAZ ETMƏK DƏRHAL DİSKVALİFİKASİYA İLƏ NƏTİCƏLƏNƏ BİLƏR."
+        "value": "PROTOKOLDAN K\u018fNARA \u00c7IXMAQ V\u018f YA HAK\u0130M Q\u018fRARLARINA ET\u0130RAZ ETM\u018fK D\u018fRHAL D\u0130SKVAL\u0130F\u0130KAS\u0130YA \u0130L\u018f N\u018fT\u0130C\u018fL\u018fN\u018f B\u0130L\u018fR."
       },
       {
         "id": "lbl-rules-pilot-des-600",
@@ -1148,7 +1148,7 @@
         "id": "RULES_PILOT_SUB3",
         "type": "text",
         "label": "KEY: RULES_PILOT_SUB3",
-        "value": "TEXNİKİ TƏLƏBLƏR"
+        "value": "TEXN\u0130K\u0130 T\u018fL\u018fBL\u018fR"
       },
       {
         "id": "lbl-rules-pilot-sub-274",
@@ -1160,7 +1160,7 @@
         "id": "RULES_PILOT_DESC3",
         "type": "text",
         "label": "KEY: RULES_PILOT_DESC3",
-        "value": "BÜTÜN AVADANLIQLAR YARIŞDAN 24 SAAT ƏVVƏL TEXNİKİ KOMİSSİYA TƏRƏFİNDƏN YOXLANILMALI VƏ TƏHLÜKƏSİZLİK SERTİFİKATI İLƏ TƏMİN EDİLMƏLİDİR."
+        "value": "B\u00dcT\u00dcN AVADANLIQLAR YARI\u015eDAN 24 SAAT \u018fVV\u018fL TEXN\u0130K\u0130 KOM\u0130SS\u0130YA T\u018fR\u018fF\u0130ND\u018fN YOXLANILMALI V\u018f T\u018fHL\u00dcK\u018fS\u0130ZL\u0130K SERT\u0130F\u0130KATI \u0130L\u018f T\u018fM\u0130N ED\u0130LM\u018fL\u0130D\u0130R."
       },
       {
         "id": "lbl-rules-pilot-des-455",
@@ -1172,7 +1172,7 @@
         "id": "RULES_TECH_TITLE",
         "type": "text",
         "label": "KEY: RULES_TECH_TITLE",
-        "value": "TEXNİKİ NORMARTİVLƏR"
+        "value": "TEXN\u0130K\u0130 NORMART\u0130VL\u018fR"
       },
       {
         "id": "lbl-rules-tech-titl-774",
@@ -1185,7 +1185,7 @@
         "id": "RULES_TECH_SUB1",
         "type": "text",
         "label": "KEY: RULES_TECH_SUB1",
-        "value": "TƏKƏR ÖLÇÜLƏRİ"
+        "value": "T\u018fK\u018fR \u00d6L\u00c7\u00dcL\u018fR\u0130"
       },
       {
         "id": "lbl-rules-tech-sub1-573",
@@ -1197,7 +1197,7 @@
         "id": "RULES_TECH_DESC1",
         "type": "text",
         "label": "KEY: RULES_TECH_DESC1",
-        "value": "PRO CLASS ÜÇÜN MAKSİMUM TƏKƏR ÖLÇÜSÜ 37 DÜYM, AMATEUR CLASS ÜÇÜN İSƏ 33 DÜYM OLARAQ MÜƏYYƏN EDİLMİŞDİR."
+        "value": "PRO CLASS \u00dc\u00c7\u00dcN MAKS\u0130MUM T\u018fK\u018fR \u00d6L\u00c7\u00dcS\u00dc 37 D\u00dcYM, AMATEUR CLASS \u00dc\u00c7\u00dcN \u0130S\u018f 33 D\u00dcYM OLARAQ M\u00dc\u018fYY\u018fN ED\u0130LM\u0130\u015eD\u0130R."
       },
       {
         "id": "lbl-rules-tech-desc-234",
@@ -1209,7 +1209,7 @@
         "id": "RULES_TECH_SUB2",
         "type": "text",
         "label": "KEY: RULES_TECH_SUB2",
-        "value": "MÜHƏRRİK GÜCÜ"
+        "value": "M\u00dcH\u018fRR\u0130K G\u00dcC\u00dc"
       },
       {
         "id": "lbl-rules-tech-sub2-534",
@@ -1221,7 +1221,7 @@
         "id": "RULES_TECH_DESC2",
         "type": "text",
         "label": "KEY: RULES_TECH_DESC2",
-        "value": "MÜHƏRRİK ÜZƏRİNDƏ APARILAN MODİFİKASİYALAR KATEQORİYA ÜZRƏ LİMİTLƏRİ AŞMAMALIDIR. TURBO SİSTEMLƏRİ YALNIZ XÜSUSİ KLASLARDA İCAZƏLİDİR."
+        "value": "M\u00dcH\u018fRR\u0130K \u00dcZ\u018fR\u0130ND\u018f APARILAN MOD\u0130F\u0130KAS\u0130YALAR KATEQOR\u0130YA \u00dcZR\u018f L\u0130M\u0130TL\u018fR\u0130 A\u015eMAMALIDIR. TURBO S\u0130STEML\u018fR\u0130 YALNIZ X\u00dcSUS\u0130 KLASLARDA \u0130CAZ\u018fL\u0130D\u0130R."
       },
       {
         "id": "lbl-rules-tech-desc-461",
@@ -1233,7 +1233,7 @@
         "id": "RULES_TECH_SUB3",
         "type": "text",
         "label": "KEY: RULES_TECH_SUB3",
-        "value": "ASQI SİSTEMİ"
+        "value": "ASQI S\u0130STEM\u0130"
       },
       {
         "id": "lbl-rules-tech-sub3-891",
@@ -1251,7 +1251,7 @@
         "id": "RULES_SAFETY_TITLE",
         "type": "text",
         "label": "KEY: RULES_SAFETY_TITLE",
-        "value": "TƏHLÜKƏSİZLİK QAYDALARI"
+        "value": "T\u018fHL\u00dcK\u018fS\u0130ZL\u0130K QAYDALARI"
       },
       {
         "id": "lbl-rules-safety-ti-935",
@@ -1264,7 +1264,7 @@
         "id": "RULES_SAFETY_SUB1",
         "type": "text",
         "label": "KEY: RULES_SAFETY_SUB1",
-        "value": "KARKAS TƏLƏBİ"
+        "value": "KARKAS T\u018fL\u018fB\u0130"
       },
       {
         "id": "lbl-rules-safety-su-270",
@@ -1282,7 +1282,7 @@
         "id": "RULES_SAFETY_SUB2",
         "type": "text",
         "label": "KEY: RULES_SAFETY_SUB2",
-        "value": "YANĞIN SÖNDÜRMƏ"
+        "value": "YAN\u011eIN S\u00d6ND\u00dcRM\u018f"
       },
       {
         "id": "lbl-rules-safety-su-903",
@@ -1294,7 +1294,7 @@
         "id": "RULES_SAFETY_DESC2",
         "type": "text",
         "label": "KEY: RULES_SAFETY_DESC2",
-        "value": "HƏR BİR AVTOMOBİLDƏ ƏN AZI 2 KİLOQRAMLIQ, ASAN ƏLÇATAN YERDƏ YERLƏŞƏN YANĞINSÖNDÜRƏN BALON OLMALIDIR."
+        "value": "H\u018fR B\u0130R AVTOMOB\u0130LD\u018f \u018fN AZI 2 K\u0130LOQRAMLIQ, ASAN \u018fL\u00c7ATAN YERD\u018f YERL\u018f\u015e\u018fN YAN\u011eINS\u00d6ND\u00dcR\u018fN BALON OLMALIDIR."
       },
       {
         "id": "lbl-rules-safety-de-44",
@@ -1306,7 +1306,7 @@
         "id": "RULES_SAFETY_SUB3",
         "type": "text",
         "label": "KEY: RULES_SAFETY_SUB3",
-        "value": "KƏMƏR VƏ DƏBİLQƏ"
+        "value": "K\u018fM\u018fR V\u018f D\u018fB\u0130LQ\u018f"
       },
       {
         "id": "lbl-rules-safety-su-670",
@@ -1324,7 +1324,7 @@
         "id": "RULES_ECO_TITLE",
         "type": "text",
         "label": "KEY: RULES_ECO_TITLE",
-        "value": "EKOLOJİ MƏSULİYYƏT"
+        "value": "EKOLOJ\u0130 M\u018fSUL\u0130YY\u018fT"
       },
       {
         "id": "lbl-rules-eco-title-32",
@@ -1337,7 +1337,7 @@
         "id": "RULES_ECO_SUB1",
         "type": "text",
         "label": "KEY: RULES_ECO_SUB1",
-        "value": "TULLANTILARIN İDARƏ EDİLMƏSİ"
+        "value": "TULLANTILARIN \u0130DAR\u018f ED\u0130LM\u018fS\u0130"
       },
       {
         "id": "lbl-rules-eco-sub1-429",
@@ -1373,7 +1373,7 @@
         "id": "RULES_ECO_DESC2",
         "type": "text",
         "label": "KEY: RULES_ECO_DESC2",
-        "value": "AVTOMOBİLDƏN YAĞ VƏ YA SOYUDUCU MAYE SIZMASI OLDUĞU TƏQDİRDƏ PİLOT DƏRHAL DAYANMALI VƏ ƏRAZİNİN ÇİRKLƏNMƏSİNİN QARŞISINI ALMALIDIR."
+        "value": "AVTOMOB\u0130LD\u018fN YA\u011e V\u018f YA SOYUDUCU MAYE SIZMASI OLDU\u011eU T\u018fQD\u0130RD\u018f P\u0130LOT D\u018fRHAL DAYANMALI V\u018f \u018fRAZ\u0130N\u0130N \u00c7\u0130RKL\u018fNM\u018fS\u0130N\u0130N QAR\u015eISINI ALMALIDIR."
       },
       {
         "id": "lbl-rules-eco-desc2-800",
@@ -1385,7 +1385,7 @@
         "id": "RULES_ECO_SUB3",
         "type": "text",
         "label": "KEY: RULES_ECO_SUB3",
-        "value": "MARŞRUTDAN KƏNARA ÇIXMAMAQ"
+        "value": "MAR\u015eRUTDAN K\u018fNARA \u00c7IXMAMAQ"
       },
       {
         "id": "lbl-rules-eco-sub3-728",
@@ -1397,7 +1397,7 @@
         "id": "RULES_ECO_DESC3",
         "type": "text",
         "label": "KEY: RULES_ECO_DESC3",
-        "value": "TƏBİİ ÖRTÜYÜ QORUMAQ MƏQSƏDİ İLƏ MÜƏYYƏN OLUNMUŞ TRASDANKƏNAR SÜRÜŞLƏR VƏ YA YAŞIL SAHƏLƏRƏ ZƏRƏR VERMƏK QADAĞANDIR."
+        "value": "T\u018fB\u0130\u0130 \u00d6RT\u00dcY\u00dc QORUMAQ M\u018fQS\u018fD\u0130 \u0130L\u018f M\u00dc\u018fYY\u018fN OLUNMU\u015e TRASDANK\u018fNAR S\u00dcR\u00dc\u015eL\u018fR V\u018f YA YA\u015eIL SAH\u018fL\u018fR\u018f Z\u018fR\u018fR VERM\u018fK QADA\u011eANDIR."
       },
       {
         "id": "lbl-rules-eco-desc3-115",
@@ -1433,7 +1433,7 @@
         "id": "DOC_DOWNLOAD_LABEL",
         "type": "text",
         "label": "KEY: DOC_DOWNLOAD_LABEL",
-        "value": "SƏNƏDİ YÜKLƏ"
+        "value": "S\u018fN\u018fD\u0130 Y\u00dcKL\u018f"
       },
       {
         "id": "lbl-doc-download-la-188",
@@ -1445,7 +1445,7 @@
         "id": "BTN_DOWNLOAD_PDF",
         "type": "text",
         "label": "KEY: BTN_DOWNLOAD_PDF",
-        "value": "PDF YÜKLƏ"
+        "value": "PDF Y\u00dcKL\u018f"
       },
       {
         "id": "lbl-btn-download-pd-35",
@@ -1458,13 +1458,13 @@
   },
   {
     "id": "contactpage",
-    "title": "Əlaqə Səhifəsi",
+    "title": "\u018flaq\u0259 S\u0259hif\u0259si",
     "sections": [
       {
         "id": "PAGE_TITLE",
         "type": "text",
         "label": "KEY: PAGE_TITLE",
-        "value": "ƏLAQƏ"
+        "value": "\u018fLAQ\u018f"
       },
       {
         "id": "lbl-page-title-183",
@@ -1482,7 +1482,7 @@
         "id": "OFFICE_LABEL",
         "type": "text",
         "label": "KEY: OFFICE_LABEL",
-        "value": "BAŞ OFİS"
+        "value": "BA\u015e OF\u0130S"
       },
       {
         "id": "lbl-office-label-517",
@@ -1524,7 +1524,7 @@
         "id": "PHONE_LABEL",
         "type": "text",
         "label": "KEY: PHONE_LABEL",
-        "value": "ƏLAQƏ NÖMRƏSİ"
+        "value": "\u018fLAQ\u018f N\u00d6MR\u018fS\u0130"
       },
       {
         "id": "lbl-phone-label-671",
@@ -1536,7 +1536,7 @@
         "id": "EMAIL_LABEL",
         "type": "text",
         "label": "KEY: EMAIL_LABEL",
-        "value": "E-POÇT ÜNVANI"
+        "value": "E-PO\u00c7T \u00dcNVANI"
       },
       {
         "id": "lbl-email-label-491",
@@ -1566,7 +1566,7 @@
         "id": "DEPT_HQ_DESC",
         "type": "text",
         "label": "KEY: DEPT_HQ_DESC",
-        "value": "ÜMUMİ SORĞULAR VƏ İDARƏETMƏ"
+        "value": "\u00dcMUM\u0130 SOR\u011eULAR V\u018f \u0130DAR\u018fETM\u018f"
       },
       {
         "id": "lbl-dept-hq-desc-6",
@@ -1590,7 +1590,7 @@
         "id": "DEPT_PR_TITLE",
         "type": "text",
         "label": "KEY: DEPT_PR_TITLE",
-        "value": "MEDİA VƏ PR"
+        "value": "MED\u0130A V\u018f PR"
       },
       {
         "id": "lbl-dept-pr-title-423",
@@ -1602,7 +1602,7 @@
         "id": "DEPT_PR_DESC",
         "type": "text",
         "label": "KEY: DEPT_PR_DESC",
-        "value": "MƏTBUAT VƏ ƏMƏKDAŞLIQ"
+        "value": "M\u018fTBUAT V\u018f \u018fM\u018fKDA\u015eLIQ"
       },
       {
         "id": "lbl-dept-pr-desc-891",
@@ -1626,7 +1626,7 @@
         "id": "DEPT_TECH_TITLE",
         "type": "text",
         "label": "KEY: DEPT_TECH_TITLE",
-        "value": "TEXNİKİ DƏSTƏK"
+        "value": "TEXN\u0130K\u0130 D\u018fST\u018fK"
       },
       {
         "id": "lbl-dept-tech-title-461",
@@ -1638,7 +1638,7 @@
         "id": "DEPT_TECH_DESC",
         "type": "text",
         "label": "KEY: DEPT_TECH_DESC",
-        "value": "PİLOTLAR ÜÇÜN TEXNİKİ YARDIM"
+        "value": "P\u0130LOTLAR \u00dc\u00c7\u00dcN TEXN\u0130K\u0130 YARDIM"
       },
       {
         "id": "lbl-dept-tech-desc-162",
@@ -1662,7 +1662,7 @@
         "id": "FORM_TITLE",
         "type": "text",
         "label": "KEY: FORM_TITLE",
-        "value": "MÜRACİƏT FORMU"
+        "value": "M\u00dcRAC\u0130\u018fT FORMU"
       },
       {
         "id": "lbl-form-title-549",
@@ -1697,20 +1697,20 @@
       {
         "id": "lbl-m-raci-tiniz-u--844",
         "type": "text",
-        "label": "Müraciətiniz uğurla ...",
-        "value": "Müraciətiniz uğurla göndərildi!"
+        "label": "M\u00fcraci\u0259tiniz u\u011furla ...",
+        "value": "M\u00fcraci\u0259tiniz u\u011furla g\u00f6nd\u0259rildi!"
       },
       {
         "id": "lbl-gond-rilm-zama-981",
         "type": "text",
-        "label": "Gondərilmə zamanı xə...",
-        "value": "Gondərilmə zamanı xəta baş verdi."
+        "label": "Gond\u0259rilm\u0259 zaman\u0131 x\u0259...",
+        "value": "Gond\u0259rilm\u0259 zaman\u0131 x\u0259ta ba\u015f verdi."
       },
       {
         "id": "FIELD_NAME_LABEL",
         "type": "text",
         "label": "KEY: FIELD_NAME_LABEL",
-        "value": "AD VƏ SOYAD"
+        "value": "AD V\u018f SOYAD"
       },
       {
         "id": "lbl-field-name-labe-884",
@@ -1722,7 +1722,7 @@
         "id": "FIELD_NAME_PLACEHOLDER",
         "type": "text",
         "label": "KEY: FIELD_NAME_PLACEHOLDER",
-        "value": "AD SOYAD DAXİL EDİN"
+        "value": "AD SOYAD DAX\u0130L ED\u0130N"
       },
       {
         "id": "lbl-field-name-plac-997",
@@ -1734,7 +1734,7 @@
         "id": "FIELD_CONTACT_LABEL",
         "type": "text",
         "label": "KEY: FIELD_CONTACT_LABEL",
-        "value": "ƏLAQƏ VASİTƏSİ"
+        "value": "\u018fLAQ\u018f VAS\u0130T\u018fS\u0130"
       },
       {
         "id": "lbl-field-contact-l-840",
@@ -1746,7 +1746,7 @@
         "id": "FIELD_CONTACT_PLACEHOLDER",
         "type": "text",
         "label": "KEY: FIELD_CONTACT_PLACEHOLDER",
-        "value": "TELEFON VƏ YA EMAIL"
+        "value": "TELEFON V\u018f YA EMAIL"
       },
       {
         "id": "lbl-field-contact-p-975",
@@ -1758,7 +1758,7 @@
         "id": "FIELD_TOPIC_LABEL",
         "type": "text",
         "label": "KEY: FIELD_TOPIC_LABEL",
-        "value": "MÜRACİƏT İSTİQAMƏTİ"
+        "value": "M\u00dcRAC\u0130\u018fT \u0130ST\u0130QAM\u018fT\u0130"
       },
       {
         "id": "lbl-field-topic-lab-18",
@@ -1770,7 +1770,7 @@
         "id": "TOPIC_GENERAL",
         "type": "text",
         "label": "KEY: TOPIC_GENERAL",
-        "value": "ÜMUMİ SORĞU"
+        "value": "\u00dcMUM\u0130 SOR\u011eU"
       },
       {
         "id": "lbl-topic-general-452",
@@ -1782,7 +1782,7 @@
         "id": "TOPIC_PILOT",
         "type": "text",
         "label": "KEY: TOPIC_PILOT",
-        "value": "PİLOT QEYDİYYATI"
+        "value": "P\u0130LOT QEYD\u0130YYATI"
       },
       {
         "id": "lbl-topic-pilot-266",
@@ -1794,7 +1794,7 @@
         "id": "TOPIC_TECH",
         "type": "text",
         "label": "KEY: TOPIC_TECH",
-        "value": "TEXNİKİ YARDIM"
+        "value": "TEXN\u0130K\u0130 YARDIM"
       },
       {
         "id": "lbl-topic-tech-424",
@@ -1830,7 +1830,7 @@
         "id": "BTN_SEND",
         "type": "text",
         "label": "KEY: BTN_SEND",
-        "value": "MESAJI GÖNDƏR"
+        "value": "MESAJI G\u00d6ND\u018fR"
       },
       {
         "id": "lbl-btn-send-979",
@@ -1843,13 +1843,13 @@
   },
   {
     "id": "categoryleaders",
-    "title": "Kateqoriya Liderləri",
+    "title": "Kateqoriya Liderl\u0259ri",
     "sections": [
       {
         "id": "SECTION_TITLE",
         "type": "text",
         "label": "KEY: SECTION_TITLE",
-        "value": "KATEQORİYA LİDƏRLƏRİ"
+        "value": "KATEQOR\u0130YA L\u0130D\u018fRL\u018fR\u0130"
       },
       {
         "id": "lbl-section-title-111",
@@ -1861,7 +1861,7 @@
         "id": "SECTION_SUBTITLE",
         "type": "text",
         "label": "KEY: SECTION_SUBTITLE",
-        "value": "HƏR KLASS ÜZRƏ MÖVSÜMÜN ƏN GÜCLÜ PİLOTLARI"
+        "value": "H\u018fR KLASS \u00dcZR\u018f M\u00d6VS\u00dcM\u00dcN \u018fN G\u00dcCL\u00dc P\u0130LOTLARI"
       },
       {
         "id": "lbl-section-subtitl-200",
@@ -1873,7 +1873,7 @@
         "id": "VIEW_ALL_BTN",
         "type": "text",
         "label": "KEY: VIEW_ALL_BTN",
-        "value": "BÜTÜN REYTİNG"
+        "value": "B\u00dcT\u00dcN REYT\u0130NG"
       },
       {
         "id": "lbl-view-all-btn-192",
@@ -1904,7 +1904,7 @@
         "id": "txt-ana-s-h-f-744",
         "type": "text",
         "label": "KEY: txt-ana-s-h-f-744",
-        "value": "ANA SƏHİFƏ",
+        "value": "ANA S\u018fH\u0130F\u018f",
         "url": "home"
       },
       {
@@ -1918,21 +1918,21 @@
         "id": "txt-x-b-rl-r-431",
         "type": "text",
         "label": "KEY: txt-x-b-rl-r-431",
-        "value": "XƏBƏRLƏR",
+        "value": "X\u018fB\u018fRL\u018fR",
         "url": "news"
       },
       {
         "id": "txt-t-dbi-rl-r-62",
         "type": "text",
         "label": "KEY: txt-t-dbi-rl-r-62",
-        "value": "TƏDBİRLƏR",
+        "value": "T\u018fDB\u0130RL\u018fR",
         "url": "events"
       },
       {
         "id": "txt-s-r-c-l-r-931",
         "type": "text",
         "label": "KEY: txt-s-r-c-l-r-931",
-        "value": "SÜRÜCÜLƏR",
+        "value": "S\u00dcR\u00dcC\u00dcL\u018fR",
         "url": "drivers"
       },
       {
@@ -1946,35 +1946,35 @@
         "id": "txt-laq-452",
         "type": "text",
         "label": "KEY: txt-laq-452",
-        "value": "ƏLAQƏ",
+        "value": "\u018fLAQ\u018f",
         "url": "contact"
       },
       {
         "id": "txt-pi-lot-protokolu-31",
         "type": "text",
         "label": "KEY: txt-pi-lot-protokolu-31",
-        "value": "PİLOT PROTOKOLU",
+        "value": "P\u0130LOT PROTOKOLU",
         "url": "rules"
       },
       {
         "id": "txt-texni-ki-normati-712",
         "type": "text",
         "label": "KEY: txt-texni-ki-normati-712",
-        "value": "TEXNİKİ NORMATİVLƏR",
+        "value": "TEXN\u0130K\u0130 NORMAT\u0130VL\u018fR",
         "url": "rules"
       },
       {
         "id": "txt-t-hl-k-si-zli-k-q-121",
         "type": "text",
         "label": "KEY: txt-t-hl-k-si-zli-k-q-121",
-        "value": "TƏHLÜKƏSİZLİK QAYDALARI",
+        "value": "T\u018fHL\u00dcK\u018fS\u0130ZL\u0130K QAYDALARI",
         "url": "rules"
       },
       {
         "id": "txt-ekoloji-m-suli-yy-612",
         "type": "text",
         "label": "KEY: txt-ekoloji-m-suli-yy-612",
-        "value": "EKOLOJİ MƏSULİYYƏT",
+        "value": "EKOLOJ\u0130 M\u018fSUL\u0130YY\u018fT",
         "url": "rules"
       },
       {
@@ -1992,14 +1992,14 @@
       {
         "id": "txt-az-rbaycan-n-n-817",
         "type": "text",
-        "label": "Azərbaycanın ən pres...",
-        "value": "Azərbaycanın ən prestijli motorsport mərkəzi. Sərhədsiz offroad həyəcanını bizimlə yaşayın."
+        "label": "Az\u0259rbaycan\u0131n \u0259n pres...",
+        "value": "Az\u0259rbaycan\u0131n \u0259n prestijli motorsport m\u0259rk\u0259zi. S\u0259rh\u0259dsiz offroad h\u0259y\u0259can\u0131n\u0131 biziml\u0259 ya\u015fay\u0131n."
       },
       {
         "id": "txt-navi-qasi-ya-60",
         "type": "text",
-        "label": "NAVİQASİYA",
-        "value": "NAVİQASİYA"
+        "label": "NAV\u0130QAS\u0130YA",
+        "value": "NAV\u0130QAS\u0130YA"
       },
       {
         "id": "txt-motorsport-495",
@@ -2010,26 +2010,26 @@
       {
         "id": "txt-x-b-rdar-ol-67",
         "type": "text",
-        "label": "XƏBƏRDAR OL",
-        "value": "XƏBƏRDAR OL"
+        "label": "X\u018fB\u018fRDAR OL",
+        "value": "X\u018fB\u018fRDAR OL"
       },
       {
         "id": "txt-yar-t-qvimi-v-807",
         "type": "text",
-        "label": "Yarış təqvimi və xəb...",
-        "value": "Yarış təqvimi və xəbərlərdən anında xəbərdar olmaq üçün abunə olun."
+        "label": "Yar\u0131\u015f t\u0259qvimi v\u0259 x\u0259b...",
+        "value": "Yar\u0131\u015f t\u0259qvimi v\u0259 x\u0259b\u0259rl\u0259rd\u0259n an\u0131nda x\u0259b\u0259rdar olmaq \u00fc\u00e7\u00fcn abun\u0259 olun."
       },
       {
         "id": "attr-email-daxi-l-edi--43",
         "type": "text",
-        "label": "PLACEHOLDER: EMAIL DAXİL EDİ...",
-        "value": "EMAIL DAXİL EDİN"
+        "label": "PLACEHOLDER: EMAIL DAX\u0130L ED\u0130...",
+        "value": "EMAIL DAX\u0130L ED\u0130N"
       },
       {
         "id": "txt--2024-forsaj-c-637",
         "type": "text",
-        "label": "© 2024 FORSAJ CLUB. ...",
-        "value": "© 2024 FORSAJ CLUB. ALL RIGHTS RESERVED.",
+        "label": "\u00a9 2024 FORSAJ CLUB. ...",
+        "value": "\u00a9 2024 FORSAJ CLUB. ALL RIGHTS RESERVED.",
         "url": "#"
       },
       {
@@ -2051,7 +2051,7 @@
   },
   {
     "id": "hero",
-    "title": "Giriş Hissəsi",
+    "title": "Giri\u015f Hiss\u0259si",
     "sections": [
       {
         "id": "text-0",
@@ -2063,19 +2063,19 @@
         "id": "text-1",
         "type": "text",
         "label": "KEY: text-1",
-        "value": "SƏRHƏDSİZ OFFROAD HƏYƏCANI"
+        "value": "S\u018fRH\u018fDS\u0130Z OFFROAD H\u018fY\u018fCANI"
       },
       {
         "id": "text-2",
         "type": "text",
         "label": "KEY: text-2",
-        "value": "Azərbaycanın ən çətin yollarında peşəkar yarışlar və adrenalin dolu anlar."
+        "value": "Az\u0259rbaycan\u0131n \u0259n \u00e7\u0259tin yollar\u0131nda pe\u015f\u0259kar yar\u0131\u015flar v\u0259 adrenalin dolu anlar."
       },
       {
         "id": "text-3",
         "type": "text",
         "label": "KEY: text-3",
-        "value": "YARIŞLARA BAX"
+        "value": "YARI\u015eLARA BAX"
       },
       {
         "id": "text-4",
@@ -2088,7 +2088,7 @@
   },
   {
     "id": "marquee",
-    "title": "Sürüşən Yazı",
+    "title": "S\u00fcr\u00fc\u015f\u0259n Yaz\u0131",
     "sections": [
       {
         "id": "lbl-forsaj-club-244",
@@ -2107,7 +2107,7 @@
         "id": "txt-ana-s-h-f-366",
         "type": "text",
         "label": "KEY: txt-ana-s-h-f-366",
-        "value": "ANA SƏHİFƏ",
+        "value": "ANA S\u018fH\u0130F\u018f",
         "url": "home"
       },
       {
@@ -2121,21 +2121,21 @@
         "id": "txt-x-b-rl-r-63",
         "type": "text",
         "label": "KEY: txt-x-b-rl-r-63",
-        "value": "XƏBƏRLƏR",
+        "value": "X\u018fB\u018fRL\u018fR",
         "url": "news"
       },
       {
         "id": "txt-t-dbi-rl-r-793",
         "type": "text",
         "label": "KEY: txt-t-dbi-rl-r-793",
-        "value": "TƏDBİRLƏR",
+        "value": "T\u018fDB\u0130RL\u018fR",
         "url": "events"
       },
       {
         "id": "txt-s-r-c-l-r-119",
         "type": "text",
         "label": "KEY: txt-s-r-c-l-r-119",
-        "value": "SÜRÜCÜLƏR",
+        "value": "S\u00dcR\u00dcC\u00dcL\u018fR",
         "url": "drivers"
       },
       {
@@ -2156,7 +2156,7 @@
         "id": "txt-laq-251",
         "type": "text",
         "label": "KEY: txt-laq-251",
-        "value": "ƏLAQƏ",
+        "value": "\u018fLAQ\u018f",
         "url": "contact"
       },
       {
@@ -2176,7 +2176,7 @@
   },
   {
     "id": "nextrace",
-    "title": "Növbəti Yarış",
+    "title": "N\u00f6vb\u0259ti Yar\u0131\u015f",
     "sections": [
       {
         "id": "lbl-race-date-36",
@@ -2218,7 +2218,7 @@
         "id": "SECTION_TITLE",
         "type": "text",
         "label": "KEY: SECTION_TITLE",
-        "value": "NÖVBƏTİ YARIŞ"
+        "value": "N\u00d6VB\u018fT\u0130 YARI\u015e"
       },
       {
         "id": "lbl-section-title-595",
@@ -2230,7 +2230,7 @@
         "id": "SECTION_SUBTITLE",
         "type": "text",
         "label": "KEY: SECTION_SUBTITLE",
-        "value": "LİVE REGİSTRATİON OPEN"
+        "value": "L\u0130VE REG\u0130STRAT\u0130ON OPEN"
       },
       {
         "id": "lbl-section-subtitl-532",
@@ -2248,7 +2248,7 @@
         "id": "VIEW_ALL_BTN",
         "type": "text",
         "label": "KEY: VIEW_ALL_BTN",
-        "value": "TAM TƏQVİM",
+        "value": "TAM T\u018fQV\u0130M",
         "url": "events"
       },
       {
@@ -2273,7 +2273,7 @@
         "id": "REGISTER_BTN",
         "type": "text",
         "label": "KEY: REGISTER_BTN",
-        "value": "QATILMAQ ÜÇÜN QEYDİYYAT",
+        "value": "QATILMAQ \u00dc\u00c7\u00dcN QEYD\u0130YYAT",
         "url": "events"
       }
     ],
@@ -2281,7 +2281,7 @@
   },
   {
     "id": "partners",
-    "title": "Tərəfdaşlar",
+    "title": "T\u0259r\u0259fda\u015flar",
     "sections": [
       {
         "id": "partner_1_name",
@@ -2311,7 +2311,7 @@
         "id": "SECTION_TITLE",
         "type": "text",
         "label": "KEY: SECTION_TITLE",
-        "value": "RƏSMİ TƏRƏFDAŞLARIMIZ"
+        "value": "R\u018fSM\u0130 T\u018fR\u018fFDA\u015eLARIMIZ"
       },
       {
         "id": "lbl-section-title-57",
@@ -2336,7 +2336,7 @@
         "id": "SECTION_TITLE",
         "type": "text",
         "label": "KEY: SECTION_TITLE",
-        "value": "VİDEO ARXİVİ"
+        "value": "V\u0130DEO ARX\u0130V\u0130"
       },
       {
         "id": "lbl-section-title-985",
@@ -2348,7 +2348,7 @@
         "id": "SECTION_SUBTITLE",
         "type": "text",
         "label": "KEY: SECTION_SUBTITLE",
-        "value": "Tarixi yarışların unudulmaz anları"
+        "value": "Tarixi yar\u0131\u015flar\u0131n unudulmaz anlar\u0131"
       },
       {
         "id": "lbl-section-subtitl-425",
@@ -2360,7 +2360,7 @@
         "id": "VIEW_ALL_BTN",
         "type": "text",
         "label": "KEY: VIEW_ALL_BTN",
-        "value": "BÜTÜN QALEREYA"
+        "value": "B\u00dcT\u00dcN QALEREYA"
       },
       {
         "id": "lbl-view-all-btn-394",
@@ -2373,73 +2373,73 @@
   },
   {
     "id": "whatisoffroad",
-    "title": "Offroad Nədir?",
+    "title": "Offroad N\u0259dir?",
     "sections": [
       {
         "id": "txt-texni-ki-t-chi-z-856",
         "type": "text",
         "label": "KEY: txt-texni-ki-t-chi-z-856",
-        "value": "TEXNİKİ TƏCHİZAT"
+        "value": "TEXN\u0130K\u0130 T\u018fCH\u0130ZAT"
       },
       {
         "id": "txt-h-r-bir-ma-i-n-x-456",
         "type": "text",
         "label": "KEY: txt-h-r-bir-ma-i-n-x-456",
-        "value": "Hər bir maşın xüsusi asqı sistemi və gücləndirilmiş mühərriklə təmin olunur."
+        "value": "H\u0259r bir ma\u015f\u0131n x\u00fcsusi asq\u0131 sistemi v\u0259 g\u00fccl\u0259ndirilmi\u015f m\u00fch\u0259rrikl\u0259 t\u0259min olunur."
       },
       {
         "id": "txt-t-hl-k-si-zli-k-420",
         "type": "text",
         "label": "KEY: txt-t-hl-k-si-zli-k-420",
-        "value": "TƏHLÜKƏSİZLİK"
+        "value": "T\u018fHL\u00dcK\u018fS\u0130ZL\u0130K"
       },
       {
         "id": "txt-pi-lotlar-n-t-hl-k-112",
         "type": "text",
         "label": "KEY: txt-pi-lotlar-n-t-hl-k-112",
-        "value": "Pilotların təhlükəsizliyi bizim üçün prioritetdir. Karkas və kəmərlər məcburidir."
+        "value": "Pilotlar\u0131n t\u0259hl\u00fck\u0259sizliyi bizim \u00fc\u00e7\u00fcn prioritetdir. Karkas v\u0259 k\u0259m\u0259rl\u0259r m\u0259cburidir."
       },
       {
         "id": "txt-navi-qasi-ya-901",
         "type": "text",
         "label": "KEY: txt-navi-qasi-ya-901",
-        "value": "NAVİQASİYA"
+        "value": "NAV\u0130QAS\u0130YA"
       },
       {
         "id": "txt-gps-v-x-ri-t-oxu-452",
         "type": "text",
         "label": "KEY: txt-gps-v-x-ri-t-oxu-452",
-        "value": "GPS və xəritə oxuma bacarığı offroad yarışlarında qalibiyyətin yarısıdır."
+        "value": "GPS v\u0259 x\u0259rit\u0259 oxuma bacar\u0131\u011f\u0131 offroad yar\u0131\u015flar\u0131nda qalibiyy\u0259tin yar\u0131s\u0131d\u0131r."
       },
       {
         "id": "txt-ekstremal-g-c-112",
         "type": "text",
         "label": "KEY: txt-ekstremal-g-c-112",
-        "value": "EKSTREMAL GÜC"
+        "value": "EKSTREMAL G\u00dcC"
       },
       {
         "id": "txt-s-r-c-n-n-fi-zi-ki-912",
         "type": "text",
         "label": "KEY: txt-s-r-c-n-n-fi-zi-ki-912",
-        "value": "Sürücünün fiziki hazırlığı ən az avtomobilin gücü qədər əhəmiyyətlidir."
+        "value": "S\u00fcr\u00fcc\u00fcn\u00fcn fiziki haz\u0131rl\u0131\u011f\u0131 \u0259n az avtomobilin g\u00fcc\u00fc q\u0259d\u0259r \u0259h\u0259miyy\u0259tlidir."
       },
       {
         "id": "txt-offroad-n-dir-134",
         "type": "text",
         "label": "KEY: txt-offroad-n-dir-134",
-        "value": "OFFROAD NƏDIR?"
+        "value": "OFFROAD N\u018fDIR?"
       },
       {
         "id": "txt-adrenali-n-v-texni-ka-364",
         "type": "text",
         "label": "KEY: txt-adrenali-n-v-texni-ka-364",
-        "value": "ADRENALİN VƏ TEXNİKANIN SİMBİOZU"
+        "value": "ADRENAL\u0130N V\u018f TEXN\u0130KANIN S\u0130MB\u0130OZU"
       },
       {
         "id": "txt-offroad-yaln-z-yol-339",
         "type": "text",
         "label": "KEY: txt-offroad-yaln-z-yol-339",
-        "value": "Offroad – yalnız yolsuzluq şəraitində hərəkət etmək deyil, həm də dözümlülük, strateji düşüncə və mühəndislik bacarığının sınağıdır. Azərbaycanın çətin dağlıq relyefi bu idman növü üçün dünyada ən maraqlı məkanlardan biri hesab olunur."
+        "value": "Offroad \u2013 yaln\u0131z yolsuzluq \u015f\u0259raitind\u0259 h\u0259r\u0259k\u0259t etm\u0259k deyil, h\u0259m d\u0259 d\u00f6z\u00fcml\u00fcl\u00fck, strateji d\u00fc\u015f\u00fcnc\u0259 v\u0259 m\u00fch\u0259ndislik bacar\u0131\u011f\u0131n\u0131n s\u0131na\u011f\u0131d\u0131r. Az\u0259rbaycan\u0131n \u00e7\u0259tin da\u011fl\u0131q relyefi bu idman n\u00f6v\u00fc \u00fc\u00e7\u00fcn d\u00fcnyada \u0259n maraql\u0131 m\u0259kanlardan biri hesab olunur."
       },
       {
         "id": "attr-offroad-culture-545",
@@ -2451,16 +2451,22 @@
         "id": "txt-yar-i-llik-96",
         "type": "text",
         "label": "KEY: txt-yar-i-llik-96",
-        "value": "YARIŞ İLLIK"
+        "value": "YARI\u015e \u0130LLIK"
       }
     ],
     "images": [
       {
         "id": "img-836",
         "path": "https://picsum.photos/id/107/800/600",
-        "alt": "Bölmədəki Şəkil",
+        "alt": "B\u00f6lm\u0259d\u0259ki \u015e\u0259kil",
         "type": "local"
       }
     ]
+  },
+  {
+    "id": "general",
+    "title": "S\u0130STEM AYARLARI",
+    "sections": [],
+    "images": []
   }
 ]
