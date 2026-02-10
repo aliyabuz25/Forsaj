@@ -45,8 +45,15 @@ const CsPlayer: React.FC<CsPlayerProps> = ({
             }
 
             try {
-                // Destroy existing instance with the same ID if any
-                if (initializedRef.current || window.csPlayer.initialized?.(playerId)) {
+                // Safely check if player exists and is initialized
+                let isInitialized = false;
+                try {
+                    isInitialized = window.csPlayer.initialized?.(playerId);
+                } catch (e) {
+                    // If the library throws despite our fix, treat as not initialized
+                }
+
+                if (initializedRef.current || isInitialized) {
                     window.csPlayer.destroy(playerId);
                 }
 
