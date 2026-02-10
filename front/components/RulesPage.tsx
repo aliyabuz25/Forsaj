@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronRight, FileText, Download, ShieldAlert, Settings, Info, Leaf } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
+import { bbcodeToHtml } from '../utils/bbcode';
 
 interface RuleSection {
   id: string;
@@ -176,9 +177,10 @@ const RulesPage: React.FC = () => {
                     <h4 className="text-[#FF4D00] font-black italic text-2xl uppercase tracking-tighter mb-4 group-hover/rule:text-white transition-colors">
                       {rule.subtitle}
                     </h4>
-                    <p className="text-gray-500 font-bold italic text-sm md:text-base uppercase leading-relaxed tracking-widest max-w-3xl">
-                      {rule.description}
-                    </p>
+                    <p
+                      className="text-gray-500 font-bold italic text-sm md:text-base uppercase leading-relaxed tracking-widest max-w-3xl"
+                      dangerouslySetInnerHTML={{ __html: bbcodeToHtml(rule.description) }}
+                    />
                   </div>
                 ))}
               </div>

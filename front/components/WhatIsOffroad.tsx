@@ -1,6 +1,7 @@
 import React from 'react';
 import { Settings, ShieldCheck, Compass, Zap } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
+import { bbcodeToHtml } from '../utils/bbcode';
 
 const WhatIsOffroad: React.FC = () => {
   const { getText, isLoading } = useSiteContent('whatisoffroad');
@@ -21,9 +22,10 @@ const WhatIsOffroad: React.FC = () => {
         <h2 className="text-5xl font-black italic leading-none mb-8 tracking-tighter uppercase">
           {getText('txt-adrenali-n-v-texni-ka-364', 'ADRENALİN VƏ TEXNİKANIN SİMBİOZU')}
         </h2>
-        <p className="text-gray-500 font-bold italic text-sm mb-12 uppercase leading-relaxed max-w-xl">
-          {getText('txt-offroad-yaln-z-yol-339', 'Offroad – yalnız yolsuzluq şəraitində hərəkət etmək deyil, həm də dözümlülük, strateji düşüncə və mühəndislik bacarığının sınağıdır. Azərbaycanın çətin dağlıq relyefi bu idman növü üçün dünyada ən maraqlı məkanlardan biri hesab olunur.')}
-        </p>
+        <p
+          className="text-gray-500 font-bold italic text-sm mb-12 uppercase leading-relaxed max-w-xl"
+          dangerouslySetInnerHTML={{ __html: bbcodeToHtml(getText('txt-offroad-yaln-z-yol-339', 'Offroad – yalnız yolsuzluq şəraitində hərəkət etmək deyil, həm də dözümlülük, strateji düşüncə və mühəndislik bacarığının sınağıdır. Azərbaycanın čətin dağlıq relyefi bu idman növü üçün dünyada ən maraqlı məkanlardan biri hesab olunur.')) }}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {features.map((f, i) => (

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Shield, Users, Leaf, Zap, Target, Globe } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
+import { bbcodeToHtml } from '../utils/bbcode';
 
 const About: React.FC = () => {
   const { getText, getImage } = useSiteContent('about');
@@ -46,9 +47,10 @@ const About: React.FC = () => {
               <h2 className="text-3xl md:text-5xl font-black italic leading-tight mb-8 uppercase max-w-2xl text-white tracking-tighter">
                 {getText('txt-forsaj-club-az-rba-66', '"FORSAJ CLUB" AZƏRBAYCANIN OFFROAD MƏDƏNİYYƏTİNİ PEŞƏKAR SƏVİYYƏYƏ ÇATDIRMAQ ÜÇÜN YARADILMIŞDIR.')}
               </h2>
-              <p className="text-gray-400 font-bold italic text-sm md:text-base leading-relaxed mb-12 max-w-xl uppercase tracking-wide">
-                {getText('txt-klubumuz-sad-c-bir-552', 'Klubumuz sadəcə bir həvəskar qrupu deyil, ölkəmizi beynəlxalq ralli xəritəsinə daxil etməyi hədəfləyən rəsmi və peşəkar bir platformadır. 2018-ci ildən bəri biz 50-dən çox rəsmi yarış, 100-dən çox ekspedisiya və saysız-hesabsız adrenalin dolu anlar yaşamışıq.')}
-              </p>
+              <p
+                className="text-gray-400 font-bold italic text-sm md:text-base leading-relaxed mb-12 max-w-xl uppercase tracking-wide"
+                dangerouslySetInnerHTML={{ __html: bbcodeToHtml(getText('txt-klubumuz-sad-c-bir-552', 'Klubumuz sadəcə bir həvəskar qrupu deyil, ölkəmizi beynəlxalq ralli xəritəsinə daxil etməyi hədəfləyən rəsmi və peşəkar bir platformadır. 2018-ci ildən bəri biz 50-dən çox rəsmi yarış, 100-dən çox ekspedisiya və saysız-hesabsız adrenalin dolu anlar yaşamışıq.')) }}
+              />
 
               <div className="flex flex-wrap gap-4">
                 {stats.map((stat, i) => (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, Calendar, Facebook, Send, Twitter, MessageCircle } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
+import { bbcodeToHtml } from '../utils/bbcode';
 
 interface NewsItem {
   id: number;
@@ -11,18 +12,7 @@ interface NewsItem {
   content: string;
 }
 
-const bbcodeToHtml = (bbcode: string) => {
-  if (!bbcode) return '';
-  let html = bbcode
-    .replace(/\[b\](.*?)\[\/b\]/gi, '<strong>$1</strong>')
-    .replace(/\[i\](.*?)\[\/i\]/gi, '<em>$1</em>')
-    .replace(/\[u\](.*?)\[\/u\]/gi, '<span style="text-decoration: underline;">$1</span>')
-    .replace(/\[s\](.*?)\[\/s\]/gi, '<strike>$1</strike>')
-    .replace(/\[url=(.*?)\](.*?)\[\/url\]/gi, '<a href="$1" target="_blank" style="color: #FF4D00;">$2</a>')
-    .replace(/\[img\](.*?)\[\/img\]/gi, '<img src="$1" style="max-width: 100%;" />')
-    .replace(/\n/g, '<br />');
-  return html;
-};
+
 
 const NewsPage: React.FC = () => {
   const { getText } = useSiteContent('newspage');
@@ -118,9 +108,10 @@ const NewsPage: React.FC = () => {
         <div className="px-4 lg:px-10 py-16">
           <div className="max-w-[1700px] mx-auto flex flex-col lg:flex-row gap-16">
             <div className="lg:w-8/12 bg-[#0A0A0A]">
-              <div className="text-gray-300 text-xl md:text-2xl font-bold italic leading-relaxed whitespace-pre-line space-y-8 uppercase tracking-wide">
-                {selectedNews.content}
-              </div>
+              <div
+                className="text-gray-300 text-xl md:text-2xl font-bold italic leading-relaxed space-y-8 uppercase tracking-wide"
+                dangerouslySetInnerHTML={{ __html: bbcodeToHtml(selectedNews.content) }}
+              />
 
               {/* Social Share */}
               <div className="mt-24 pt-12 border-t border-white/5 flex flex-col items-start">

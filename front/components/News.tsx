@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Calendar } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
+import { bbcodeToHtml } from '../utils/bbcode';
 
 interface NewsItem {
   id: number;
@@ -14,18 +15,7 @@ interface NewsProps {
   onViewChange: (view: any) => void;
 }
 
-const bbcodeToHtml = (bbcode: string) => {
-  if (!bbcode) return '';
-  let html = bbcode
-    .replace(/\[b\](.*?)\[\/b\]/gi, '<strong>$1</strong>')
-    .replace(/\[i\](.*?)\[\/i\]/gi, '<em>$1</em>')
-    .replace(/\[u\](.*?)\[\/u\]/gi, '<span style="text-decoration: underline;">$1</span>')
-    .replace(/\[s\](.*?)\[\/s\]/gi, '<strike>$1</strike>')
-    .replace(/\[url=(.*?)\](.*?)\[\/url\]/gi, '<a href="$1" target="_blank" style="color: #FF4D00;">$2</a>')
-    .replace(/\[img\](.*?)\[\/img\]/gi, '<img src="$1" style="max-width: 100%;" />')
-    .replace(/\n/g, '<br />');
-  return html;
-};
+
 
 const News: React.FC<NewsProps> = ({ onViewChange }) => {
   const { getText } = useSiteContent('news');

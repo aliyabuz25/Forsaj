@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, Calendar, MapPin, X, Car, Users as UsersIcon, Download, FileText, ChevronDown } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
+import { bbcodeToHtml } from '../utils/bbcode';
 import toast from 'react-hot-toast';
 
 interface EventItem {
@@ -20,22 +21,7 @@ interface EventsPageProps {
   onViewChange: (view: 'home' | 'about' | 'news' | 'events' | 'drivers' | 'rules' | 'contact' | 'gallery') => void;
 }
 
-const bbcodeToHtml = (bbcode: string) => {
-  if (!bbcode) return '';
-  let html = bbcode
-    .replace(/\[b\](.*?)\[\/b\]/gi, '<strong>$1</strong>')
-    .replace(/\[i\](.*?)\[\/i\]/gi, '<em>$1</em>')
-    .replace(/\[u\](.*?)\[\/u\]/gi, '<span style="text-decoration: underline;">$1</span>')
-    .replace(/\[s\](.*?)\[\/s\]/gi, '<strike>$1</strike>')
-    .replace(/\[url=(.*?)\](.*?)\[\/url\]/gi, '<a href="$1" target="_blank" style="color: #FF4D00;">$2</a>')
-    .replace(/\[img\](.*?)\[\/img\]/gi, '<img src="$1" style="max-width: 100%;" />')
-    .replace(/\[color=(.*?)\](.*?)\[\/color\]/gi, '<span style="color: $1;">$2</span>')
-    .replace(/\[size=(.*?)\](.*?)\[\/size\]/gi, '<span style="font-size: $1px;">$2</span>')
-    .replace(/\[quote\](.*?)\[\/quote\]/gi, '<blockquote style="border-left: 2px solid #FF4D00; padding-left: 10px; margin-left: 0;">$1</blockquote>')
-    .replace(/\[code\](.*?)\[\/code\]/gi, '<pre style="background: #222; padding: 10px; border-radius: 4px;"><code>$1</code></pre>')
-    .replace(/\n/g, '<br />');
-  return html;
-};
+
 
 const EventsPage: React.FC<EventsPageProps> = ({ onViewChange }) => {
   const { getText } = useSiteContent('eventspage');
@@ -325,9 +311,10 @@ const EventsPage: React.FC<EventsPageProps> = ({ onViewChange }) => {
             <div className="lg:w-4/12">
               <div className="bg-[#111] p-12 border border-white/5 sticky top-32 shadow-2xl rounded-sm">
                 <h4 className="text-white text-4xl font-black italic uppercase tracking-tighter mb-6 leading-none">{getText('SIDEBAR_QUESTION_TITLE', 'SUALINIZ VAR?')}</h4>
-                <p className="text-gray-500 font-bold italic text-xs uppercase mb-10 leading-relaxed tracking-widest">
-                  {getText('SIDEBAR_QUESTION_DESC', 'YARIŞLA BAĞLI ƏLAVƏ SUALLARINIZ ÜÇÜN BİZİMLƏ ƏLAQƏ SAXLAYIN.')}
-                </p>
+                <p
+                  className="text-gray-500 font-bold italic text-xs uppercase mb-10 leading-relaxed tracking-widest"
+                  dangerouslySetInnerHTML={{ __html: bbcodeToHtml(getText('SIDEBAR_QUESTION_DESC', 'YARIŞLA BAĞLI ƏLAVƏ SUALLARINIZ ÜÇÜN BİZİMLƏ ƏLAQƏ SAXLAYIN.')) }}
+                />
                 <button
                   onClick={() => onViewChange('contact')}
                   className="w-full border-2 border-white/10 text-white py-5 font-black italic text-xs uppercase hover:bg-[#FF4D00] hover:text-black hover:border-[#FF4D00] transition-all transform -skew-x-12 tracking-widest"
