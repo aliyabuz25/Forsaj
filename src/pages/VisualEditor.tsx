@@ -83,6 +83,21 @@ interface DriverCategory {
     drivers: DriverItem[];
 }
 
+const componentLabels: Record<string, string> = {
+    'about': 'HAQQIMIZDA',
+    'eventspage': 'Tədbirlər Səhifəsi',
+    'rulespage': 'Qaydalar',
+    'contactpage': 'Əlaqə Səhifəsi',
+    'footer': 'Sayt Sonu',
+    'hero': 'Giriş Hissəsi',
+    'marquee': 'Sürüşən Yazı',
+    'navbar': 'Naviqasiya',
+    'upcomings': 'Növbəti Yarışlar',
+    'partners': 'Tərəfdaşlar',
+    'offroadinfo': 'Offroad Nədir?',
+    'general': 'SİSTEM AYARLARI'
+};
+
 const BBCodeEditor: React.FC<{ value: string, onChange: (val: string) => void, id: string }> = ({ value, onChange, id }) => {
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
     const editorRef = React.useRef<any>(null);
@@ -1142,32 +1157,34 @@ const VisualEditor: React.FC = () => {
 
                                 <div className="edit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
                                     <div className="form-group">
-                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>XƏBƏRİN BAŞLIĞI</label>
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>XƏBƏR BAŞLIĞI (AZ)</label>
                                         <input
                                             type="text"
                                             value={newsForm.title}
                                             onChange={(e) => handleNewsChange('title', e.target.value, newsForm.id)}
-                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}
+                                            placeholder="Xəbərin əsas başlığı..."
+                                            style={{ width: '100%', padding: '14px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '16px', fontWeight: 'bold' }}
                                         />
                                     </div>
 
                                     <div className="form-group">
-                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>TARİX</label>
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>PAYLAŞILMA TARİXİ</label>
                                         <input
                                             type="date"
                                             value={newsForm.date}
                                             onChange={(e) => handleNewsChange('date', e.target.value, newsForm.id)}
-                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px' }}
+                                            style={{ width: '100%', padding: '14px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '15px' }}
                                         />
                                     </div>
 
                                     <div className="form-group">
-                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>KATEQORİYA</label>
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>XƏBƏR KATEQORİYASI</label>
                                         <input
                                             type="text"
                                             value={newsForm.category || ''}
                                             onChange={(e) => handleNewsChange('category', e.target.value, newsForm.id)}
-                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px' }}
+                                            placeholder="Məs: YARIŞLAR, TEXNOLOGİYA"
+                                            style={{ width: '100%', padding: '14px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '15px' }}
                                         />
                                     </div>
 
@@ -1231,6 +1248,9 @@ const VisualEditor: React.FC = () => {
 
                                     <div className="form-group" style={{ gridColumn: '1 / -1' }}>
                                         <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>MƏZMUN (CONTENT)</label>
+                                        <div style={{ marginBottom: '10px', fontSize: '11px', color: '#94a3b8', fontStyle: 'italic', background: '#f8fafc', padding: '8px 12px', borderRadius: '8px', border: '1px dashed #e2e8f0' }}>
+                                            💡 <b>BBCode İpucu:</b> [b]<b>Qalın</b>[/b], [i]<i>Maili</i>[/i], [url=link]Keçid[/url], [youtube]Video_ID[/youtube]
+                                        </div>
                                         <BBCodeEditor
                                             id="news-desc"
                                             value={newsForm.description || ''}
@@ -1304,45 +1324,48 @@ const VisualEditor: React.FC = () => {
 
                                 <div className="edit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
                                     <div className="form-group">
-                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>TƏDBİRİN ADI</label>
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>YARIŞIN / TƏDBİRİN ADI (AZ)</label>
                                         <input
                                             type="text"
                                             value={eventForm.title}
                                             onChange={(e) => handleEventChange('title', e.target.value, eventForm.id)}
-                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}
+                                            placeholder="Məs: Offroad Championship 2024"
+                                            style={{ width: '100%', padding: '14px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '16px', fontWeight: 'bold' }}
                                         />
                                     </div>
 
                                     <div className="form-group">
-                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>TARİX</label>
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>TARİX Seçin</label>
                                         <input
                                             type="date"
                                             value={eventForm.date}
                                             onChange={(e) => handleEventChange('date', e.target.value, eventForm.id)}
-                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px' }}
+                                            style={{ width: '100%', padding: '14px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '15px' }}
                                         />
                                     </div>
 
                                     <div className="form-group">
-                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>MƏKAN</label>
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>MƏKAN (Şəhər, Rayon və ya Ünvan)</label>
                                         <div style={{ position: 'relative' }}>
-                                            <MapPin size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                                            <MapPin size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
                                             <input
                                                 type="text"
                                                 value={eventForm.location}
                                                 onChange={(e) => handleEventChange('location', e.target.value, eventForm.id)}
-                                                style={{ width: '100%', padding: '12px 12px 12px 40px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px' }}
+                                                placeholder="Məs: Quba, Bakı"
+                                                style={{ width: '100%', padding: '14px 14px 14px 44px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '15px' }}
                                             />
                                         </div>
                                     </div>
 
                                     <div className="form-group">
-                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>KATEQORİYA</label>
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>SƏVİYYƏ / KATEQORİYA</label>
                                         <input
                                             type="text"
                                             value={eventForm.category}
+                                            placeholder="Məs: EXTREME, TOURING"
                                             onChange={(e) => handleEventChange('category', e.target.value, eventForm.id)}
-                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px' }}
+                                            style={{ width: '100%', padding: '14px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '15px' }}
                                         />
                                     </div>
 
@@ -1406,6 +1429,9 @@ const VisualEditor: React.FC = () => {
 
                                     <div className="form-group" style={{ gridColumn: '1 / -1' }}>
                                         <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>TƏSVİR (DESCRIPTION)</label>
+                                        <div style={{ marginBottom: '10px', fontSize: '11px', color: '#94a3b8', fontStyle: 'italic', background: '#f8fafc', padding: '8px 12px', borderRadius: '8px', border: '1px dashed #e2e8f0' }}>
+                                            💡 <b>BBCode İpucu:</b> [b]<b>Qalın</b>[/b], [i]<i>Maili</i>[/i], [url=link]Keçid[/url], [youtube]Video_ID[/youtube]
+                                        </div>
                                         <BBCodeEditor
                                             id="event-desc"
                                             value={eventForm.description || ''}
@@ -1538,43 +1564,46 @@ const VisualEditor: React.FC = () => {
 
                                 <div className="edit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
                                     <div className="form-group">
-                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>AD SOYAD</label>
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>SÜRÜCÜNÜN ADI VƏ SOYADI</label>
                                         <input
                                             type="text"
                                             value={driverForm.name}
                                             onChange={(e) => handleDriverChange('name', e.target.value)}
-                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}
+                                            placeholder="Məs: Əli Məmmədov"
+                                            style={{ width: '100%', padding: '14px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '16px', fontWeight: 'bold' }}
                                         />
                                     </div>
 
                                     <div className="form-group">
-                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>SIRA (RANK)</label>
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>YARIŞ SIRALAMASI (RANK)</label>
                                         <input
                                             type="number"
                                             value={driverForm.rank}
                                             readOnly
-                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '16px', background: '#f8fafc', color: '#94a3b8', cursor: 'not-allowed' }}
+                                            style={{ width: '100%', padding: '14px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '16px', background: '#f8fafc', color: '#94a3b8', cursor: 'not-allowed' }}
                                         />
-                                        <p style={{ fontSize: '10px', color: '#3b82f6', marginTop: '4px', fontWeight: 'bold' }}>* Sira xallara əsasən sistem tərəfindən avtomatik təyin edilir</p>
+                                        <p style={{ fontSize: '11px', color: '#3b82f6', marginTop: '6px', fontWeight: 'bold' }}>ℹ️ Bu sıra ballara görə avtomatik hesablanır</p>
                                     </div>
 
                                     <div className="form-group">
-                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>LİSENZİYA</label>
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>PİLOT LİSENZİYASI</label>
                                         <input
                                             type="text"
                                             value={driverForm.license}
                                             onChange={(e) => handleDriverChange('license', e.target.value)}
-                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px' }}
+                                            placeholder="Məs: A-SİNFİ"
+                                            style={{ width: '100%', padding: '14px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '15px' }}
                                         />
                                     </div>
 
                                     <div className="form-group">
-                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>KOMANDA (TEAM)</label>
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>TƏMSİL ETDİYİ KOMANDA</label>
                                         <input
                                             type="text"
                                             value={driverForm.team}
                                             onChange={(e) => handleDriverChange('team', e.target.value)}
-                                            style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px' }}
+                                            placeholder="Məs: FORSAJ RACING"
+                                            style={{ width: '100%', padding: '14px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '15px' }}
                                         />
                                     </div>
 
@@ -1898,23 +1927,19 @@ const VisualEditor: React.FC = () => {
                                     <button
                                         className={`page-nav-item ${selectedPageIndex === idx ? 'active' : ''}`}
                                         onClick={() => setSelectedPageIndex(idx)}
-                                        style={{ width: '100%', paddingRight: '40px' }}
+                                        style={{ width: '100%', paddingRight: '40px', textAlign: 'left' }}
                                     >
-                                        <Layout size={16} /> {page.title}
-                                        {searchTerm && (
-                                            <span style={{ marginLeft: 'auto', fontSize: '9px', background: 'rgba(255,255,255,0.2)', padding: '2px 6px', borderRadius: '10px' }}>
-                                                {(page.sections.filter(s => s.label.toLowerCase().includes(searchTerm.toLowerCase()) || s.value.toLowerCase().includes(searchTerm.toLowerCase())).length +
-                                                    page.images.filter(i => i.alt.toLowerCase().includes(searchTerm.toLowerCase()) || i.path.toLowerCase().includes(searchTerm.toLowerCase())).length) > 0 ? 'Tapıldı' : ''}
-                                            </span>
-                                        )}
+                                        <Layout size={16} /> {componentLabels[page.id] || page.title || page.id}
                                     </button>
-                                    <button
-                                        className="delete-section-btn"
-                                        onClick={(e) => deleteSection(idx, e)}
-                                        style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#ff4d4f', opacity: selectedPageIndex === idx ? 1 : 0.3, cursor: 'pointer' }}
-                                    >
-                                        <Trash2 size={14} />
-                                    </button>
+                                    {!componentLabels[page.id] && (
+                                        <button
+                                            className="delete-section-btn"
+                                            onClick={(e) => deleteSection(idx, e)}
+                                            style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#ff4d4f', opacity: 0.3, cursor: 'pointer' }}
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
+                                    )}
                                 </div>
                             ))}
                         </div>
