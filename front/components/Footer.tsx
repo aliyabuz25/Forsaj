@@ -9,9 +9,15 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
   const { getText, getUrl, getImage } = useSiteContent('footer');
-  const { getImage: getImageGeneral } = useSiteContent('general');
+  const { getText: getGeneralText, getImage: getImageGeneral } = useSiteContent('general');
 
   const logoImg = getImageGeneral('SITE_LOGO_LIGHT').path;
+
+  const socialLinks = [
+    { Icon: Instagram, url: getGeneralText('SOCIAL_INSTAGRAM') || '#' },
+    { Icon: Youtube, url: getGeneralText('SOCIAL_YOUTUBE') || '#' },
+    { Icon: Facebook, url: getGeneralText('SOCIAL_FACEBOOK') || '#' },
+  ];
 
   const navigationLinks = [
     { name: getText('txt-ana-s-h-f-744', 'ANA SƏHİFƏ'), id: getUrl('txt-ana-s-h-f-744', 'home') as any },
@@ -56,10 +62,12 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
             Azərbaycanın ən prestijli motorsport mərkəzi. Sərhədsiz offroad həyəcanını bizimlə yaşayın.
           </p>
           <div className="flex gap-4">
-            {[Instagram, Youtube, Facebook].map((Icon, idx) => (
+            {socialLinks.map(({ Icon, url }, idx) => (
               <a
                 key={idx}
-                href="#"
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="bg-white/5 p-4 rounded-sm text-gray-500 hover:bg-[#FF4D00] hover:text-black transition-all transform hover:-translate-y-1 shadow-sm"
               >
                 <Icon className="w-5 h-5" />

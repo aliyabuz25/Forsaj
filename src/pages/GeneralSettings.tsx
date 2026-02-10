@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Globe, Image as ImageIcon, BarChart3, Save, Upload } from 'lucide-react';
+import { Globe, Image as ImageIcon, BarChart3, Save, Upload, Mail } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './GeneralSettings.css';
 
@@ -187,6 +187,137 @@ const GeneralSettings: React.FC = () => {
                     </div>
                 </div>
 
+                {/* Contact Details Section */}
+                <div className="settings-card shadow-sm">
+                    <div className="card-header">
+                        <ImageIcon size={20} className="text-red-500" />
+                        <h2>Əlaqə Təfərrüatları</h2>
+                    </div>
+                    <div className="card-body">
+                        <div className="field-group">
+                            <label>Baş Ofis Ünvan (Sətir 1)</label>
+                            <input
+                                type="text"
+                                value={getFieldValue('CONTACT_ADDRESS_1')}
+                                onChange={(e) => updateField('CONTACT_ADDRESS_1', e.target.value)}
+                                placeholder="Məs: AZADLIQ 102, BAKI"
+                            />
+                        </div>
+                        <div className="field-group">
+                            <label>Baş Ofis Ünvan (Sətir 2)</label>
+                            <input
+                                type="text"
+                                value={getFieldValue('CONTACT_ADDRESS_2')}
+                                onChange={(e) => updateField('CONTACT_ADDRESS_2', e.target.value)}
+                                placeholder="Məs: AZƏRBAYCAN // SECTOR_01"
+                            />
+                        </div>
+                        <div className="field-group">
+                            <label>İş Saatları</label>
+                            <input
+                                type="text"
+                                value={getFieldValue('CONTACT_HOURS')}
+                                onChange={(e) => updateField('CONTACT_HOURS', e.target.value)}
+                                placeholder="Məs: 09:00 - 18:00"
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="field-group">
+                                <label>Əlaqə Nömrəsi</label>
+                                <input
+                                    type="text"
+                                    value={getFieldValue('CONTACT_PHONE')}
+                                    onChange={(e) => updateField('CONTACT_PHONE', e.target.value)}
+                                    placeholder="+994 50 000 00 00"
+                                />
+                            </div>
+                            <div className="field-group">
+                                <label>Əlaqə E-poçtu</label>
+                                <input
+                                    type="text"
+                                    value={getFieldValue('CONTACT_EMAIL')}
+                                    onChange={(e) => updateField('CONTACT_EMAIL', e.target.value)}
+                                    placeholder="info@forsaj.az"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Department Emails Section */}
+                <div className="settings-card shadow-sm">
+                    <div className="card-header">
+                        <Mail size={20} className="text-purple-500" />
+                        <h2>Şöbə E-poçtları</h2>
+                    </div>
+                    <div className="card-body">
+                        <div className="field-group">
+                            <label>Baş Ofis (HQ)</label>
+                            <input
+                                type="text"
+                                value={getFieldValue('DEPT_HQ_EMAIL')}
+                                onChange={(e) => updateField('DEPT_HQ_EMAIL', e.target.value)}
+                                placeholder="hq@forsaj.az"
+                            />
+                        </div>
+                        <div className="field-group">
+                            <label>Media və PR</label>
+                            <input
+                                type="text"
+                                value={getFieldValue('DEPT_PR_EMAIL')}
+                                onChange={(e) => updateField('DEPT_PR_EMAIL', e.target.value)}
+                                placeholder="pr@forsaj.az"
+                            />
+                        </div>
+                        <div className="field-group">
+                            <label>Texniki Dəstək</label>
+                            <input
+                                type="text"
+                                value={getFieldValue('DEPT_TECH_EMAIL')}
+                                onChange={(e) => updateField('DEPT_TECH_EMAIL', e.target.value)}
+                                placeholder="tech@forsaj.az"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Social Links Section */}
+                <div className="settings-card shadow-sm">
+                    <div className="card-header">
+                        <Globe size={20} className="text-pink-500" />
+                        <h2>Sosial Media Linkləri</h2>
+                    </div>
+                    <div className="card-body">
+                        <div className="field-group">
+                            <label>Instagram</label>
+                            <input
+                                type="text"
+                                value={getFieldValue('SOCIAL_INSTAGRAM')}
+                                onChange={(e) => updateField('SOCIAL_INSTAGRAM', e.target.value)}
+                                placeholder="https://instagram.com/forsajclub"
+                            />
+                        </div>
+                        <div className="field-group">
+                            <label>Youtube</label>
+                            <input
+                                type="text"
+                                value={getFieldValue('SOCIAL_YOUTUBE')}
+                                onChange={(e) => updateField('SOCIAL_YOUTUBE', e.target.value)}
+                                placeholder="https://youtube.com/@forsajclub"
+                            />
+                        </div>
+                        <div className="field-group">
+                            <label>Facebook</label>
+                            <input
+                                type="text"
+                                value={getFieldValue('SOCIAL_FACEBOOK')}
+                                onChange={(e) => updateField('SOCIAL_FACEBOOK', e.target.value)}
+                                placeholder="https://facebook.com/forsajclub"
+                            />
+                        </div>
+                    </div>
+                </div>
+
                 {/* Stats Section */}
                 <div className="settings-card shadow-sm">
                     <div className="card-header">
@@ -225,6 +356,7 @@ const GeneralSettings: React.FC = () => {
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     );
