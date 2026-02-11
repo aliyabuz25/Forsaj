@@ -28,9 +28,16 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => {
     { name: 'ƏLAQƏ', id: 'contact' },
   ];
 
-  const navItems = navbarPage?.sections?.length > 0
-    ? navbarPage.sections.map(s => ({ name: s.value, id: s.url || s.id }))
-    : defaultNavItems;
+  const navItems = [
+    { name: 'ANA SƏHİFƏ', id: 'home' },
+    { name: 'HAQQIMIZDA', id: 'about' },
+    { name: 'XƏBƏRLƏR', id: 'news' },
+    { name: 'TƏDBİRLƏR', id: 'events' },
+    { name: 'SÜRÜCÜLƏR', id: 'drivers' },
+    { name: 'QALEREYA', id: 'gallery' },
+    { name: 'QAYDALAR', id: 'rules' },
+    { name: 'ƏLAQƏ', id: 'contact' },
+  ];
 
 
   const languages = ['AZ', 'RU', 'ENG'];
@@ -42,7 +49,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => {
         onClick={() => onViewChange('home')}
       >
         {logoImg ? (
-          <img src={logoImg} alt="Forsaj Logo" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+          <img src={logoImg} alt="Forsaj Logo" className="h-12 w-auto object-contain transition-transform group-hover:scale-105" />
         ) : (
           <div className="flex items-center gap-3">
             <div className="bg-[#FF4D00] w-10 h-10 rounded-sm flex items-center justify-center relative shadow-[0_0_20px_rgba(255,77,0,0.4)] group-hover:scale-110 transition-transform">
@@ -53,6 +60,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => {
             <h1 className="text-2xl font-black italic tracking-tighter flex items-center">
               <span className="text-white">FORSAJ</span>
               <span className="text-[#FF4D00] ml-1">CLUB</span>
+              <span className="text-[8px] text-gray-500 ml-2 opacity-50">FIXED</span>
             </h1>
           </div>
         )}

@@ -791,6 +791,16 @@ app.all('/api/extract-content', async (req, res) => {
                             const url = urlMatch ? urlMatch[1] : undefined;
 
                             const slug = text.slice(0, 15).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+                            // Specific safeguard for navbar: only extract if it has a valid-looking URL 
+                            // and isn't a known internal technical string.
+                            if (pageId === 'navbar') {
+                                const internalStrings = ['FORSAJ', 'CLUB', 'SITE_LOGO_LIGHT', 'AZ', 'RU', 'ENG'];
+                                if (internalStrings.includes(text.toUpperCase()) || !url) {
+                                    continue;
+                                }
+                            }
+
                             items.push({
                                 pos: match.index,
                                 item: {

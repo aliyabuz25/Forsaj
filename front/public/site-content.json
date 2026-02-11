@@ -2104,72 +2104,60 @@
     "title": "Naviqasiya",
     "sections": [
       {
-        "id": "txt-ana-s-h-f-366",
+        "id": "home",
         "type": "text",
-        "label": "KEY: txt-ana-s-h-f-366",
-        "value": "ANA S\u018fH\u0130F\u018f",
+        "label": "ANA SƏHİFƏ",
+        "value": "ANA SƏHİFƏ",
         "url": "home"
       },
       {
-        "id": "txt-haqqimizda-387",
+        "id": "about",
         "type": "text",
-        "label": "KEY: txt-haqqimizda-387",
+        "label": "HAQQIMIZDA",
         "value": "HAQQIMIZDA",
         "url": "about"
       },
       {
-        "id": "txt-x-b-rl-r-63",
+        "id": "news",
         "type": "text",
-        "label": "KEY: txt-x-b-rl-r-63",
-        "value": "X\u018fB\u018fRL\u018fR",
+        "label": "XƏBƏRLƏR",
+        "value": "XƏBƏRLƏR",
         "url": "news"
       },
       {
-        "id": "txt-t-dbi-rl-r-793",
+        "id": "events",
         "type": "text",
-        "label": "KEY: txt-t-dbi-rl-r-793",
-        "value": "T\u018fDB\u0130RL\u018fR",
+        "label": "TƏDBİRLƏR",
+        "value": "TƏDBİRLƏR",
         "url": "events"
       },
       {
-        "id": "txt-s-r-c-l-r-119",
+        "id": "drivers",
         "type": "text",
-        "label": "KEY: txt-s-r-c-l-r-119",
-        "value": "S\u00dcR\u00dcC\u00dcL\u018fR",
+        "label": "SÜRÜCÜLƏR",
+        "value": "SÜRÜCÜLƏR",
         "url": "drivers"
       },
       {
-        "id": "txt-qalereya-784",
+        "id": "gallery",
         "type": "text",
-        "label": "KEY: txt-qalereya-784",
+        "label": "QALEREYA",
         "value": "QALEREYA",
         "url": "gallery"
       },
       {
-        "id": "txt-qaydalar-291",
+        "id": "rules",
         "type": "text",
-        "label": "KEY: txt-qaydalar-291",
+        "label": "QAYDALAR",
         "value": "QAYDALAR",
         "url": "rules"
       },
       {
-        "id": "txt-laq-251",
+        "id": "contact",
         "type": "text",
-        "label": "KEY: txt-laq-251",
-        "value": "\u018fLAQ\u018f",
+        "label": "ƏLAQƏ",
+        "value": "ƏLAQƏ",
         "url": "contact"
-      },
-      {
-        "id": "txt-forsaj-919",
-        "type": "text",
-        "label": "FORSAJ",
-        "value": "FORSAJ"
-      },
-      {
-        "id": "txt-club-303",
-        "type": "text",
-        "label": "CLUB",
-        "value": "CLUB"
       }
     ],
     "images": []
@@ -2465,9 +2453,16 @@
   },
   {
     "id": "general",
-    "title": "S\u0130STEM AYARLARI",
+    "title": "SİSTEM AYARLARI",
     "sections": [],
-    "images": []
+    "images": [
+      {
+        "id": "SITE_LOGO_LIGHT",
+        "path": "/uploads/1770547955419-477388235.jpeg",
+        "alt": "Forsaj Logo",
+        "type": "local"
+      }
+    ]
   },
   {
     "id": "socials",

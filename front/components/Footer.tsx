@@ -58,7 +58,7 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
         <div className="lg:col-span-1">
           <div className="flex items-center gap-3 mb-8 cursor-pointer" onClick={() => onViewChange('home')}>
             {logoImg ? (
-              <img src={logoImg} alt="Forsaj Logo" className="h-10 w-auto object-contain" />
+              <img src={logoImg} alt="Forsaj Logo" className="h-12 w-auto object-contain" />
             ) : (
               <div className="flex items-center gap-3">
                 <div className="bg-[#FF4D00] w-10 h-10 rounded-sm flex items-center justify-center relative shadow-[0_0_20px_rgba(255,77,0,0.4)] group-hover:scale-110 transition-transform">
