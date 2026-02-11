@@ -801,6 +801,13 @@ app.all('/api/extract-content', async (req, res) => {
                                 }
                             }
 
+                            if (pageId === 'partners') {
+                                const junkStrings = ['TITLE', 'OFFICIAL PARTNER', 'SECTION_TITLE', 'PARTNER_1', 'PARTNER_2', 'PARTNER_3', 'PARTNER_4'];
+                                if (junkStrings.includes(text.toUpperCase())) {
+                                    continue;
+                                }
+                            }
+
                             items.push({
                                 pos: match.index,
                                 item: {

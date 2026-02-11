@@ -15,24 +15,25 @@ const Partners: React.FC = () => {
     return <ShieldCheck className="w-10 h-10" />; // Fallback
   };
 
-  const defaultPartners = [
-    { id: 'partner_1', name: 'AZMF', icon: <ShieldCheck className="w-10 h-10" />, color: 'text-[#FF4D00]', bg: 'group-hover:bg-[#FF4D00]/10', glow: 'group-hover:shadow-[#FF4D00]/20' },
-    { id: 'partner_2', name: 'OFFROAD AZ', icon: <Truck className="w-10 h-10" />, color: 'text-white', bg: 'group-hover:bg-white/10', glow: 'group-hover:shadow-white/10' },
-    { id: 'partner_3', name: 'GLOBAL 4X4', icon: <Globe className="w-10 h-10" />, color: 'text-gray-400', bg: 'group-hover:bg-gray-400/10', glow: 'group-hover:shadow-gray-400/10' },
-    { id: 'partner_4', name: 'RACE TECH', icon: <Zap className="w-10 h-10" />, color: 'text-[#FF4D00]', bg: 'group-hover:bg-[#FF4D00]/10', glow: 'group-hover:shadow-[#FF4D00]/20' },
+  const partnerList = [
+    { id: 'partner_1', defaultName: 'AZMF', iconKey: 'shield' },
+    { id: 'partner_2', defaultName: 'OFFROAD AZ', iconKey: 'truck' },
+    { id: 'partner_3', defaultName: 'GLOBAL 4X4', iconKey: 'globe' },
+    { id: 'partner_4', defaultName: 'RACE TECH', iconKey: 'zap' },
   ];
 
-  const partners = partnersPage?.sections && partnersPage.sections.length > 0
-    ? partnersPage.sections.filter(s => s.type === 'text' && !s.id.includes('TITLE')).map((s, i) => ({
-      id: s.id,
-      name: s.value,
-      icon: getIcon(s.label || ''),
+  const partners = partnerList.map((p, i) => {
+    const cmsItem = partnersPage?.sections?.find(s => s.id === p.id);
+    return {
+      id: p.id,
+      name: cmsItem ? cmsItem.value : p.defaultName,
+      icon: getIcon(p.iconKey),
       color: i % 2 === 0 ? 'text-[#FF4D00]' : 'text-white',
       bg: i % 2 === 0 ? 'group-hover:bg-[#FF4D00]/10' : 'group-hover:bg-white/10',
       glow: i % 2 === 0 ? 'group-hover:shadow-[#FF4D00]/20' : 'group-hover:shadow-white/10',
-      tag: s.url || 'OFFICIAL PARTNER'
-    }))
-    : defaultPartners;
+      tag: 'OFFICIAL PARTNER'
+    };
+  });
 
 
   return (

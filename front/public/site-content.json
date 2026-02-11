@@ -2269,49 +2269,37 @@
   },
   {
     "id": "partners",
-    "title": "T\u0259r\u0259fda\u015flar",
+    "title": "Tərəfdaşlar",
     "sections": [
-      {
-        "id": "partner_1_name",
-        "type": "text",
-        "label": "KEY: partner_1_name",
-        "value": "AZMF"
-      },
-      {
-        "id": "partner_2_name",
-        "type": "text",
-        "label": "KEY: partner_2_name",
-        "value": "OFFROAD AZ"
-      },
-      {
-        "id": "partner_3_name",
-        "type": "text",
-        "label": "KEY: partner_3_name",
-        "value": "GLOBAL 4X4"
-      },
-      {
-        "id": "partner_4_name",
-        "type": "text",
-        "label": "KEY: partner_4_name",
-        "value": "RACE TECH"
-      },
       {
         "id": "SECTION_TITLE",
         "type": "text",
         "label": "KEY: SECTION_TITLE",
-        "value": "R\u018fSM\u0130 T\u018fR\u018fFDA\u015eLARIMIZ"
+        "value": "RƏSMİ TƏRƏFDAŞLARIMIZ"
       },
       {
-        "id": "lbl-section-title-57",
+        "id": "partner_1",
         "type": "text",
-        "label": "SECTION_TITLE",
-        "value": "SECTION_TITLE"
+        "label": "AZMF",
+        "value": "AZMF"
       },
       {
-        "id": "lbl-official-partne-225",
+        "id": "partner_2",
         "type": "text",
-        "label": "OFFICIAL PARTNER",
-        "value": "OFFICIAL PARTNER"
+        "label": "OFFROAD AZ",
+        "value": "OFFROAD AZ"
+      },
+      {
+        "id": "partner_3",
+        "type": "text",
+        "label": "GLOBAL 4X4",
+        "value": "GLOBAL 4X4"
+      },
+      {
+        "id": "partner_4",
+        "type": "text",
+        "label": "RACE TECH",
+        "value": "RACE TECH"
       }
     ],
     "images": []
